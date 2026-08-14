@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Stopwatch crown -->
+  <rect x="27" y="4" width="10" height="7" rx="2" fill="#2c3e50"/>
+  <!-- Top button -->
+  <circle cx="32" cy="10" r="4" fill="#2c3e50"/>
+  <!-- Side button -->
+  <rect x="46" y="12" width="8" height="6" rx="2" transform="rotate(40 50 15)" fill="#2c3e50"/>
+
+  <!-- Watch body -->
+  <circle cx="32" cy="36" r="24" fill="#3498db" stroke="#2c3e50" stroke-width="3"/>
+  <circle cx="32" cy="36" r="19" fill="#ecf0f1"/>
+
+  <!-- Tick marks -->
+  <g stroke="#2c3e50" stroke-width="2" stroke-linecap="round">
+    <line x1="32" y1="19" x2="32" y2="22"/>
+    <line x1="32" y1="50" x2="32" y2="53"/>
+    <line x1="15" y1="36" x2="18" y2="36"/>
+    <line x1="46" y1="36" x2="49" y2="36"/>
+  </g>
+
+  <!-- Hands, pointing to ~10:10 -->
+  <g stroke="#2c3e50" stroke-linecap="round">
+    <line x1="32" y1="36" x2="32" y2="24" stroke-width="3"/>
+    <line x1="32" y1="36" x2="22" y2="29" stroke-width="3"/>
+  </g>
+
+  <!-- Center pin -->
+  <circle cx="32" cy="36" r="2.5" fill="#2c3e50"/>
+</svg>
