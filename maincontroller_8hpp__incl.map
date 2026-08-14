@@ -1,0 +1,18 @@
+<map id="src/qml/controller/maincontroller.hpp" name="src/qml/controller/maincontroller.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="78,5,226,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,167,80,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,48,90,95,56,155,51,153,86,92,129,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="101,93,203,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,46,155,79,149,79,149,46"/>
+<area shape="rect" id="Node000004" href="$sendingservice_8hpp.html" title=" " alt="" coords="230,93,410,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="193,43,284,85,282,90,191,48"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="276,121,94,168,93,163,275,116"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="104,167,205,192"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="294,121,195,164,193,159,292,116"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="229,167,419,192"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="323,119,325,153,320,153,318,119"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="443,167,514,192"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="347,116,441,159,439,163,344,121"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="539,167,589,192"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="361,116,526,164,525,169,360,121"/>
+</map>

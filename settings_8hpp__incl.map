@@ -1,0 +1,9 @@
+<map id="src/core/settings.hpp" name="src/core/settings.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="68,5,225,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,80,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,33,73,73,70,68,128,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="104,79,189,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,31,149,65,144,65,144,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="213,79,376,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="172,28,259,70,257,75,169,33"/>
+</map>
