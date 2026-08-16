@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# Blocks `git push` if clang-tidy reports any warnings/errors (see .clang-tidy)
+# in the project's C++ sources.
+#
+# Enable once per clone with:
+#   git config core.hooksPath hooks
+#
+# Bypass in an emergency with:
+#   git push --no-verify
+
+set -uo pipefail
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root" || exit 1
+# shellcheck source=hooks/lib.sh
+source hooks/lib.sh
+
+require_clang_tidy || exit 1
+
+build_dir=$(find_build_dir) || {
+    print_no_build_dir_help
+    exit 1
+}
+
+echo "pre-push: running clang-tidy against src/**/*.cpp using $build_dir ..."
+
+mapfile -d '' files < <(find src -name '*.cpp' -print0)
+run_clang_tidy_on "$build_dir" "${files[@]}"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+    echo "" >&2
+    echo "pre-push: clang-tidy found problems above — push blocked." >&2
+    echo "Fix them, or bypass (not recommended) with: git push --no-verify" >&2
+fi
+
+exit $status

@@ -33,3 +33,14 @@ if(BUILD_DOCS)
         message(STATUS "Doxygen not found - 'docs' target will not be available")
     endif()
 endif()
+
+if(EXISTS ${CMAKE_SOURCE_DIR}/.git)
+    execute_process(
+        COMMAND git config core.hooksPath hooks
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE _hooks_result
+    )
+    if(NOT _hooks_result EQUAL 0)
+        message(WARNING "Failed to set core.hooksPath")
+    endif()
+endif()

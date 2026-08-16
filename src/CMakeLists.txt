@@ -23,6 +23,7 @@ qt_add_qml_module(worktime
 
 set_target_properties(worktime PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    EXPORT_COMPILE_COMMANDS YES
 )
 
 target_compile_features(worktime PRIVATE cxx_std_17)

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Blocks `git commit` if clang-tidy reports any warnings/errors (see
+# .clang-tidy) in the C++ files staged for this commit.
+#
+# Enable once per clone with:
+#   git config core.hooksPath hooks
+#
+# Bypass in an emergency with:
+#   git commit --no-verify
+
+set -uo pipefail
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root" || exit 1
+# shellcheck source=hooks/lib.sh
+source hooks/lib.sh
+
+mapfile -d '' staged < <(git diff --cached --name-only --diff-filter=ACMR -z -- src)
+
+cpp_files=()
+for f in "${staged[@]}"; do
+    case "$f" in
+        *.cpp) cpp_files+=("$f") ;;
+    esac
+done
+
+if [ "${#cpp_files[@]}" -eq 0 ]; then
+    exit 0
+fi
+
+require_clang_tidy || exit 1
+
+build_dir=$(find_build_dir) || {
+    print_no_build_dir_help
+    exit 1
+}
+
+echo "pre-commit: running clang-tidy on staged files using $build_dir ..."
+
+run_clang_tidy_on "$build_dir" "${cpp_files[@]}"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+    echo "" >&2
+    echo "pre-commit: clang-tidy found problems above — commit blocked." >&2
+    echo "Fix them, or bypass (not recommended) with: git commit --no-verify" >&2
+fi
+
+exit $status
