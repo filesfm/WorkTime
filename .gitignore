@@ -31,6 +31,7 @@ ui_*.h
 *.jsc
 
 # Other common IDEs/editors
+.claude/
 .vscode/
 .idea/
 *.iml
