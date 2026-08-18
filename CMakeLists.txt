@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.19)
 
 project(worktime VERSION 0.1.0 LANGUAGES CXX)
 
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 option(BUILD_DOCS "Build the API documentation with Doxygen" OFF)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Network Qml Quick QuickControls2 Widgets)
@@ -26,6 +30,7 @@ if(BUILD_DOCS)
         doxygen_add_docs(docs ALL USE_STAMP_FILE
             ${CMAKE_SOURCE_DIR}/src/core/settings.hpp
             ${CMAKE_SOURCE_DIR}/src/core/sendingservice.hpp
+            ${CMAKE_SOURCE_DIR}/src/core/utilities.hpp
             ${CMAKE_SOURCE_DIR}/src/qml/controller/maincontroller.hpp
             COMMENT "Generating API documentation with Doxygen"
         )

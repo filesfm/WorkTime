@@ -17,9 +17,17 @@ qt_add_qml_module(worktime
         core/settings.hpp
         core/sendingservice.cpp
         core/sendingservice.hpp
+        core/utilities.cpp
+        core/utilities.hpp
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    find_package(X11 REQUIRED)
+elseif(APPLE)
+    target_sources(worktime PRIVATE core/utilities_mac.mm)
+endif()
 
 set_target_properties(worktime PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -42,3 +50,9 @@ target_link_libraries(worktime
         Qt6::QuickControls2
         Qt6::Widgets
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(worktime PRIVATE X11::X11)
+elseif(APPLE)
+    target_link_libraries(worktime PRIVATE "-framework Cocoa")
+endif()
