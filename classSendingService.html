@@ -114,6 +114,7 @@ Signals</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4725127232ea47a6cd1708510d5abec8" id="r_a4725127232ea47a6cd1708510d5abec8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">SendingService</a> (QObject *parent=nullptr)</td></tr>
+<tr class="memdesc:a4725127232ea47a6cd1708510d5abec8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wires the send timer and network manager, and rebinds the timer interval whenever <a class="el" href="classSettings.html#aedeb353ebd040e255d90c8873437c74a" title="Interval, in seconds, between tracked-time submissions. Always &gt; 0.">Settings::postInterval()</a> changes.  <br /></td></tr>
 <tr class="separator:a4725127232ea47a6cd1708510d5abec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0196fe402ec1fcef247564586c41eaf" id="r_ab0196fe402ec1fcef247564586c41eaf"><td class="memItemLeft" align="right" valign="top">QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">serverUrl</a> () const</td></tr>
 <tr class="memdesc:ab0196fe402ec1fcef247564586c41eaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Endpoint requests are POSTed to. Invalid/empty until the API is known.  <br /></td></tr>
@@ -159,6 +160,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Wires the send timer and network manager, and rebinds the timer interval whenever <a class="el" href="classSettings.html#aedeb353ebd040e255d90c8873437c74a" title="Interval, in seconds, between tracked-time submissions. Always &gt; 0.">Settings::postInterval()</a> changes. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -178,6 +182,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Whether the periodic send timer is currently active. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -252,6 +257,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Endpoint requests are POSTed to. Invalid/empty until the API is known. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -272,6 +278,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sets <a class="el" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf" title="Endpoint requests are POSTed to. Invalid/empty until the API is known.">serverUrl()</a>. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -291,6 +298,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Starts the periodic send timer and sends immediately once. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -310,6 +318,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Stops the periodic send timer. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
 
 </div>
 </div>
