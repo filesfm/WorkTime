@@ -23,18 +23,38 @@ class SendingService : public QObject
     Q_OBJECT
 
 public:
+    /*!
+     * \brief Wires the send timer and network manager, and rebinds the timer interval
+     * whenever Settings::postInterval() changes.
+     * \par Cyclomatic complexity: 1
+     */
     explicit SendingService(QObject *parent = nullptr);
 
-    /*! \brief Endpoint requests are POSTed to. Invalid/empty until the API is known. */
+    /*!
+     * \brief Endpoint requests are POSTed to. Invalid/empty until the API is known.
+     * \par Cyclomatic complexity: 1
+     */
     QUrl serverUrl() const;
-    /*! \brief Sets serverUrl(). */
+    /*!
+     * \brief Sets serverUrl().
+     * \par Cyclomatic complexity: 1
+     */
     void setServerUrl(const QUrl &url);
 
-    /*! \brief Starts the periodic send timer and sends immediately once. */
+    /*!
+     * \brief Starts the periodic send timer and sends immediately once.
+     * \par Cyclomatic complexity: 1
+     */
     void start();
-    /*! \brief Stops the periodic send timer. */
+    /*!
+     * \brief Stops the periodic send timer.
+     * \par Cyclomatic complexity: 1
+     */
     void stop();
-    /*! \brief Whether the periodic send timer is currently active. */
+    /*!
+     * \brief Whether the periodic send timer is currently active.
+     * \par Cyclomatic complexity: 1
+     */
     bool isActive() const;
 
 signals:
@@ -50,6 +70,7 @@ private:
      * Placeholder shape (username + UTC timestamp) until the actual API
      * contract is known - change freely, nothing else depends on its
      * fields.
+     * \par Cyclomatic complexity: 1
      */
     QJsonObject buildPayload() const;
 
