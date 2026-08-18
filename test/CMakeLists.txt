@@ -45,4 +45,9 @@ elseif(APPLE)
 endif()
 
 include(GoogleTest)
-gtest_discover_tests(worktime_tests)
+# PRE_TEST (rather than the default POST_BUILD) defers running the test
+# binary for test enumeration until `ctest` itself is invoked. worktime_tests
+# constructs a QGuiApplication, which needs a working Qt platform plugin
+# (e.g. QT_QPA_PLATFORM=offscreen); that's set for the `ctest` invocation in
+# CI but not for the build step, so POST_BUILD discovery fails the build.
+gtest_discover_tests(worktime_tests DISCOVERY_MODE PRE_TEST)
