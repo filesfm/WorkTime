@@ -7,6 +7,7 @@ import Worktime
 
 ApplicationWindow {
     id: window
+    visible: !trayAvailable
 
     Material.theme: Material.System
     Material.accent: Material.Blue
@@ -15,21 +16,15 @@ ApplicationWindow {
         id: controller
     }
 
-    // Set from C++ (main.cpp) via QSystemTrayIcon::isSystemTrayAvailable(),
-    // passed in as an initial property. When false, the tray icon below
-    // stays inactive and the window behaves like a normal application
-    // window instead of hiding into a tray that doesn't exist.
+    // Set from C++
     property bool trayAvailable: false
 
-    visible: !trayAvailable
     // Size to fit whatever content is actually in mainColumn, rather than a
     // guessed fixed size that can clip content as fields are added.
     width: mainColumn.implicitWidth + mainColumn.anchors.margins * 2
     height: mainColumn.implicitHeight + mainColumn.anchors.margins * 2
     title: "Worktime"
 
-    // With a tray available, keep the app running in the tray instead of
-    // quitting on close. Without one, closing behaves normally (quits).
     onClosing: function (close) {
         if (trayAvailable) {
             close.accepted = false
@@ -40,7 +35,7 @@ ApplicationWindow {
     Platform.SystemTrayIcon {
         id: trayIcon
         visible: trayAvailable
-        icon.source: "icon.svg"   // path to a small icon file (16–32px)
+        icon.source: "icon.svg"
         tooltip: "Worktime"
 
         onActivated: function (reason) {
@@ -60,11 +55,6 @@ ApplicationWindow {
             }
             Platform.MenuItem {
                 text: "Quit"
-                // Deferred rather than called synchronously: on Linux the
-                // tray menu is a native DBus (StatusNotifierItem) menu, and
-                // calling Qt.quit() directly from inside its callback can
-                // post the quit event into that native nested loop instead
-                // of the main one, silently dropping it.
                 onTriggered: Qt.callLater(Qt.quit)
             }
         }
