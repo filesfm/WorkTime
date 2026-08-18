@@ -1,24 +1,7 @@
 var searchData=
 [
-  ['sendfailed_0',['sendFailed',['../classSendingService.html#a1f06beef9e350a0218e68dca42828a12',1,'SendingService']]],
-  ['sendingservice_1',['sendingservice',['../classSendingService.html',1,'SendingService'],['../classSendingService.html#a4725127232ea47a6cd1708510d5abec8',1,'SendingService::SendingService()']]],
-  ['sendingservice_2ehpp_2',['sendingservice.hpp',['../sendingservice_8hpp.html',1,'']]],
-  ['sendsucceeded_3',['sendSucceeded',['../classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694',1,'SendingService']]],
-  ['serverurl_4',['serverUrl',['../classSendingService.html#ab0196fe402ec1fcef247564586c41eaf',1,'SendingService']]],
-  ['setautostartup_5',['setautostartup',['../classSettings.html#ad7aa200f1dafa08cfc810291c7d32dc9',1,'Settings::setAutoStartup()'],['../classMainController.html#a1e7742ee9df37406940085ff85e2bd59',1,'MainController::setAutoStartup()']]],
-  ['setenableshots_6',['setenableshots',['../classSettings.html#ae694e4ddc2905cd4132fd2c8d7fcef4e',1,'Settings::setEnableShots()'],['../classMainController.html#a497bdc8fe4cded7df16a84b093e92587',1,'MainController::setEnableShots()']]],
-  ['setpassword_7',['setpassword',['../classSettings.html#aefd5ae26097e537a4ddbac179a383687',1,'Settings::setPassword()'],['../classMainController.html#ae2567a26f3172b3d4701094a09d4bc24',1,'MainController::setPassword()']]],
-  ['setpostinterval_8',['setpostinterval',['../classSettings.html#a892ecfa06eba90e9242ba4ca2311ece1',1,'Settings::setPostInterval()'],['../classMainController.html#a8e7dba8b6f152fecde266f5fd16cbf27',1,'MainController::setPostInterval()']]],
-  ['setserverurl_9',['setServerUrl',['../classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c',1,'SendingService']]],
-  ['setshotcompression_10',['setshotcompression',['../classSettings.html#a2fc7aa37eb95026d747cfa4d630cf432',1,'Settings::setShotCompression()'],['../classMainController.html#a445e0c84e24e3f97a7e4c6b9144ef78e',1,'MainController::setShotCompression(int compression)']]],
-  ['setshotscale_11',['setshotscale',['../classMainController.html#ac1752b551de0e2fa2fd549be7218f2f2',1,'MainController::setShotScale()'],['../classSettings.html#ac1ede30bd59847aa7e79cb83ea8a14cd',1,'Settings::setShotScale()']]],
-  ['settings_12',['Settings',['../classSettings.html',1,'']]],
-  ['settings_2ehpp_13',['settings.hpp',['../settings_8hpp.html',1,'']]],
-  ['setusername_14',['setusername',['../classSettings.html#afe37c1523033ac62b459b7887c4164c0',1,'Settings::setUsername()'],['../classMainController.html#a3155d0be0fa9e451266e4c97804da9df',1,'MainController::setUsername(const QString &amp;username)']]],
-  ['shotcompression_15',['shotcompression',['../classMainController.html#a2ffa421c412d3f259f16517420aa26e9',1,'MainController::shotCompression'],['../classSettings.html#afc20acbe0b341da786839be0d9659b12',1,'Settings::shotCompression()'],['../classMainController.html#ac744568055ee0995a2d9b57b34c73975',1,'MainController::shotCompression()']]],
-  ['shotcompressionchanged_16',['shotcompressionchanged',['../classSettings.html#ac918f719d4cb01dbe56c42957a165db7',1,'Settings::shotCompressionChanged()'],['../classMainController.html#a1f85bc99f0645469b32ec0a40b962664',1,'MainController::shotCompressionChanged()']]],
-  ['shotscale_17',['shotscale',['../classMainController.html#af065baf4609012a7f6b76f228da7a42f',1,'MainController::shotScale'],['../classSettings.html#a9ce62c64934b573bd9ff02220626021d',1,'Settings::shotScale()'],['../classMainController.html#a4f1be4aa49813fd087a75321b92e3138',1,'MainController::shotScale()']]],
-  ['shotscalechanged_18',['shotscalechanged',['../classSettings.html#aee85d0d82b6c05a1c5a5bc5f9aa26982',1,'Settings::shotScaleChanged()'],['../classMainController.html#a7850f7992bd7ef4a705b1b9b1bf2983f',1,'MainController::shotScaleChanged()']]],
-  ['start_19',['start',['../classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a',1,'SendingService']]],
-  ['stop_20',['stop',['../classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a',1,'SendingService']]]
+  ['password_0',['password',['../classMainController.html#a931464ffdcfe7bc774660ecb6fa41245',1,'MainController::password'],['../classSettings.html#ad7a5bf897ebf81b3d0dc0c105ab0a081',1,'Settings::password()'],['../classMainController.html#a466d249e8ebb132b294238f0c48357ae',1,'MainController::password()']]],
+  ['passwordchanged_1',['passwordchanged',['../classSettings.html#a4462c1bc2bf3b3eddf50873dd05ce34f',1,'Settings::passwordChanged()'],['../classMainController.html#a9d6080be20596a8121e364ac0a915907',1,'MainController::passwordChanged()']]],
+  ['postinterval_2',['postinterval',['../classMainController.html#a272c87f2edd6930a482a06f743990641',1,'MainController::postInterval'],['../classSettings.html#aedeb353ebd040e255d90c8873437c74a',1,'Settings::postInterval()'],['../classMainController.html#ae2eb7b3b5dcc30e16c29fe07f3241bb9',1,'MainController::postInterval()']]],
+  ['postintervalchanged_3',['postintervalchanged',['../classSettings.html#a3bf14c354454f1aa4d8ed04421804ca7',1,'Settings::postIntervalChanged()'],['../classMainController.html#a3ab6d8fa0436de1051d0e62d076768fa',1,'MainController::postIntervalChanged()']]]
 ];

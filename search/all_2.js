@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['instance_0',['instance',['../classSettings.html#a43bc7afd43a5f5b9457ac4e0c5e8d4cd',1,'Settings']]],
-  ['isactive_1',['isActive',['../classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9',1,'SendingService']]]
+  ['enableshots_0',['enableshots',['../classMainController.html#a79d7c286726f8191b4c97feea5917e98',1,'MainController::enableShots'],['../classSettings.html#ac64e38ce932ca27f0537ae05d5a8d276',1,'Settings::enableShots()'],['../classMainController.html#a65543d54d0c2c3a8ccda1ca41215d182',1,'MainController::enableShots()']]],
+  ['enableshotschanged_1',['enableshotschanged',['../classSettings.html#ab04dd3d1b359daadc8a285bf6b18df59',1,'Settings::enableShotsChanged()'],['../classMainController.html#a3a90b5683921e7fb207d5fd32dbfdce2',1,'MainController::enableShotsChanged()']]]
 ];
