@@ -14,16 +14,16 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
     - name: Install Doxygen
       run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
 
     - name: Install Ninja
-      uses: seanmiddleditch/gha-setup-ninja@v4
+      uses: seanmiddleditch/gha-setup-ninja@8b297075da4cd2a5f1fd21fe011b499edf06e9d2 # v4
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v4
+      uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
       with:
         version: '6.8.1'
         arch: linux_gcc_64
@@ -40,7 +40,7 @@ jobs:
       run: ls -lR build/docs/html
 
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: build/docs/html
