@@ -1,6 +1,6 @@
 # worktime
 
-[![codecov](https://codecov.io/gh/filesfm/WorkTime/branch/main/graph/badge.svg)](https://codecov.io/gh/filesfm/WorkTime)
+[![Test coverage](https://img.shields.io/codecov/c/github/filesfm/WorkTime?label=test%20coverage&style=for-the-badge&logo=codecov&logoColor=white)](https://codecov.io/gh/filesfm/WorkTime)
 
 A Qt6/QML desktop time-tracking app.
 
