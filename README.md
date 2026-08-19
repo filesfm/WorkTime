@@ -1,7 +1,7 @@
 # worktime
 
 [![Test coverage](https://img.shields.io/codecov/c/github/filesfm/WorkTime?label=test%20coverage&style=for-the-badge&logo=codecov&logoColor=white)](https://codecov.io/gh/filesfm/WorkTime)
-[![Lines of code](https://tokei.rs/b1/github/filesfm/WorkTime?category=code&style=for-the-badge)](https://github.com/filesfm/WorkTime)
+[![Lines of code](https://www.aschey.tech/tokei/github.com/filesfm/WorkTime?category=code&style=for-the-badge)](https://github.com/filesfm/WorkTime)
 
 A Qt6/QML desktop time-tracking app.
 
