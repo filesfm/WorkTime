@@ -44,6 +44,15 @@ elseif(APPLE)
     target_link_libraries(worktime_tests PRIVATE "-framework Cocoa")
 endif()
 
+if(ENABLE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(worktime_tests PRIVATE --coverage -O0 -g)
+        target_link_options(worktime_tests PRIVATE --coverage)
+    else()
+        message(WARNING "ENABLE_COVERAGE requested but compiler '${CMAKE_CXX_COMPILER_ID}' is not GCC/Clang; skipping instrumentation")
+    endif()
+endif()
+
 include(GoogleTest)
 # PRE_TEST (rather than the default POST_BUILD) defers running the test
 # binary for test enumeration until `ctest` itself is invoked. worktime_tests

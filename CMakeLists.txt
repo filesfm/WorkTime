@@ -7,6 +7,7 @@ if(APPLE)
 endif()
 
 option(BUILD_DOCS "Build the API documentation with Doxygen" OFF)
+option(ENABLE_COVERAGE "Instrument worktime_tests for coverage (GCC/Clang only)" OFF)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Network Qml Quick QuickControls2 Widgets)
 

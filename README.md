@@ -1,5 +1,7 @@
 # worktime
 
+[![codecov](https://codecov.io/gh/filesfm/WorkTime/branch/main/graph/badge.svg)](https://codecov.io/gh/filesfm/WorkTime)
+
 A Qt6/QML desktop time-tracking app.
 
 ## Contents
@@ -32,6 +34,18 @@ cmake --build build/Debug --target docs
 ```
 
 Output is written to `build/Debug/docs/html/index.html`.
+
+Optionally measure test coverage (requires GCC or Clang, plus `gcovr`):
+
+```
+cmake -S . -B build/Coverage -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DENABLE_COVERAGE=ON
+cmake --build build/Coverage
+ctest --test-dir build/Coverage --output-on-failure
+gcovr --root . --filter 'src/core/' --html-details -o build/Coverage/coverage.html build/Coverage
+```
+
+CI uploads coverage from every push to `main` to
+[Codecov](https://codecov.io/gh/filesfm/WorkTime).
 
 ## Build for usage
 
