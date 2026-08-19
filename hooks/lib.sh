@@ -21,7 +21,7 @@ require_clang_format() {
 find_build_dir() {
     local candidate
     for candidate in build/Debug build/Release build/*; do
-        if [ -f "$candidate/compile_commands.json" ]; then
+        if [[ -f "$candidate/compile_commands.json" ]]; then
             echo "$candidate"
             return 0
         fi
@@ -41,7 +41,7 @@ print_no_build_dir_help() {
 run_clang_tidy_on() {
     local build_dir=$1
     shift
-    if [ "$#" -eq 0 ]; then
+    if [[ "$#" -eq 0 ]]; then
         return 0
     fi
 
@@ -60,7 +60,7 @@ run_clang_tidy_on() {
 # file that isn't already clang-format-clean. Returns non-zero if any file
 # needs reformatting.
 run_clang_format_check_on() {
-    if [ "$#" -eq 0 ]; then
+    if [[ "$#" -eq 0 ]]; then
         return 0
     fi
 
