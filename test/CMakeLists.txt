@@ -26,6 +26,8 @@ elseif(APPLE)
     target_sources(worktime_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/core/utilities_mac.mm)
 endif()
 
+set_target_properties(worktime_tests PROPERTIES EXPORT_COMPILE_COMMANDS YES)
+
 target_compile_features(worktime_tests PRIVATE cxx_std_17)
 
 target_include_directories(worktime_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)

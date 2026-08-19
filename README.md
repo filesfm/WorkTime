@@ -2,6 +2,7 @@
 
 [![Test coverage](https://img.shields.io/codecov/c/github/filesfm/WorkTime?label=test%20coverage&style=for-the-badge&logo=codecov&logoColor=white)](https://codecov.io/gh/filesfm/WorkTime)
 [![Lines of code](https://www.aschey.tech/tokei/github.com/filesfm/WorkTime?category=code&style=for-the-badge)](https://github.com/filesfm/WorkTime)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 
 A Qt6/QML desktop time-tracking app.
 
@@ -48,6 +49,11 @@ gcovr --root . --filter 'src/core/' --html-details -o build/Coverage/coverage.ht
 
 CI uploads coverage from every push to `main` to
 [Codecov](https://codecov.io/gh/filesfm/WorkTime).
+
+CI also runs a [SonarCloud](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
+static analysis pass on every push to `main`, tracking maintainability
+(tech debt), code smells, and duplication. Configuration lives in
+`sonar-project.properties`.
 
 ## Build for usage
 
