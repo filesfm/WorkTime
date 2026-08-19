@@ -12,8 +12,9 @@ A Qt6/QML desktop time-tracking app.
 ## Build for development
 
 Requirements: Qt 6.5+, CMake 3.19+, a C++17 compiler, a CMake generator (e.g.
-Ninja), and `clang-tidy` on `PATH` (used by the pre-commit/pre-push git
-hooks, which CMake enables automatically on configure).
+Ninja), and `clang-tidy` and `clang-format` on `PATH` (used by the
+pre-commit/pre-push git hooks, which CMake enables automatically on
+configure).
 
 ```
 cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON

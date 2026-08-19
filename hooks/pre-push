@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Blocks `git push` if clang-tidy reports any warnings/errors (see .clang-tidy)
-# in the project's C++ sources.
+# Blocks `git push` if clang-tidy (see .clang-tidy) or clang-format (see
+# .clang-format) reports any problems in the project's C++ sources.
 #
 # Enable once per clone with:
 #   git config core.hooksPath hooks
@@ -16,6 +16,8 @@ cd "$repo_root" || exit 1
 # shellcheck source=hooks/lib.sh
 source hooks/lib.sh
 
+status=0
+
 require_clang_tidy || exit 1
 
 build_dir=$(find_build_dir) || {
@@ -25,14 +27,30 @@ build_dir=$(find_build_dir) || {
 
 echo "pre-push: running clang-tidy against src/**/*.cpp using $build_dir ..."
 
-mapfile -d '' files < <(find src -name '*.cpp' -print0)
-run_clang_tidy_on "$build_dir" "${files[@]}"
-status=$?
+mapfile -d '' tidy_files < <(find src -name '*.cpp' -print0)
+run_clang_tidy_on "$build_dir" "${tidy_files[@]}"
+if [ $? -ne 0 ]; then
+    echo "" >&2
+    echo "pre-push: clang-tidy found problems above." >&2
+    status=1
+fi
+
+require_clang_format || exit 1
+
+echo "pre-push: checking clang-format conformance of src/ and test/ ..."
+
+mapfile -d '' format_files < <(find src test \( -name '*.cpp' -o -name '*.hpp' -o -name '*.mm' \) -print0)
+run_clang_format_check_on "${format_files[@]}"
+if [ $? -ne 0 ]; then
+    echo "" >&2
+    echo "pre-push: the files above are not clang-format-clean." >&2
+    echo "Run: clang-format -i <file>..." >&2
+    status=1
+fi
 
 if [ "$status" -ne 0 ]; then
     echo "" >&2
-    echo "pre-push: clang-tidy found problems above — push blocked." >&2
-    echo "Fix them, or bypass (not recommended) with: git push --no-verify" >&2
+    echo "pre-push: push blocked. Fix the problems above, or bypass (not recommended) with: git push --no-verify" >&2
 fi
 
 exit $status

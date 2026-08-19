@@ -21,8 +21,7 @@ public:
     }
 };
 
-::testing::Environment *const g_settingsEnv =
-    ::testing::AddGlobalTestEnvironment(new SettingsEnvironment);
+::testing::Environment *const g_settingsEnv = ::testing::AddGlobalTestEnvironment(new SettingsEnvironment);
 
 } // namespace
 

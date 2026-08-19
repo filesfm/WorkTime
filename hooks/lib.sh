@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 #
-# Shared helpers for the clang-tidy git hooks (pre-commit, pre-push).
-# Must be sourced, not executed.
+# Shared helpers for the clang-tidy/clang-format git hooks (pre-commit,
+# pre-push). Must be sourced, not executed.
 
 require_clang_tidy() {
     if ! command -v clang-tidy >/dev/null 2>&1; then
         echo "clang-tidy not found on PATH." >&2
+        return 1
+    fi
+}
+
+require_clang_format() {
+    if ! command -v clang-format >/dev/null 2>&1; then
+        echo "clang-format not found on PATH." >&2
         return 1
     fi
 }
@@ -46,4 +53,24 @@ run_clang_tidy_on() {
     fi
 
     printf '%s\0' "$@" | xargs -0 -P "$jobs" -n1 clang-tidy -p "$build_dir"
+}
+
+# run_clang_format_check_on <file>...
+# Diffs each file against its clang-format output, printing a diff for any
+# file that isn't already clang-format-clean. Returns non-zero if any file
+# needs reformatting.
+run_clang_format_check_on() {
+    if [ "$#" -eq 0 ]; then
+        return 0
+    fi
+
+    local status=0
+    local f
+    for f in "$@"; do
+        if ! diff -u --label "$f" --label "$f (clang-format)" "$f" <(clang-format "$f"); then
+            status=1
+        fi
+    done
+
+    return $status
 }

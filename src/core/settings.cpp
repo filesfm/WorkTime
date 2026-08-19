@@ -31,18 +31,24 @@ Settings::Settings(QObject *parent)
         {"username", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
         {"password", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
         {"autoStartup", false, [](const QVariant &v) { return v.canConvert<bool>(); }},
-        {"postInterval", 30, [](const QVariant &v) {
+        {"postInterval",
+         30,
+         [](const QVariant &v) {
              bool ok = false;
              const int interval = v.toInt(&ok);
              return ok && interval > 0;
          }},
         {"enableShots", false, [](const QVariant &v) { return v.canConvert<bool>(); }},
-        {"shotScale", 1.0, [](const QVariant &v) {
+        {"shotScale",
+         1.0,
+         [](const QVariant &v) {
              bool ok = false;
              const qreal scale = v.toDouble(&ok);
              return ok && scale > 0.0 && scale <= 1.0;
          }},
-        {"shotCompression", 80, [](const QVariant &v) {
+        {"shotCompression",
+         80,
+         [](const QVariant &v) {
              bool ok = false;
              const int compression = v.toInt(&ok);
              return ok && compression >= 0 && compression <= 100;

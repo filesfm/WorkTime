@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
-# Blocks `git commit` if clang-tidy reports any warnings/errors (see
-# .clang-tidy) in the C++ files staged for this commit.
+# Blocks `git commit` if clang-tidy (see .clang-tidy) or clang-format (see
+# .clang-format) reports any problems in the C++ files staged for this
+# commit.
 #
 # Enable once per clone with:
 #   git config core.hooksPath hooks
@@ -16,35 +17,59 @@ cd "$repo_root" || exit 1
 # shellcheck source=hooks/lib.sh
 source hooks/lib.sh
 
-mapfile -d '' staged < <(git diff --cached --name-only --diff-filter=ACMR -z -- src)
+mapfile -d '' staged < <(git diff --cached --name-only --diff-filter=ACMR -z -- src test)
 
 cpp_files=()
+format_files=()
 for f in "${staged[@]}"; do
     case "$f" in
-        *.cpp) cpp_files+=("$f") ;;
+        *.cpp)
+            format_files+=("$f")
+            case "$f" in
+                src/*) cpp_files+=("$f") ;;
+            esac
+            ;;
+        *.hpp | *.mm) format_files+=("$f") ;;
     esac
 done
 
-if [ "${#cpp_files[@]}" -eq 0 ]; then
-    exit 0
+status=0
+
+if [ "${#cpp_files[@]}" -gt 0 ]; then
+    require_clang_tidy || exit 1
+
+    build_dir=$(find_build_dir) || {
+        print_no_build_dir_help
+        exit 1
+    }
+
+    echo "pre-commit: running clang-tidy on staged files using $build_dir ..."
+
+    run_clang_tidy_on "$build_dir" "${cpp_files[@]}"
+    if [ $? -ne 0 ]; then
+        echo "" >&2
+        echo "pre-commit: clang-tidy found problems above." >&2
+        status=1
+    fi
 fi
 
-require_clang_tidy || exit 1
+if [ "${#format_files[@]}" -gt 0 ]; then
+    require_clang_format || exit 1
 
-build_dir=$(find_build_dir) || {
-    print_no_build_dir_help
-    exit 1
-}
+    echo "pre-commit: checking clang-format conformance of staged files ..."
 
-echo "pre-commit: running clang-tidy on staged files using $build_dir ..."
-
-run_clang_tidy_on "$build_dir" "${cpp_files[@]}"
-status=$?
+    run_clang_format_check_on "${format_files[@]}"
+    if [ $? -ne 0 ]; then
+        echo "" >&2
+        echo "pre-commit: the files above are not clang-format-clean." >&2
+        echo "Run: clang-format -i <file>..." >&2
+        status=1
+    fi
+fi
 
 if [ "$status" -ne 0 ]; then
     echo "" >&2
-    echo "pre-commit: clang-tidy found problems above — commit blocked." >&2
-    echo "Fix them, or bypass (not recommended) with: git commit --no-verify" >&2
+    echo "pre-commit: commit blocked. Fix the problems above, or bypass (not recommended) with: git commit --no-verify" >&2
 fi
 
 exit $status
