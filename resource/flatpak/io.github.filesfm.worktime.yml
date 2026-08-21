@@ -13,7 +13,7 @@ finish-args:
 
 modules:
   - name: worktime
-    buildsystem: cmake-ninja
+    buildsystem: cmake
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_TESTING=OFF
