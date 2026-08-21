@@ -10,13 +10,15 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-find_package(Qt6 REQUIRED COMPONENTS Gui Test)
+find_package(Qt6 REQUIRED COMPONENTS Gui Network Test)
 
 add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/src/core/settings.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/sendingservice.cpp
     ${CMAKE_SOURCE_DIR}/src/core/utilities.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/sendingservice_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/utilities_test.cpp
 )
 
@@ -37,6 +39,7 @@ target_link_libraries(worktime_tests
         GTest::gtest
         Qt6::Core
         Qt6::Gui
+        Qt6::Network
         Qt6::Test
 )
 
