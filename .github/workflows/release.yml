@@ -46,11 +46,13 @@ jobs:
           LINUXDEPLOY_QT_URL: https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/1-alpha-20250213-1/linuxdeploy-plugin-qt-x86_64.AppImage
           LINUXDEPLOY_QT_SHA256: 15106be885c1c48a021198e7e1e9a48ce9d02a86dd0a1848f00bdbf3c1c92724
         run: |
-          curl -sL -o linuxdeploy.AppImage "$LINUXDEPLOY_URL"
-          curl -sL -o linuxdeploy-plugin-qt.AppImage "$LINUXDEPLOY_QT_URL"
-          echo "$LINUXDEPLOY_SHA256  linuxdeploy.AppImage" | sha256sum -c -
-          echo "$LINUXDEPLOY_QT_SHA256  linuxdeploy-plugin-qt.AppImage" | sha256sum -c -
-          chmod +x linuxdeploy.AppImage linuxdeploy-plugin-qt.AppImage
+          mkdir -p "$HOME/.local/linuxdeploy-tools"
+          curl -sL -o "$HOME/.local/linuxdeploy-tools/linuxdeploy.AppImage" "$LINUXDEPLOY_URL"
+          curl -sL -o "$HOME/.local/linuxdeploy-tools/linuxdeploy-plugin-qt.AppImage" "$LINUXDEPLOY_QT_URL"
+          echo "$LINUXDEPLOY_SHA256  $HOME/.local/linuxdeploy-tools/linuxdeploy.AppImage" | sha256sum -c -
+          echo "$LINUXDEPLOY_QT_SHA256  $HOME/.local/linuxdeploy-tools/linuxdeploy-plugin-qt.AppImage" | sha256sum -c -
+          chmod +x "$HOME/.local/linuxdeploy-tools/linuxdeploy.AppImage" "$HOME/.local/linuxdeploy-tools/linuxdeploy-plugin-qt.AppImage"
+          echo "$HOME/.local/linuxdeploy-tools" >> "$GITHUB_PATH"
 
       - name: Build AppImage
         env:
@@ -58,7 +60,7 @@ jobs:
           VERSION: ${{ github.ref_name }}
           APPIMAGE_EXTRACT_AND_RUN: '1'
         run: |
-          ./linuxdeploy.AppImage --appdir AppDir \
+          linuxdeploy.AppImage --appdir AppDir \
             --executable build/Release/bin/worktime \
             --desktop-file resource/io.github.filesfm.worktime.desktop \
             --icon-file resource/icon.svg \
