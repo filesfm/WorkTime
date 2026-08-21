@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=WorkTime
+Comment=A Qt6/QML desktop time-tracking app
+Exec=worktime
+Icon=io.github.filesfm.worktime
+Terminal=false
+Categories=Utility;
+StartupWMClass=worktime

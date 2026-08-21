@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.filesfm.worktime</id>
+  <name>WorkTime</name>
+  <summary>A Qt6/QML desktop time-tracking app</summary>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <description>
+    <p>
+      WorkTime tracks working time with a simple Start/Stop button. It uses a
+      system tray icon when one is available on the current desktop, falling
+      back to a normal always-visible window otherwise, and configures a
+      small settings table for server credentials, post interval, and
+      screenshot capture options.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.filesfm.worktime.desktop</launchable>
+  <url type="homepage">https://github.com/filesfm/WorkTime</url>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2026-08-21" />
+  </releases>
+</component>

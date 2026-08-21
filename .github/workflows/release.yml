@@ -1,0 +1,140 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  appimage:
+    name: AppImage
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@8b297075da4cd2a5f1fd21fe011b499edf06e9d2 # v4
+
+      - name: Install Linux build/runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libxkbcommon-x11-0 libx11-dev fuse libfuse2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
+        with:
+          version: '6.8.1'
+          arch: linux_gcc_64
+          modules: 'qtshadertools'
+          cache: true
+
+      - name: Configure
+        run: cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+
+      - name: Build
+        run: cmake --build build/Release
+
+      - name: Download linuxdeploy tools
+        env:
+          LINUXDEPLOY_URL: https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20251107-1/linuxdeploy-x86_64.AppImage
+          LINUXDEPLOY_SHA256: c20cd71e3a4e3b80c3483cef793cda3f4e990aca14014d23c544ca3ce1270b4d
+          LINUXDEPLOY_QT_URL: https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/1-alpha-20250213-1/linuxdeploy-plugin-qt-x86_64.AppImage
+          LINUXDEPLOY_QT_SHA256: 15106be885c1c48a021198e7e1e9a48ce9d02a86dd0a1848f00bdbf3c1c92724
+        run: |
+          curl -sL -o linuxdeploy.AppImage "$LINUXDEPLOY_URL"
+          curl -sL -o linuxdeploy-plugin-qt.AppImage "$LINUXDEPLOY_QT_URL"
+          echo "$LINUXDEPLOY_SHA256  linuxdeploy.AppImage" | sha256sum -c -
+          echo "$LINUXDEPLOY_QT_SHA256  linuxdeploy-plugin-qt.AppImage" | sha256sum -c -
+          chmod +x linuxdeploy.AppImage linuxdeploy-plugin-qt.AppImage
+
+      - name: Build AppImage
+        env:
+          QML_SOURCES_PATHS: ${{ github.workspace }}/src/qml
+          VERSION: ${{ github.ref_name }}
+          APPIMAGE_EXTRACT_AND_RUN: '1'
+        run: |
+          ./linuxdeploy.AppImage --appdir AppDir \
+            --executable build/Release/bin/worktime \
+            --desktop-file resource/io.github.filesfm.worktime.desktop \
+            --icon-file resource/icon.svg \
+            --icon-filename io.github.filesfm.worktime \
+            --plugin qt \
+            --output appimage
+          mkdir -p dist
+          mv worktime-*.AppImage "dist/worktime-${VERSION}-x86_64.AppImage"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: appimage
+          path: dist/*.AppImage
+          if-no-files-found: error
+
+  flatpak:
+    name: Flatpak
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-6.7@sha256:aa2a9d3ca93244629ac56eb256b9ce4d04cf802ab9e501f25e9f75c5fd37bbae
+      options: --privileged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Build Flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@401fe28a8384095fc1531b9d320b292f0ee45adb # v6.7
+        with:
+          bundle: worktime.flatpak
+          manifest-path: resource/flatpak/io.github.filesfm.worktime.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+          upload-artifact: false
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: flatpak
+          path: worktime.flatpak
+          if-no-files-found: error
+
+  snap:
+    name: Snap
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Build snap
+        id: snapcraft
+        uses: snapcore/action-build@3bdaa03e1ba6bf59a65f84a751d943d549a54e79 # v1
+        with:
+          path: resource
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: snap
+          path: ${{ steps.snapcraft.outputs.snap }}
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: [appimage, flatpak, snap]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: dist/*
+          fail_on_unmatched_files: true

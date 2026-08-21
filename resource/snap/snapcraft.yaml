@@ -1,0 +1,53 @@
+name: worktime
+base: core24
+version: git
+summary: A Qt6/QML desktop time-tracking app
+description: |
+  WorkTime tracks working time with a simple Start/Stop button. It uses a
+  system tray icon when one is available on the current desktop, falling
+  back to a normal always-visible window otherwise, and configures a small
+  settings table (server credentials, post interval, screenshot capture
+  options).
+grade: stable
+confinement: strict
+
+apps:
+  worktime:
+    command: usr/bin/worktime
+    common-id: io.github.filesfm.worktime
+    desktop: usr/share/applications/io.github.filesfm.worktime.desktop
+    extensions:
+      - kde-neon-6
+    plugs:
+      - network
+      - desktop
+      - desktop-legacy
+      - x11
+      - wayland
+      - opengl
+
+parts:
+  worktime:
+    plugin: cmake
+    # snapcraft is invoked with resource/ as its project root (see the
+    # release workflow's `path: resource` input), so the repo root sits
+    # one level up from here.
+    source: ..
+    cmake-parameters:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_TESTING=OFF
+      - -DCMAKE_INSTALL_PREFIX=/usr
+    build-packages:
+      - libx11-dev
+
+  desktop-assets:
+    plugin: dump
+    source: ..
+    organize:
+      resource/io.github.filesfm.worktime.desktop: usr/share/applications/io.github.filesfm.worktime.desktop
+      resource/icon.svg: usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg
+      resource/io.github.filesfm.worktime.metainfo.xml: usr/share/metainfo/io.github.filesfm.worktime.metainfo.xml
+    stage:
+      - usr/share/applications/io.github.filesfm.worktime.desktop
+      - usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg
+      - usr/share/metainfo/io.github.filesfm.worktime.metainfo.xml

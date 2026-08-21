@@ -75,3 +75,10 @@ cmake --build build/Release
 
 The built app is at `build/Release/bin/worktime` (`worktime.exe` on Windows,
 `worktime.app` on macOS).
+
+On Linux, pushing a `vX.Y.Z` tag triggers the
+[Release](.github/workflows/release.yml) workflow, which builds an AppImage,
+a Flatpak bundle, and a Snap — manifests and desktop/AppStream metadata for
+all three live under `resource/` — then attaches all three to the
+resulting GitHub Release.
+
