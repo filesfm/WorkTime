@@ -55,7 +55,7 @@ public:
      * \brief Forwards to Settings::setUsername().
      * \par Cyclomatic complexity: 1
      */
-    void setUsername(const QString &username);
+    void setUsername(const QString &username) const;
 
     /*!
      * \brief Forwards to Settings::password().
@@ -66,7 +66,7 @@ public:
      * \brief Forwards to Settings::setPassword().
      * \par Cyclomatic complexity: 1
      */
-    void setPassword(const QString &password);
+    void setPassword(const QString &password) const;
 
     /*!
      * \brief Forwards to Settings::autoStartup().
@@ -77,7 +77,7 @@ public:
      * \brief Forwards to Settings::setAutoStartup().
      * \par Cyclomatic complexity: 1
      */
-    void setAutoStartup(bool enabled);
+    void setAutoStartup(bool enabled) const;
 
     /*!
      * \brief Forwards to Settings::postInterval().
@@ -88,7 +88,7 @@ public:
      * \brief Forwards to Settings::setPostInterval().
      * \par Cyclomatic complexity: 1
      */
-    void setPostInterval(int seconds);
+    void setPostInterval(int seconds) const;
 
     /*!
      * \brief Forwards to Settings::enableShots().
@@ -99,7 +99,7 @@ public:
      * \brief Forwards to Settings::setEnableShots().
      * \par Cyclomatic complexity: 1
      */
-    void setEnableShots(bool enabled);
+    void setEnableShots(bool enabled) const;
 
     /*!
      * \brief Forwards to Settings::shotScale().
@@ -110,7 +110,7 @@ public:
      * \brief Forwards to Settings::setShotScale().
      * \par Cyclomatic complexity: 1
      */
-    void setShotScale(qreal scale);
+    void setShotScale(qreal scale) const;
 
     /*!
      * \brief Forwards to Settings::shotCompression().
@@ -121,7 +121,7 @@ public:
      * \brief Forwards to Settings::setShotCompression().
      * \par Cyclomatic complexity: 1
      */
-    void setShotCompression(int compression);
+    void setShotCompression(int compression) const;
 
 signals:
     void runningChanged();

@@ -41,7 +41,7 @@ QString MainController::username() const
     return Settings::instance()->username();
 }
 
-void MainController::setUsername(const QString &username)
+void MainController::setUsername(const QString &username) const
 {
     Settings::instance()->setUsername(username);
 }
@@ -51,7 +51,7 @@ QString MainController::password() const
     return Settings::instance()->password();
 }
 
-void MainController::setPassword(const QString &password)
+void MainController::setPassword(const QString &password) const
 {
     Settings::instance()->setPassword(password);
 }
@@ -61,7 +61,7 @@ bool MainController::autoStartup() const
     return Settings::instance()->autoStartup();
 }
 
-void MainController::setAutoStartup(bool enabled)
+void MainController::setAutoStartup(bool enabled) const
 {
     Settings::instance()->setAutoStartup(enabled);
 }
@@ -71,7 +71,7 @@ int MainController::postInterval() const
     return Settings::instance()->postInterval();
 }
 
-void MainController::setPostInterval(int seconds)
+void MainController::setPostInterval(int seconds) const
 {
     Settings::instance()->setPostInterval(seconds);
 }
@@ -81,7 +81,7 @@ bool MainController::enableShots() const
     return Settings::instance()->enableShots();
 }
 
-void MainController::setEnableShots(bool enabled)
+void MainController::setEnableShots(bool enabled) const
 {
     Settings::instance()->setEnableShots(enabled);
 }
@@ -91,7 +91,7 @@ qreal MainController::shotScale() const
     return Settings::instance()->shotScale();
 }
 
-void MainController::setShotScale(qreal scale)
+void MainController::setShotScale(qreal scale) const
 {
     Settings::instance()->setShotScale(scale);
 }
@@ -101,7 +101,7 @@ int MainController::shotCompression() const
     return Settings::instance()->shotCompression();
 }
 
-void MainController::setShotCompression(int compression)
+void MainController::setShotCompression(int compression) const
 {
     Settings::instance()->setShotCompression(compression);
 }
