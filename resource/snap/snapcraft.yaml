@@ -29,10 +29,10 @@ apps:
 parts:
   worktime:
     plugin: cmake
-    # snapcraft is invoked with resource/ as its project root (see the
-    # release workflow's `path: resource` input), so the repo root sits
-    # one level up from here.
-    source: ..
+    # snap/snapcraft.yaml at the repo root is a symlink to this file, so
+    # snapcraft treats the repo root as the project directory and `.`
+    # resolves there.
+    source: .
     cmake-parameters:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_TESTING=OFF
@@ -42,7 +42,7 @@ parts:
 
   desktop-assets:
     plugin: dump
-    source: ..
+    source: .
     organize:
       resource/io.github.filesfm.worktime.desktop: usr/share/applications/io.github.filesfm.worktime.desktop
       resource/icon.svg: usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg

@@ -56,3 +56,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif(APPLE)
     target_link_libraries(worktime PRIVATE "-framework Cocoa")
 endif()
+
+include(GNUInstallDirs)
+install(TARGETS worktime
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    BUNDLE DESTINATION .
+)
