@@ -121,9 +121,68 @@ jobs:
           path: ${{ steps.snapcraft.outputs.snap }}
           if-no-files-found: error
 
+  macos:
+    name: macOS
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
+        with:
+          version: '6.11.1'
+          arch: clang_64
+          modules: 'qtshadertools'
+          cache: true
+
+      - name: Configure
+        run: cmake -S . -B build/Release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+
+      - name: Build
+        run: cmake --build build/Release
+
+      - name: Deploy and sign app bundle
+        run: |
+          app_bundle=build/Release/bin/worktime.app
+          macdeployqt "$app_bundle" -qmldir=src/qml -verbose=1
+
+          # Apple Silicon refuses to run any executable without at least an
+          # ad-hoc signature. There's no Developer ID certificate here, so
+          # sign ad-hoc (`-s -`) rather than leave the bundle unrunnable.
+          codesign --force --deep --sign - "$app_bundle"
+
+      - name: Build DMG
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          mkdir -p dist
+          hdiutil create -volname "WorkTime" -srcfolder build/Release/bin/worktime.app -ov -format UDZO \
+            "dist/worktime-${VERSION}-arm64.dmg"
+
+      - name: Build PKG
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          mkdir -p dist
+          pkgbuild --component build/Release/bin/worktime.app \
+            --install-location /Applications \
+            --identifier io.github.filesfm.worktime \
+            --version "${VERSION#v}" \
+            "dist/worktime-${VERSION}-arm64.pkg"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: macos
+          path: |
+            dist/*.dmg
+            dist/*.pkg
+          if-no-files-found: error
+
   release:
     name: Publish release
-    needs: [appimage, flatpak, snap]
+    needs: [appimage, flatpak, snap, macos]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
