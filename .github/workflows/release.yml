@@ -180,9 +180,78 @@ jobs:
             dist/*.pkg
           if-no-files-found: error
 
+  windows:
+    name: Windows
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@8b297075da4cd2a5f1fd21fe011b499edf06e9d2 # v4
+
+      - name: Set up MSVC environment
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+        with:
+          arch: x64
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
+        with:
+          version: '6.8.1'
+          arch: win64_msvc2022_64
+          modules: 'qtshadertools'
+          cache: true
+
+      - name: Configure
+        run: cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+
+      - name: Build
+        run: cmake --build build/Release
+
+      - name: Deploy Qt runtime
+        run: |
+          windeployqt --release --compiler-runtime --qmldir src/qml --no-translations \
+            build/Release/bin/worktime.exe
+
+      - name: Package portable ZIP
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          mkdir -p dist
+          package_dir="worktime-${VERSION}-x64"
+          cp -r build/Release/bin "$package_dir"
+          7z a -tzip "dist/worktime-${VERSION}-x64.zip" "$package_dir" >/dev/null
+
+      - name: Build NSIS installer
+        env:
+          VERSION: ${{ github.ref_name }}
+          MSYS_NO_PATHCONV: '1'
+        run: |
+          version_number="${VERSION#v}"
+          package_dir="$PWD/worktime-${VERSION}-x64"
+          out_file="$PWD/dist/worktime-${VERSION}-x64-setup.exe"
+          makensis.exe \
+            /DVERSION="${version_number}" \
+            /DSOURCE_DIR="$(cygpath -w "$package_dir")" \
+            /DOUT_FILE="$(cygpath -w "$out_file")" \
+            resource/windows/installer.nsi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: windows
+          path: |
+            dist/*.zip
+            dist/*-setup.exe
+          if-no-files-found: error
+
   release:
     name: Publish release
-    needs: [appimage, flatpak, snap, macos]
+    needs: [appimage, flatpak, snap, macos, windows]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
