@@ -3,6 +3,7 @@
 #include <QImage>
 #include <QList>
 #include <QString>
+#include <QUrl>
 
 /*!
  * \brief Stateless OS-interaction helpers: screenshot capture and focused
@@ -35,4 +36,21 @@ public:
      * implementation differs per platform (see utilities.cpp / utilities_mac.mm).
      */
     static QString focusedApplicationName();
+
+    /*!
+     * \brief Copies a file (e.g. a `:/` Qt resource) to a fixed path under
+     * the system temp directory, overwriting any file already there.
+     *
+     * Needed because some platform APIs (e.g. Qt.labs.platform's
+     * SystemTrayIcon on Linux) can't load an icon straight out of the Qt
+     * resource system and need a plain file:// path instead.
+     *
+     * \param sourcePath Path to copy from, as accepted by QFile (a `:/...`
+     * resource path or a path on disk).
+     * \param fileName Destination file name, placed directly under
+     * QStandardPaths::TempLocation.
+     * \return A file:// URL pointing at the destination path.
+     * \par Cyclomatic complexity: 1
+     */
+    static QUrl extractResourceToDisk(const QString &sourcePath, const QString &fileName);
 };

@@ -1,8 +1,11 @@
 #include "utilities.hpp"
 
+#include <QDir>
+#include <QFile>
 #include <QGuiApplication>
 #include <QPixmap>
 #include <QScreen>
+#include <QStandardPaths>
 
 QList<QImage> Utilities::captureScreenshots()
 {
@@ -13,9 +16,16 @@ QList<QImage> Utilities::captureScreenshots()
     return images;
 }
 
-#if defined(Q_OS_LINUX)
+QUrl Utilities::extractResourceToDisk(const QString &sourcePath, const QString &fileName)
+{
+    const QString destinationPath
+        = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).filePath(fileName);
+    QFile::remove(destinationPath);
+    QFile::copy(sourcePath, destinationPath);
+    return QUrl::fromLocalFile(destinationPath);
+}
 
-#    include <QFile>
+#if defined(Q_OS_LINUX)
 
 #    include <optional>
 
