@@ -26,20 +26,20 @@ Ninja), and `clang-tidy` and `clang-format` on `PATH` (used by the
 pre-commit/pre-push git hooks, which CMake enables automatically on
 configure).
 
-```
+```bash
 cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
 cmake --build build/Debug
 ```
 
 Run the test suite:
 
-```
+```bash
 ctest --test-dir build/Debug --output-on-failure
 ```
 
 Optionally build the Doxygen API docs (requires Doxygen installed):
 
-```
+```bash
 cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_DOCS=ON
 cmake --build build/Debug --target docs
 ```
@@ -48,7 +48,7 @@ Output is written to `build/Debug/docs/html/index.html`.
 
 Optionally measure test coverage (requires GCC or Clang, plus `gcovr`):
 
-```
+```bash
 cmake -S . -B build/Coverage -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DENABLE_COVERAGE=ON
 cmake --build build/Coverage
 ctest --test-dir build/Coverage --output-on-failure
@@ -68,7 +68,7 @@ static analysis pass on every push to `main`, tracking maintainability
 Just want to run the app? Configure and build a Release binary — no tests,
 no docs:
 
-```
+```bash
 cmake -S . -B build/Release -DCMAKE_BUILD_TYPE=Release
 cmake --build build/Release
 ```
@@ -81,4 +81,3 @@ On Linux, pushing a `vX.Y.Z` tag triggers the
 a Flatpak bundle, and a Snap — manifests and desktop/AppStream metadata for
 all three live under `resource/` — then attaches all three to the
 resulting GitHub Release.
-

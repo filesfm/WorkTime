@@ -25,7 +25,7 @@ Two build types must be supported: **Debug** and **Release**. Always pass
 don't default to one) — don't leave it unset or assume Debug. Build trees
 go under `build/Debug` and `build/Release`.
 
-```
+```bash
 # Debug
 cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug
 cmake --build build/Debug
