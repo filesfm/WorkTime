@@ -28,8 +28,7 @@ build_dir=$(find_build_dir) || {
 echo "pre-push: running clang-tidy against src/**/*.cpp using $build_dir ..."
 
 mapfile -d '' tidy_files < <(find src -name '*.cpp' -print0)
-run_clang_tidy_on "$build_dir" "${tidy_files[@]}"
-if [ $? -ne 0 ]; then
+if ! run_clang_tidy_on "$build_dir" "${tidy_files[@]}"; then
     echo "" >&2
     echo "pre-push: clang-tidy found problems above." >&2
     status=1
@@ -40,8 +39,7 @@ require_clang_format || exit 1
 echo "pre-push: checking clang-format conformance of src/ and test/ ..."
 
 mapfile -d '' format_files < <(find src test \( -name '*.cpp' -o -name '*.hpp' -o -name '*.mm' \) -print0)
-run_clang_format_check_on "${format_files[@]}"
-if [ $? -ne 0 ]; then
+if ! run_clang_format_check_on "${format_files[@]}"; then
     echo "" >&2
     echo "pre-push: the files above are not clang-format-clean." >&2
     echo "Run: clang-format -i <file>..." >&2

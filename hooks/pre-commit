@@ -45,8 +45,7 @@ if [ "${#cpp_files[@]}" -gt 0 ]; then
 
     echo "pre-commit: running clang-tidy on staged files using $build_dir ..."
 
-    run_clang_tidy_on "$build_dir" "${cpp_files[@]}"
-    if [ $? -ne 0 ]; then
+    if ! run_clang_tidy_on "$build_dir" "${cpp_files[@]}"; then
         echo "" >&2
         echo "pre-commit: clang-tidy found problems above." >&2
         status=1
@@ -58,8 +57,7 @@ if [ "${#format_files[@]}" -gt 0 ]; then
 
     echo "pre-commit: checking clang-format conformance of staged files ..."
 
-    run_clang_format_check_on "${format_files[@]}"
-    if [ $? -ne 0 ]; then
+    if ! run_clang_format_check_on "${format_files[@]}"; then
         echo "" >&2
         echo "pre-commit: the files above are not clang-format-clean." >&2
         echo "Run: clang-format -i <file>..." >&2
