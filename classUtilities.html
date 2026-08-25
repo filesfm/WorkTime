@@ -96,6 +96,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a09f3ef4048032217dcbb9da5178ce13f" id="r_a09f3ef4048032217dcbb9da5178ce13f"><td class="memItemLeft" align="right" valign="top">static QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#a09f3ef4048032217dcbb9da5178ce13f">focusedApplicationName</a> ()</td></tr>
 <tr class="memdesc:a09f3ef4048032217dcbb9da5178ce13f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the application owning the currently focused window.  <br /></td></tr>
 <tr class="separator:a09f3ef4048032217dcbb9da5178ce13f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a713e231cfe16927125a67f7e42972e19" id="r_a713e231cfe16927125a67f7e42972e19"><td class="memItemLeft" align="right" valign="top">static QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#a713e231cfe16927125a67f7e42972e19">extractResourceToDisk</a> (const QString &amp;sourcePath, const QString &amp;fileName)</td></tr>
+<tr class="memdesc:a713e231cfe16927125a67f7e42972e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies a file (e.g. a <code>:/</code> Qt resource) to a fixed path under the system temp directory, overwriting any file already there.  <br /></td></tr>
+<tr class="separator:a713e231cfe16927125a67f7e42972e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stateless OS-interaction helpers: screenshot capture and focused application detection. </p>
@@ -155,6 +158,54 @@ Static Public Member Functions</h2></td></tr>
 <p>Captures every connected screen. </p>
 <dl class="section return"><dt>Returns</dt><dd>One image per screen, in QGuiApplication::screens() order. Empty if no screens are available. </dd></dl>
 <dl class="section user"><dt>Cyclomatic complexity: 2</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a713e231cfe16927125a67f7e42972e19" name="a713e231cfe16927125a67f7e42972e19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a713e231cfe16927125a67f7e42972e19">&#9670;&#160;</a></span>extractResourceToDisk()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static QUrl Utilities::extractResourceToDisk </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sourcePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>fileName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copies a file (e.g. a <code>:/</code> Qt resource) to a fixed path under the system temp directory, overwriting any file already there. </p>
+<p>Needed because some platform APIs (e.g. Qt.labs.platform's SystemTrayIcon on Linux) can't load an icon straight out of the Qt resource system and need a plain <a href="file://">file://</a> path instead.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sourcePath</td><td>Path to copy from, as accepted by QFile (a <code>:/...</code> resource path or a path on disk). </td></tr>
+    <tr><td class="paramname">fileName</td><td>Destination file name, placed directly under QStandardPaths::TempLocation. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a href="file://">file://</a> URL pointing at the destination path. </dd></dl>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
 
 </div>
 </div>
