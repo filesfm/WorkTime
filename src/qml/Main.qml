@@ -18,6 +18,7 @@ ApplicationWindow {
 
     // Set from C++
     property bool trayAvailable: false
+    property url trayIconSource: ""
 
     // Size to fit whatever content is actually in mainColumn, rather than a
     // guessed fixed size that can clip content as fields are added.
@@ -34,8 +35,12 @@ ApplicationWindow {
 
     Platform.SystemTrayIcon {
         id: trayIcon
-        visible: trayAvailable
-        icon.source: "icon.svg"
+        visible: window.trayAvailable
+        // A file:// path on disk (extracted from the qrc resource by
+        // main.cpp), not a qrc:/... resource path: Qt.labs.platform's Linux
+        // tray backend silently produces no icon at all when icon.source
+        // points into the Qt resource system, regardless of image format.
+        icon.source: window.trayIconSource
         tooltip: "Worktime"
 
         onActivated: function (reason) {
@@ -71,8 +76,8 @@ ApplicationWindow {
             spacing: 12
 
             Rectangle {
-                width: 12
-                height: 12
+                Layout.preferredWidth: 12
+                Layout.preferredHeight: 12
                 radius: 6
                 color: controller.running ? "#2ecc71" : "#95a5a6"
 

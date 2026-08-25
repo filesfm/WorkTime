@@ -5,6 +5,9 @@ qt_add_executable(worktime WIN32 MACOSX_BUNDLE
 set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.svg PROPERTIES
     QT_RESOURCE_ALIAS "icon.svg"
 )
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.png PROPERTIES
+    QT_RESOURCE_ALIAS "icon.png"
+)
 
 qt_add_qml_module(worktime
     URI Worktime
@@ -21,6 +24,7 @@ qt_add_qml_module(worktime
         core/utilities.hpp
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
+        ${CMAKE_SOURCE_DIR}/resource/icon.png
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
