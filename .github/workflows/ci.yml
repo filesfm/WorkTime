@@ -57,6 +57,10 @@ jobs:
       - name: Build
         run: cmake --build build/${{ matrix.build_type }}
 
+      - name: Run qmllint
+        if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release'
+        run: qmllint -I build/${{ matrix.build_type }}/src src/qml/Main.qml
+
       - name: Test
         env:
           QT_QPA_PLATFORM: offscreen
@@ -151,6 +155,48 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@689fb39b34b9aa95ebc5f8f119343ddd51542402 # v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install actionlint
+        env:
+          ACTIONLINT_URL: https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz
+          ACTIONLINT_SHA256: 023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757
+        run: |
+          curl -sL -o actionlint.tar.gz "$ACTIONLINT_URL"
+          echo "$ACTIONLINT_SHA256  actionlint.tar.gz" | sha256sum -c -
+          tar xzf actionlint.tar.gz actionlint
+          sudo mv actionlint /usr/local/bin/actionlint
+
+      - name: Run actionlint
+        run: actionlint
+
+      - name: Install shellcheck
+        env:
+          SHELLCHECK_URL: https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz
+          SHELLCHECK_SHA256: 6c881ab0698e4e6ea235245f22832860544f17ba386442fe7e9d629f8cbedf87
+        run: |
+          curl -sL -o shellcheck.tar.xz "$SHELLCHECK_URL"
+          echo "$SHELLCHECK_SHA256  shellcheck.tar.xz" | sha256sum -c -
+          tar xf shellcheck.tar.xz shellcheck-v0.10.0/shellcheck
+          sudo mv shellcheck-v0.10.0/shellcheck /usr/local/bin/shellcheck
+
+      - name: Run shellcheck
+        run: shellcheck hooks/pre-commit hooks/pre-push hooks/lib.sh
+
+      - name: Install yamllint
+        run: pip install --quiet yamllint==1.38.0
+
+      - name: Run yamllint
+        run: yamllint .
+
+      - name: Run markdownlint
+        run: npx --yes markdownlint-cli2@0.15.0 "README.md" "AGENTS.md"
 
   trivy:
     name: Trivy

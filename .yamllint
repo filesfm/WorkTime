@@ -1,0 +1,12 @@
+extends: default
+
+ignore:
+  - build/
+  - .claude/
+
+rules:
+  line-length: disable
+  document-start: disable
+  truthy: disable
+  comments:
+    min-spaces-from-content: 1
