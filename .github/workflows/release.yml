@@ -114,11 +114,22 @@ jobs:
         id: snapcraft
         uses: snapcore/action-build@3bdaa03e1ba6bf59a65f84a751d943d549a54e79 # v1
 
+      - name: Rename snap
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          # snapcraft.yaml uses `version: git`, so the built file name embeds
+          # the commit SHA and changes on every run. Rename it to match the
+          # other release artifacts so re-runs overwrite the same GitHub
+          # Release asset instead of piling up a new one each time.
+          mkdir -p dist
+          cp "${{ steps.snapcraft.outputs.snap }}" "dist/worktime-${VERSION}-amd64.snap"
+
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: snap
-          path: ${{ steps.snapcraft.outputs.snap }}
+          path: dist/*.snap
           if-no-files-found: error
 
   macos:
