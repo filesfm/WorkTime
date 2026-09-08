@@ -37,12 +37,20 @@ elseif(APPLE)
         MACOSX_PACKAGE_LOCATION "Resources"
     )
     target_sources(worktime PRIVATE ${ICON_FILE})
+
+    set(WORKTIME_APP_BUNDLE_DIR "${CMAKE_BINARY_DIR}/bin/WorkTime.app")
+    add_custom_command(TARGET worktime POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf "${WORKTIME_APP_BUNDLE_DIR}"
+        COMMAND ${CMAKE_COMMAND} -E rename "$<TARGET_BUNDLE_DIR:worktime>" "${WORKTIME_APP_BUNDLE_DIR}"
+        COMMENT "Renaming app bundle to WorkTime.app"
+    )
 endif()
 
 set_target_properties(worktime PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     EXPORT_COMPILE_COMMANDS YES
     MACOSX_BUNDLE_ICON_FILE icon.icns
+    MACOSX_BUNDLE_BUNDLE_NAME WorkTime
 )
 
 target_compile_features(worktime PRIVATE cxx_std_17)
