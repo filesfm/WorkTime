@@ -42,7 +42,7 @@ endif()
 set_target_properties(worktime PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     EXPORT_COMPILE_COMMANDS YES
-    MACOSX_BUNDLE_ICON_FILE ${CMAKE_SOURCE_DIR}/resource/macos/icon.icns
+    MACOSX_BUNDLE_ICON_FILE icon.icns
 )
 
 target_compile_features(worktime PRIVATE cxx_std_17)
