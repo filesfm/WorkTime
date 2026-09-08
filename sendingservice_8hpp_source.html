@@ -83,52 +83,51 @@ $(document).ready(function() { init_codefold(0); });
 <div class="contents">
 <a href="sendingservice_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;QJsonObject&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QNetworkAccessManager&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;QTimer&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;QUrl&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">class </span>QNetworkReply;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="foldopen" id="foldopen00021" data-start="{" data-end="};">
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classSendingService.html">   21</a></span><span class="keyword">class </span><a class="code hl_class" href="classSendingService.html">SendingService</a> : <span class="keyword">public</span> QObject</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>{</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    Q_OBJECT</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">   31</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">SendingService</a>(QObject *parent = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">   37</a></span>    QUrl <a class="code hl_function" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">serverUrl</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">   42</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">setServerUrl</a>(<span class="keyword">const</span> QUrl &amp;url);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">   48</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">start</a>();</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">   53</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">stop</a>();</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">   58</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">isActive</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>signals:</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">   62</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">sendSucceeded</a>();</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">sendFailed</a>(<span class="keyword">const</span> QString &amp;errorString);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    QJsonObject buildPayload() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordtype">void</span> sendNow();</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordtype">void</span> handleReplyFinished(QNetworkReply *reply);</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    QNetworkAccessManager m_networkManager;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    QTimer m_timer;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    QUrl m_serverUrl;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>};</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;QNetworkAccessManager&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QTimer&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;QUrl&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">class </span>QNetworkReply;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classSendingService.html">   14</a></span><span class="keyword">class </span><a class="code hl_class" href="classSendingService.html">SendingService</a> : <span class="keyword">public</span> QObject</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    Q_OBJECT</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">   24</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">SendingService</a>(QObject *parent = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">   30</a></span>    QUrl <a class="code hl_function" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">serverUrl</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">   35</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">setServerUrl</a>(<span class="keyword">const</span> QUrl &amp;url);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">   41</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">start</a>();</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">stop</a>();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">   51</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">isActive</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>signals:</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">   55</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">sendSucceeded</a>();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">   57</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">sendFailed</a>(<span class="keyword">const</span> QString &amp;errorString);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    QByteArray buildRequestBody() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">void</span> sendNow();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">void</span> handleReplyFinished(QNetworkReply *reply);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    QNetworkAccessManager m_networkManager;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    QTimer m_timer;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    QUrl m_serverUrl;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>};</div>
 </div>
-<div class="ttc" id="aclassSendingService_html"><div class="ttname"><a href="classSendingService.html">SendingService</a></div><div class="ttdoc">Periodically sends tracked-time data to a remote server.</div><div class="ttdef"><b>Definition</b> sendingservice.hpp:22</div></div>
+<div class="ttc" id="aclassSendingService_html"><div class="ttname"><a href="classSendingService.html">SendingService</a></div><div class="ttdoc">Periodically submits one activity sample to the Worktime remote endpoint.</div><div class="ttdef"><b>Definition</b> sendingservice.hpp:15</div></div>
 <div class="ttc" id="aclassSendingService_html_a1dc0c0ecfaf50a86b735775b8eb60a0a"><div class="ttname"><a href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">SendingService::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Starts the periodic send timer and sends immediately once.</div></div>
 <div class="ttc" id="aclassSendingService_html_a1f06beef9e350a0218e68dca42828a12"><div class="ttname"><a href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">SendingService::sendFailed</a></div><div class="ttdeci">void sendFailed(const QString &amp;errorString)</div><div class="ttdoc">Emitted after a send request fails, with a human-readable reason.</div></div>
 <div class="ttc" id="aclassSendingService_html_a42dda7b4c7af2a3e19fa5d680219b99c"><div class="ttname"><a href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">SendingService::setServerUrl</a></div><div class="ttdeci">void setServerUrl(const QUrl &amp;url)</div><div class="ttdoc">Sets serverUrl().</div></div>
 <div class="ttc" id="aclassSendingService_html_a4725127232ea47a6cd1708510d5abec8"><div class="ttname"><a href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">SendingService::SendingService</a></div><div class="ttdeci">SendingService(QObject *parent=nullptr)</div><div class="ttdoc">Wires the send timer and network manager, and rebinds the timer interval whenever Settings::postInter...</div></div>
 <div class="ttc" id="aclassSendingService_html_a5c9b8669459dbe85bbd290f2560af17a"><div class="ttname"><a href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">SendingService::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdoc">Stops the periodic send timer.</div></div>
 <div class="ttc" id="aclassSendingService_html_a98ac1cf723a73b1d32e464c3418a5694"><div class="ttname"><a href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">SendingService::sendSucceeded</a></div><div class="ttdeci">void sendSucceeded()</div><div class="ttdoc">Emitted after a send request completes successfully.</div></div>
-<div class="ttc" id="aclassSendingService_html_ab0196fe402ec1fcef247564586c41eaf"><div class="ttname"><a href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">SendingService::serverUrl</a></div><div class="ttdeci">QUrl serverUrl() const</div><div class="ttdoc">Endpoint requests are POSTed to. Invalid/empty until the API is known.</div></div>
+<div class="ttc" id="aclassSendingService_html_ab0196fe402ec1fcef247564586c41eaf"><div class="ttname"><a href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">SendingService::serverUrl</a></div><div class="ttdeci">QUrl serverUrl() const</div><div class="ttdoc">Endpoint requests are POSTed to. Invalid/empty until set.</div></div>
 <div class="ttc" id="aclassSendingService_html_adc824d31c0e51a45e6364c81b57d20f9"><div class="ttname"><a href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">SendingService::isActive</a></div><div class="ttdeci">bool isActive() const</div><div class="ttdoc">Whether the periodic send timer is currently active.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
