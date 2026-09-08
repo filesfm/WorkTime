@@ -58,7 +58,7 @@ target_link_libraries(worktime
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(worktime PRIVATE X11::X11)
 elseif(APPLE)
-    target_link_libraries(worktime PRIVATE "-framework Cocoa")
+    target_link_libraries(worktime PRIVATE "-framework Cocoa" "-framework ApplicationServices")
 endif()
 
 include(GNUInstallDirs)

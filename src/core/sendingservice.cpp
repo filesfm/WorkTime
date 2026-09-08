@@ -1,11 +1,23 @@
 #include "sendingservice.hpp"
 
 #include "core/settings.hpp"
+#include "core/utilities.hpp"
 
 #include <QDateTime>
-#include <QJsonDocument>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QUrl>
+
+namespace {
+
+constexpr qsizetype kMaxMetadataLength = 255;
+
+QByteArray encodeField(const QString &key, const QString &value)
+{
+    return QUrl::toPercentEncoding(key) + '=' + QUrl::toPercentEncoding(value);
+}
+
+} // namespace
 
 SendingService::SendingService(QObject *parent)
     : QObject(parent)
@@ -46,13 +58,28 @@ bool SendingService::isActive() const
     return m_timer.isActive();
 }
 
-QJsonObject SendingService::buildPayload() const
+QByteArray SendingService::buildRequestBody() const
 {
-    // TODO: replace with the real payload shape once the server API is defined.
-    return QJsonObject{
-        {"username", Settings::instance()->username()},
-        {"timestamp", QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},
-    };
+    const qint64 utcTimestamp = QDateTime::currentSecsSinceEpoch();
+    const qint64 shootTime = utcTimestamp + QDateTime::currentDateTime().offsetFromUtc();
+
+    const QByteArray body
+        = encodeField(QStringLiteral("Shoot[user_name]"), Settings::instance()->username()) + '&'
+          + encodeField(QStringLiteral("Shoot[password]"), Settings::instance()->password()) + '&'
+          + encodeField(QStringLiteral("Shoot[project_name]"), QString()) + '&'
+          + encodeField(QStringLiteral("Shoot[app_name]"),
+                        Utilities::truncateUtf8Safe(Utilities::focusedApplicationName(), kMaxMetadataLength))
+          + '&'
+          + encodeField(QStringLiteral("Shoot[document_name]"),
+                        Utilities::truncateUtf8Safe(Utilities::activeWindowTitle(), kMaxMetadataLength))
+          + '&'
+          + encodeField(QStringLiteral("Shoot[document_path]"),
+                        Utilities::truncateUtf8Safe(Utilities::activeWindowExecutablePath(), kMaxMetadataLength))
+          + '&' + encodeField(QStringLiteral("Shoot[shoot_time]"), QString::number(shootTime)) + '&'
+          + encodeField(QStringLiteral("Shoot[utc_timestamp]"), QString::number(utcTimestamp)) + '&'
+          + encodeField(QStringLiteral("Shoot[image_resized]"), QStringLiteral("1"));
+
+    return body;
 }
 
 void SendingService::sendNow()
@@ -63,10 +90,10 @@ void SendingService::sendNow()
     }
 
     QNetworkRequest request(m_serverUrl);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
 
-    const QJsonDocument document(buildPayload());
-    m_networkManager.post(request, document.toJson(QJsonDocument::Compact));
+    m_networkManager.post(request, buildRequestBody());
 }
 
 void SendingService::handleReplyFinished(QNetworkReply *reply)
@@ -74,6 +101,8 @@ void SendingService::handleReplyFinished(QNetworkReply *reply)
     reply->deleteLater();
 
     if (reply->error() != QNetworkReply::NoError) {
+        const QVariant status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+        qWarning() << "SendingService: submission failed (HTTP" << status << "):" << reply->errorString();
         emit sendFailed(reply->errorString());
         return;
     }

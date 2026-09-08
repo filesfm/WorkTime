@@ -25,6 +25,15 @@ QUrl Utilities::extractResourceToDisk(const QString &sourcePath, const QString &
     return QUrl::fromLocalFile(destinationPath);
 }
 
+QString Utilities::truncateUtf8Safe(const QString &value, qsizetype maxCodePoints)
+{
+    const QList<uint> codePoints = value.toUcs4();
+    if (codePoints.size() <= maxCodePoints)
+        return value;
+
+    return QString::fromUcs4(reinterpret_cast<const char32_t *>(codePoints.constData()), maxCodePoints);
+}
+
 #if defined(Q_OS_LINUX)
 
 #    include <optional>
@@ -71,6 +80,79 @@ QString applicationNameFromPid(unsigned long pid)
     return QString::fromUtf8(commFile.readAll()).trimmed();
 }
 
+// Finds the currently active window (`_NET_ACTIVE_WINDOW` on the root
+// window), shared by focusedApplicationName(), activeWindowTitle(), and
+// activeWindowExecutablePath() so each doesn't repeat the same lookup.
+std::optional<Window> activeWindow(Display *display)
+{
+    const Atom activeWindowAtom = XInternAtom(display, "_NET_ACTIVE_WINDOW", True);
+    if (activeWindowAtom == None)
+        return std::nullopt;
+
+    return readProperty<Window>(display, DefaultRootWindow(display), activeWindowAtom, XA_WINDOW);
+}
+
+// PID of the process owning `window` (`_NET_WM_PID`), shared by
+// focusedApplicationName() and activeWindowExecutablePath().
+std::optional<unsigned long> windowPid(Display *display, Window window)
+{
+    const Atom pidAtom = XInternAtom(display, "_NET_WM_PID", True);
+    if (pidAtom == None)
+        return std::nullopt;
+
+    return readProperty<unsigned long>(display, window, pidAtom, XA_CARDINAL);
+}
+
+// Title of `window`: `_NET_WM_NAME` (UTF8_STRING) if set, else the legacy
+// `WM_NAME` (Latin-1, via XFetchName).
+QString windowTitle(Display *display, Window window)
+{
+    const Atom utf8StringAtom = XInternAtom(display, "UTF8_STRING", True);
+    const Atom netWmNameAtom = XInternAtom(display, "_NET_WM_NAME", True);
+
+    if (utf8StringAtom != None && netWmNameAtom != None) {
+        Atom actualType;
+        int actualFormat = 0;
+        unsigned long itemCount = 0;
+        unsigned long bytesAfter = 0;
+        unsigned char *data = nullptr;
+
+        const int status = XGetWindowProperty(display,
+                                              window,
+                                              netWmNameAtom,
+                                              0,
+                                              // Property length is measured in 32-bit units; this
+                                              // covers titles up to ~4000 bytes, comfortably above
+                                              // the 255-character limit this value is truncated to.
+                                              1024,
+                                              False,
+                                              utf8StringAtom,
+                                              &actualType,
+                                              &actualFormat,
+                                              &itemCount,
+                                              &bytesAfter,
+                                              &data);
+
+        QString title;
+        if (status == Success && data) {
+            if (actualType == utf8StringAtom && itemCount > 0)
+                title = QString::fromUtf8(reinterpret_cast<const char *>(data), static_cast<int>(itemCount));
+            XFree(data);
+        }
+        if (!title.isEmpty())
+            return title;
+    }
+
+    char *legacyName = nullptr;
+    if (XFetchName(display, window, &legacyName) != 0 && legacyName) {
+        const QString title = QString::fromLatin1(legacyName);
+        XFree(legacyName);
+        return title;
+    }
+
+    return QString();
+}
+
 } // namespace
 
 QString Utilities::focusedApplicationName()
@@ -85,29 +167,65 @@ QString Utilities::focusedApplicationName()
     if (!display)
         return QString();
 
-    const Window root = DefaultRootWindow(display);
-    const Atom activeWindowAtom = XInternAtom(display, "_NET_ACTIVE_WINDOW", True);
-    const Atom pidAtom = XInternAtom(display, "_NET_WM_PID", True);
-
     QString name;
-    if (activeWindowAtom != None && pidAtom != None) {
-        if (const auto activeWindow = readProperty<Window>(display, root, activeWindowAtom, XA_WINDOW)) {
-            if (const auto pid = readProperty<unsigned long>(display, *activeWindow, pidAtom, XA_CARDINAL))
-                name = applicationNameFromPid(*pid);
-        }
+    if (const auto window = activeWindow(display)) {
+        if (const auto pid = windowPid(display, *window))
+            name = applicationNameFromPid(*pid);
     }
 
     XCloseDisplay(display);
     return name;
 }
 
+QString Utilities::activeWindowTitle()
+{
+    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY"))
+        return QString();
+
+    Display *display = XOpenDisplay(nullptr);
+    if (!display)
+        return QString();
+
+    QString title;
+    if (const auto window = activeWindow(display))
+        title = windowTitle(display, *window);
+
+    XCloseDisplay(display);
+    return title;
+}
+
+QString Utilities::activeWindowExecutablePath()
+{
+    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY"))
+        return QString();
+
+    Display *display = XOpenDisplay(nullptr);
+    if (!display)
+        return QString();
+
+    QString path;
+    if (const auto window = activeWindow(display)) {
+        if (const auto pid = windowPid(display, *window))
+            path = QFile::symLinkTarget(QStringLiteral("/proc/%1/exe").arg(*pid));
+    }
+
+    XCloseDisplay(display);
+    return path;
+}
+
 #elif defined(Q_OS_WIN)
 
 #    include <QFileInfo>
+#    include <QVarLengthArray>
 
 #    include <windows.h>
 
-QString Utilities::focusedApplicationName()
+namespace {
+
+// Full path to the executable owning the current foreground window, or
+// empty if it could not be determined. Shared by focusedApplicationName()
+// and activeWindowExecutablePath() so each doesn't repeat the same lookup.
+QString foregroundWindowExecutablePath()
 {
     const HWND window = GetForegroundWindow();
     if (!window)
@@ -130,17 +248,60 @@ QString Utilities::focusedApplicationName()
     if (!ok)
         return QString();
 
-    return QFileInfo(QString::fromWCharArray(path, size)).completeBaseName();
+    return QString::fromWCharArray(path, size);
+}
+
+} // namespace
+
+QString Utilities::focusedApplicationName()
+{
+    const QString path = foregroundWindowExecutablePath();
+    return path.isEmpty() ? QString() : QFileInfo(path).completeBaseName();
+}
+
+QString Utilities::activeWindowTitle()
+{
+    const HWND window = GetForegroundWindow();
+    if (!window)
+        return QString();
+
+    const int length = GetWindowTextLengthW(window);
+    if (length <= 0)
+        return QString();
+
+    // +1 for the terminating null GetWindowTextW always writes.
+    QVarLengthArray<wchar_t, 256> buffer(length + 1);
+    const int copied = GetWindowTextW(window, buffer.data(), buffer.size());
+    if (copied <= 0)
+        return QString();
+
+    return QString::fromWCharArray(buffer.data(), copied);
+}
+
+QString Utilities::activeWindowExecutablePath()
+{
+    return foregroundWindowExecutablePath();
 }
 
 #elif defined(Q_OS_MACOS)
 
-// Implemented in utilities_mac.mm: querying the frontmost application
-// requires Cocoa's NSWorkspace, which needs Objective-C++.
+// Implemented in utilities_mac.mm: querying the frontmost application and
+// its focused window requires Cocoa's NSWorkspace and the Accessibility
+// API, which need Objective-C++.
 
 #else
 
 QString Utilities::focusedApplicationName()
+{
+    return QString();
+}
+
+QString Utilities::activeWindowTitle()
+{
+    return QString();
+}
+
+QString Utilities::activeWindowExecutablePath()
 {
     return QString();
 }

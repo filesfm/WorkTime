@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QTimer>
@@ -9,14 +8,8 @@
 class QNetworkReply;
 
 /*!
- * \brief Periodically sends tracked-time data to a remote server.
- *
- * The concrete server API is not yet defined, so this class is deliberately
- * generic: it owns the send schedule (driven by Settings::postInterval())
- * and the HTTP transport, while the request URL and payload shape - the
- * parts that depend on the actual API - are isolated behind serverUrl()
- * and buildPayload() so they can be filled in later without touching the
- * scheduling/transport logic around them.
+ * \brief Periodically submits one activity sample to the Worktime remote
+ * endpoint.
  */
 class SendingService : public QObject
 {
@@ -31,7 +24,7 @@ public:
     explicit SendingService(QObject *parent = nullptr);
 
     /*!
-     * \brief Endpoint requests are POSTed to. Invalid/empty until the API is known.
+     * \brief Endpoint requests are POSTed to. Invalid/empty until set.
      * \par Cyclomatic complexity: 1
      */
     QUrl serverUrl() const;
@@ -65,14 +58,16 @@ signals:
 
 private:
     /*!
-     * \brief Builds the JSON payload for one send.
+     * \brief Builds the `application/x-www-form-urlencoded` request body for
+     * one activity sample, per the Worktime remote submission protocol:
+     * credentials and activity metadata as `Shoot[...]` fields, with
+     * `shoot_time`/`utc_timestamp` computed for the current instant.
      *
-     * Placeholder shape (username + UTC timestamp) until the actual API
-     * contract is known - change freely, nothing else depends on its
-     * fields.
+     * Credentials (`Shoot[user_name]`/`Shoot[password]`) are sent verbatim;
+     * metadata fields are truncated to 255 Unicode code points.
      * \par Cyclomatic complexity: 1
      */
-    QJsonObject buildPayload() const;
+    QByteArray buildRequestBody() const;
 
     void sendNow();
     void handleReplyFinished(QNetworkReply *reply);

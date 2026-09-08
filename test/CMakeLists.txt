@@ -46,7 +46,7 @@ target_link_libraries(worktime_tests
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(worktime_tests PRIVATE X11::X11)
 elseif(APPLE)
-    target_link_libraries(worktime_tests PRIVATE "-framework Cocoa")
+    target_link_libraries(worktime_tests PRIVATE "-framework Cocoa" "-framework ApplicationServices")
 endif()
 
 if(ENABLE_COVERAGE)

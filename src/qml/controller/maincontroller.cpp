@@ -5,6 +5,8 @@
 MainController::MainController(QObject *parent)
     : QObject(parent)
 {
+    m_sendingService.setServerUrl(QUrl(QStringLiteral("https://worktime.lv/remote")));
+
     connect(Settings::instance(), &Settings::usernameChanged, this, &MainController::usernameChanged);
     connect(Settings::instance(), &Settings::passwordChanged, this, &MainController::passwordChanged);
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::autoStartupChanged);
