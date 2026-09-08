@@ -32,7 +32,7 @@ Settings::Settings(QObject *parent)
         {"password", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
         {"autoStartup", false, [](const QVariant &v) { return v.canConvert<bool>(); }},
         {"postInterval",
-         30,
+         60,
          [](const QVariant &v) {
              bool ok = false;
              const int interval = v.toInt(&ok);

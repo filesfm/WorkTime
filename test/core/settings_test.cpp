@@ -32,7 +32,7 @@ TEST(SettingsTest, DefaultsArePopulatedOnFirstUse)
     EXPECT_EQ(settings->username(), QString());
     EXPECT_EQ(settings->password(), QString());
     EXPECT_FALSE(settings->autoStartup());
-    EXPECT_EQ(settings->postInterval(), 30);
+    EXPECT_EQ(settings->postInterval(), 60);
     EXPECT_FALSE(settings->enableShots());
     EXPECT_DOUBLE_EQ(settings->shotScale(), 1.0);
     EXPECT_EQ(settings->shotCompression(), 80);
