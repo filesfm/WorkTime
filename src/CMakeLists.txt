@@ -40,7 +40,6 @@ elseif(APPLE)
 
     set(WORKTIME_APP_BUNDLE_DIR "${CMAKE_BINARY_DIR}/bin/WorkTime.app")
     add_custom_command(TARGET worktime POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -rf "${WORKTIME_APP_BUNDLE_DIR}"
         COMMAND ${CMAKE_COMMAND} -E rename "$<TARGET_BUNDLE_DIR:worktime>" "${WORKTIME_APP_BUNDLE_DIR}"
         COMMENT "Renaming app bundle to WorkTime.app"
     )
