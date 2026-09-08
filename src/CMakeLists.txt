@@ -32,7 +32,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif(APPLE)
     target_sources(worktime PRIVATE core/utilities_mac.mm)
 
-    set(ICON_FILE ${CMAKE_CURRENT_SOURCE_DIR}/resource/macos/icon.icns)
+    set(ICON_FILE ${CMAKE_SOURCE_DIR}/resource/macos/icon.icns)
     set_source_files_properties(${ICON_FILE} PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources"
     )
@@ -42,7 +42,7 @@ endif()
 set_target_properties(worktime PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     EXPORT_COMPILE_COMMANDS YES
-    MACOSX_BUNDLE_ICON_FILE ${CMAKE_CURRENT_SOURCE_DIR}/resource/macos/icon.icns
+    MACOSX_BUNDLE_ICON_FILE ${CMAKE_SOURCE_DIR}/resource/macos/icon.icns
 )
 
 target_compile_features(worktime PRIVATE cxx_std_17)
