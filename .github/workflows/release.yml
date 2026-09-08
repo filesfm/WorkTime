@@ -63,7 +63,7 @@ jobs:
           linuxdeploy.AppImage --appdir AppDir \
             --executable build/Release/bin/worktime \
             --desktop-file resource/io.github.filesfm.worktime.desktop \
-            --icon-file resource/icon.svg \
+            --icon-file resource/icon.png \
             --icon-filename io.github.filesfm.worktime \
             --plugin qt \
             --output appimage
