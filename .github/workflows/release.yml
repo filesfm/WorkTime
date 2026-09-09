@@ -202,7 +202,7 @@ jobs:
         run: |
           mkdir -p dist
           dmg_path="dist/worktime-${VERSION}-arm64.dmg"
-          hdiutil create -volname "WorkTime" -srcfolder build/Release/bin/worktime.app -ov -format UDZO \
+          hdiutil create -volname "WorkTime" -srcfolder build/Release/bin/WorkTime.app -ov -format UDZO \
             "$dmg_path"
 
           identity=$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" \
