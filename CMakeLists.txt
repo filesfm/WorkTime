@@ -4,6 +4,8 @@ project(worktime VERSION 0.4.18 LANGUAGES CXX)
 
 if(APPLE)
     enable_language(OBJCXX)
+elseif(WIN32)
+    enable_language(RC)
 endif()
 
 option(BUILD_DOCS "Build the API documentation with Doxygen" OFF)
