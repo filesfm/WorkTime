@@ -1,0 +1,52 @@
+name: Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag whose snap to publish (e.g. v0.4.2)'
+        required: true
+      channel:
+        description: 'Snap Store channel to release to'
+        required: true
+        default: edge
+        type: choice
+        options:
+          - edge
+          - beta
+          - candidate
+          - stable
+
+permissions:
+  contents: read
+
+jobs:
+  publish-snap:
+    name: Publish Snap
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download snap from GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p dist
+          gh release download "${{ inputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern '*-amd64.snap' \
+            --dir dist
+
+          count=$(find dist -maxdepth 1 -name '*.snap' | wc -l)
+          if [ "$count" -ne 1 ]; then
+            echo "::error::Expected exactly one .snap asset on release ${{ inputs.tag }}, found $count"
+            exit 1
+          fi
+
+          echo "SNAP_FILE=$(find dist -maxdepth 1 -name '*.snap')" >> "$GITHUB_ENV"
+
+      - name: Publish to Snap Store
+        uses: snapcore/action-publish@214b86e5ca036ead1668c79afb81e550e6c54d40 # v1.2.0
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        with:
+          snap: ${{ env.SNAP_FILE }}
+          release: ${{ inputs.channel }}
