@@ -1,6 +1,6 @@
 name: files-fm-worktime
 base: core24
-version: git
+adopt-info: worktime
 summary: A Qt6/QML desktop time-tracking app
 description: |
   WorkTime tracks working time with a simple Start/Stop button. It uses a
@@ -33,6 +33,9 @@ parts:
     # snapcraft treats the repo root as the project directory and `.`
     # resolves there.
     source: .
+    override-pull: |
+      craftctl default
+      craftctl set version="$(git describe --tags --always)"
     cmake-parameters:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_TESTING=OFF
