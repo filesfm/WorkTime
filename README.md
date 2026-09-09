@@ -12,6 +12,8 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 
+[![files-fm-worktime](https://snapcraft.io/files-fm-worktime/badge.svg)](https://snapcraft.io/files-fm-worktime)
+
 A Qt6/QML desktop time-tracking app.
 
 ## Contents
