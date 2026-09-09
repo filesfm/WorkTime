@@ -19,11 +19,11 @@
   <screenshots>
     <screenshot type="default">
       <caption>Big window</caption>
-      <image type="source">https://github.com/filesfm/WorkTime/tree/main/resource/screenshots/big-window.png</image>
+      <image type="source">https://raw.githubusercontent.com/filesfm/WorkTime/main/resource/screenshots/big-window.png</image>
     </screenshot>
     <screenshot>
       <caption>Small window</caption>
-      <image type="source">https://github.com/filesfm/WorkTime/tree/main/resource/screenshots/small-window.png</image>
+      <image type="source">https://raw.githubusercontent.com/filesfm/WorkTime/main/resource/screenshots/small-window.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1" />
