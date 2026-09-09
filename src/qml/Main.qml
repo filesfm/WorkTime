@@ -24,7 +24,7 @@ ApplicationWindow {
     // guessed fixed size that can clip content as fields are added.
     width: mainColumn.implicitWidth + mainColumn.anchors.margins * 2
     height: mainColumn.implicitHeight + mainColumn.anchors.margins * 2
-    title: "Worktime"
+    title: "WorkTime"
 
     onClosing: function (close) {
         if (trayAvailable) {
@@ -41,7 +41,7 @@ ApplicationWindow {
         // tray backend silently produces no icon at all when icon.source
         // points into the Qt resource system, regardless of image format.
         icon.source: window.trayIconSource
-        tooltip: "Worktime"
+        tooltip: "WorkTime"
 
         onActivated: function (reason) {
             if (reason === Platform.SystemTrayIcon.Trigger) {
