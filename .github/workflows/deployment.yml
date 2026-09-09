@@ -50,3 +50,8 @@ jobs:
         with:
           snap: ${{ env.SNAP_FILE }}
           release: ${{ inputs.channel }}
+
+      - name: Push Snap Store listing metadata (icon, summary, description)
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        run: /snap/bin/snapcraft upload-metadata "$SNAP_FILE" --force
