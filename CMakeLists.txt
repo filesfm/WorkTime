@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(worktime VERSION 0.4.18 LANGUAGES CXX)
+project(worktime VERSION 0.4.19 LANGUAGES CXX)
 
 if(APPLE)
     enable_language(OBJCXX)
