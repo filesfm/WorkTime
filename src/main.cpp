@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
     app.setQuitOnLastWindowClosed(false);
 
     QQmlApplicationEngine engine;
