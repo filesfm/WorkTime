@@ -4,7 +4,7 @@
   <name>WorkTime</name>
   <summary>A Qt6/QML desktop time-tracking app</summary>
   <metadata_license>FSFAP</metadata_license>
-  <project_license>LicenseRef-proprietary</project_license>
+  <project_license>Apache-2.0</project_license>
   <description>
     <p>
       WorkTime tracks working time with a simple Start/Stop button. It uses a

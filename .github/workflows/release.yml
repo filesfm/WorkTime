@@ -60,6 +60,8 @@ jobs:
           VERSION: ${{ github.ref_name }}
           APPIMAGE_EXTRACT_AND_RUN: '1'
         run: |
+          install -Dm644 LICENSE \
+            AppDir/usr/share/licenses/io.github.filesfm.worktime/LICENSE
           linuxdeploy.AppImage --appdir AppDir \
             --executable build/Release/bin/worktime \
             --desktop-file resource/io.github.filesfm.worktime.desktop \

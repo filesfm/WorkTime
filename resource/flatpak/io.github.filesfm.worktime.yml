@@ -28,3 +28,5 @@ modules:
         /app/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg
       - install -Dm644 resource/io.github.filesfm.worktime.desktop
         /app/share/applications/io.github.filesfm.worktime.desktop
+      - install -Dm644 LICENSE
+        /app/share/licenses/io.github.filesfm.worktime/LICENSE

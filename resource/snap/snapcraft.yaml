@@ -1,4 +1,5 @@
 name: files-fm-worktime
+license: Apache-2.0
 base: core24
 adopt-info: worktime
 summary: A Qt6/QML desktop time-tracking app

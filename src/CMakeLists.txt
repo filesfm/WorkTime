@@ -50,6 +50,7 @@ set_target_properties(worktime PROPERTIES
     EXPORT_COMPILE_COMMANDS YES
     MACOSX_BUNDLE_ICON_FILE icon.icns
     MACOSX_BUNDLE_BUNDLE_NAME WorkTime
+    MACOSX_BUNDLE_COPYRIGHT "Copyright 2026 WorkTime contributors. Licensed under Apache-2.0."
 )
 
 target_compile_features(worktime PRIVATE cxx_std_17)
