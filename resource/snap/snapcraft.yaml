@@ -46,8 +46,10 @@ parts:
     organize:
       resource/io.github.filesfm.worktime.desktop: usr/share/applications/io.github.filesfm.worktime.desktop
       resource/icon.svg: usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg
+      resource/icon.png: usr/share/icons/hicolor/128x128/apps/io.github.filesfm.worktime.png
       resource/io.github.filesfm.worktime.metainfo.xml: usr/share/metainfo/io.github.filesfm.worktime.metainfo.xml
     stage:
       - usr/share/applications/io.github.filesfm.worktime.desktop
       - usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg
+      - usr/share/icons/hicolor/128x128/apps/io.github.filesfm.worktime.png
       - usr/share/metainfo/io.github.filesfm.worktime.metainfo.xml
