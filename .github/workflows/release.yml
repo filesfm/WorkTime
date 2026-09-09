@@ -306,6 +306,7 @@ jobs:
           mkdir -p dist
           package_dir="worktime-${VERSION}-x64"
           cp -r build/Release/bin "$package_dir"
+          cp LICENSE "$package_dir"
           7z a -tzip "dist/worktime-${VERSION}-x64.zip" "$package_dir" >/dev/null
 
       - name: Build NSIS installer
