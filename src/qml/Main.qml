@@ -60,7 +60,7 @@ ApplicationWindow {
             }
             Platform.MenuItem {
                 text: "Quit"
-                onTriggered: Qt.callLater(Qt.quit)
+                onTriggered: appQuitter.quit()
             }
         }
     }

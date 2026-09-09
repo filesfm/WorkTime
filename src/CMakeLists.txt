@@ -16,6 +16,8 @@ qt_add_qml_module(worktime
     SOURCES
         qml/controller/maincontroller.cpp
         qml/controller/maincontroller.hpp
+        qml/controller/appquitter.cpp
+        qml/controller/appquitter.hpp
         core/settings.cpp
         core/settings.hpp
         core/sendingservice.cpp

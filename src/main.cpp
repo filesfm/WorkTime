@@ -1,19 +1,20 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QSystemTrayIcon>
 
 #include "core/utilities.hpp"
+#include "qml/controller/appquitter.hpp"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    // Qt.labs.platform's SystemTrayIcon can't load an icon.source that
-    // points into the Qt resource system (qrc:/...) on Linux - the DBus
-    // StatusNotifierItem backend silently ends up with no icon at all, for
-    // any image format. Extract it to a real file on disk once at startup
-    // so the tray icon can reference it by a plain file:// path instead.
+    app.setQuitOnLastWindowClosed(false);
+
     QQmlApplicationEngine engine;
+    AppQuitter appQuitter;
+    engine.rootContext()->setContextProperty("appQuitter", &appQuitter);
     engine.setInitialProperties({
         {"trayAvailable", QSystemTrayIcon::isSystemTrayAvailable()},
         {"trayIconSource",
@@ -25,7 +26,7 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    QObject::connect(&engine, &QQmlApplicationEngine::quit, &QGuiApplication::quit);
+    QObject::connect(&engine, &QQmlApplicationEngine::quit, &appQuitter, &AppQuitter::quit);
 
     return app.exec();
 }
