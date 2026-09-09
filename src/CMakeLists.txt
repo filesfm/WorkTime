@@ -55,6 +55,7 @@ set_target_properties(worktime PROPERTIES
     MACOSX_BUNDLE_ICON_FILE icon.icns
     MACOSX_BUNDLE_BUNDLE_NAME WorkTime
     MACOSX_BUNDLE_COPYRIGHT "Copyright 2026 WorkTime contributors. Licensed under Apache-2.0."
+    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/resource/macos/Info.plist.in
 )
 
 target_compile_features(worktime PRIVATE cxx_std_17)
