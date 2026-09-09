@@ -1,4 +1,4 @@
-name: worktime
+name: files-fm-worktime
 base: core24
 version: git
 summary: A Qt6/QML desktop time-tracking app
@@ -12,7 +12,7 @@ grade: stable
 confinement: strict
 
 apps:
-  worktime:
+  files-fm-worktime:
     command: usr/bin/worktime
     common-id: io.github.filesfm.worktime
     desktop: usr/share/applications/io.github.filesfm.worktime.desktop
