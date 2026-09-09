@@ -16,6 +16,16 @@
   </description>
   <launchable type="desktop-id">io.github.filesfm.worktime.desktop</launchable>
   <url type="homepage">https://github.com/filesfm/WorkTime</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Big window</caption>
+      <image type="source">https://github.com/filesfm/WorkTime/tree/main/resource/screenshots/big-window.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Small window</caption>
+      <image type="source">https://github.com/filesfm/WorkTime/tree/main/resource/screenshots/small-window.png</image>
+    </screenshot>
+  </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
     <release version="0.4.2" date="2026-09-08" />
