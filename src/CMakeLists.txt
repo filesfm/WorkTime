@@ -29,6 +29,8 @@ qt_add_qml_module(worktime
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
+elseif(WIN32)
+    target_sources(worktime PRIVATE ${CMAKE_SOURCE_DIR}/resource/windows/icon.rc)
 elseif(APPLE)
     target_sources(worktime PRIVATE core/utilities_mac.mm)
 
