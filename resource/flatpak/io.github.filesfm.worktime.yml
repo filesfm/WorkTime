@@ -1,4 +1,5 @@
 app-id: io.github.filesfm.worktime
+appdata-license: Apache-2.0
 runtime: org.kde.Platform
 runtime-version: '6.7'
 sdk: org.kde.Sdk
