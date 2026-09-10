@@ -44,6 +44,15 @@ target_link_libraries(worktime_tests
         Qt6::DBus
 )
 
+if(APPLE)
+    target_link_libraries(worktime_tests
+        PRIVATE
+            "-framework ServiceManagement"
+            "-framework CoreFoundation"
+            "-framework AppKit"
+    )
+endif()
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(worktime_tests PRIVATE X11::X11)
 elseif(APPLE)

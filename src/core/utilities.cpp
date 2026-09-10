@@ -315,8 +315,6 @@ void Utilities::autostart(bool autostart) {}
 
 #elif defined(Q_OS_MACOS)
 
-void Utilities::autostart(bool autostart) {}
-
 #elif defined(Q_OS_WINDOWS)
 
 void Utilities::autostart(bool autostart)

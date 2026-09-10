@@ -6,6 +6,7 @@
 
 #import <AppKit/AppKit.h>
 #import <ApplicationServices/ApplicationServices.h>
+#include <ServiceManagement/ServiceManagement.h>
 
 namespace {
 
@@ -67,4 +68,16 @@ QString Utilities::activeWindowTitle()
 
     CFRelease(appElement);
     return title;
+}
+
+void Utilities::autostart(bool autostart)
+{
+    SMAppService *service = [SMAppService mainAppService];
+    NSError *error = nil;
+
+    if (autostart) {
+        [service registerAndReturnError:&error];
+    } else {
+        [service unregisterAndReturnError:&error];
+    }
 }
