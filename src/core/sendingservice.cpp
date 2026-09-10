@@ -3,7 +3,12 @@
 #include "core/settings.hpp"
 #include "core/utilities.hpp"
 
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusReply>
 #include <QDateTime>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QUrl>
@@ -63,6 +68,33 @@ QByteArray SendingService::buildRequestBody() const
     const qint64 utcTimestamp = QDateTime::currentSecsSinceEpoch();
     const qint64 shootTime = utcTimestamp + QDateTime::currentDateTime().offsetFromUtc();
 
+#if defined(Q_OS_LINUX)
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell",
+                                                      "/org/gnome/shell/extensions/FocusedWindow",
+                                                      "org.gnome.shell.extensions.FocusedWindow",
+                                                      "Get");
+    QDBusMessage reply = QDBusConnection::sessionBus().call(msg);
+    QString title;
+
+    if (reply.type() == QDBusMessage::ReplyMessage && !reply.arguments().isEmpty()) {
+        const QString json = reply.arguments().at(0).toString();
+
+        QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
+        QJsonObject obj = doc.object();
+
+        title = obj["title"].toString();
+    }
+
+    QByteArray body = encodeField(QStringLiteral("Shoot[user_name]"), Settings::instance()->username()) + '&'
+                      + encodeField(QStringLiteral("Shoot[password]"), Settings::instance()->password()) + '&'
+                      + encodeField(QStringLiteral("Shoot[project_name]"), QString()) + '&'
+                      + encodeField(QStringLiteral("Shoot[app_name]"), title) + '&'
+                      + encodeField(QStringLiteral("Shoot[document_name]"), QString()) + '&'
+                      + encodeField(QStringLiteral("Shoot[document_path]"), QString()) + '&'
+                      + encodeField(QStringLiteral("Shoot[shoot_time]"), QString::number(shootTime)) + '&'
+                      + encodeField(QStringLiteral("Shoot[utc_timestamp]"), QString::number(utcTimestamp)) + '&'
+                      + encodeField(QStringLiteral("Shoot[image_resized]"), QStringLiteral("1"));
+#else
     const QByteArray body
         = encodeField(QStringLiteral("Shoot[user_name]"), Settings::instance()->username()) + '&'
           + encodeField(QStringLiteral("Shoot[password]"), Settings::instance()->password()) + '&'
@@ -78,6 +110,7 @@ QByteArray SendingService::buildRequestBody() const
           + '&' + encodeField(QStringLiteral("Shoot[shoot_time]"), QString::number(shootTime)) + '&'
           + encodeField(QStringLiteral("Shoot[utc_timestamp]"), QString::number(utcTimestamp)) + '&'
           + encodeField(QStringLiteral("Shoot[image_resized]"), QStringLiteral("1"));
+#endif
 
     return body;
 }

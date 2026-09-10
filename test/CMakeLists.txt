@@ -10,7 +10,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-find_package(Qt6 REQUIRED COMPONENTS Gui Network Test)
+find_package(Qt6 REQUIRED COMPONENTS Gui Network Test DBus)
 
 add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/main.cpp
@@ -41,6 +41,7 @@ target_link_libraries(worktime_tests
         Qt6::Gui
         Qt6::Network
         Qt6::Test
+        Qt6::DBus
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

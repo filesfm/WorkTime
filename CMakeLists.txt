@@ -11,7 +11,7 @@ endif()
 option(BUILD_DOCS "Build the API documentation with Doxygen" OFF)
 option(ENABLE_COVERAGE "Instrument worktime_tests for coverage (GCC/Clang only)" OFF)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Network Qml Quick QuickControls2 Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Network Qml Quick QuickControls2 Widgets DBus)
 
 qt_standard_project_setup(REQUIRES 6.5 SUPPORTS_UP_TO 6.8)
 

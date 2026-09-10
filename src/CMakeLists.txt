@@ -73,6 +73,7 @@ target_link_libraries(worktime
         Qt6::Quick
         Qt6::QuickControls2
         Qt6::Widgets
+        Qt6::DBus
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
