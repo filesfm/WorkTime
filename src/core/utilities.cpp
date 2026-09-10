@@ -321,13 +321,11 @@ void Utilities::autostart(bool autostart) {}
 
 void Utilities::autostart(bool autostart)
 {
-    QSettings registry(QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\R
-                                      un"),
-                                      QSettings::NativeFormat);
+    QSettings registry(QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"),
+                       QSettings::NativeFormat);
 
     if (autostart)
-        registry.setValue(QStringLiteral("WorkTime"),
-                                         QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
+        registry.setValue(QStringLiteral("WorkTime"), QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
     else
         registry.remove(QStringLiteral("WorkTime"));
 }
