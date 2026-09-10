@@ -5,6 +5,8 @@
 
 #include <functional>
 
+#include "core/utilities.hpp"
+
 namespace {
 
 struct SettingSpec
@@ -103,6 +105,7 @@ void Settings::setAutoStartup(bool enabled)
     if (autoStartup() == enabled)
         return;
     m_settings.setValue("autoStartup", enabled);
+    Utilities::autostart(enabled);
     emit autoStartupChanged();
 }
 

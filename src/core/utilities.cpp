@@ -307,3 +307,28 @@ QString Utilities::activeWindowExecutablePath()
 }
 
 #endif
+
+#if defined(Q_OS_LINUX)
+
+void Utilities::autostart(bool autostart) {}
+
+#elif defined(Q_OS_MACOS)
+
+void Utilities::autostart(bool autostart) {}
+
+#elif defined(Q_OS_WINDOWS)
+
+void Utilities::autostart(bool autostart)
+{
+    QSettings registry(QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\R
+                                      un"),
+                                      QSettings::NativeFormat);
+
+    if (autostart)
+        registry.setValue(QStringLiteral("WorkTime"),
+                                         QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
+    else
+        registry.remove(QStringLiteral("WorkTime"));
+}
+
+#endif

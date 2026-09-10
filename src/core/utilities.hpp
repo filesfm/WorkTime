@@ -94,4 +94,6 @@ public:
      * \par Cyclomatic complexity: 2
      */
     static QString truncateUtf8Safe(const QString &value, qsizetype maxCodePoints);
+
+    static void autostart(bool autostart = true);
 };
