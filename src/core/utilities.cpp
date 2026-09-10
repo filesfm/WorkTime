@@ -5,6 +5,7 @@
 #include <QGuiApplication>
 #include <QPixmap>
 #include <QScreen>
+#include <QSettings>
 #include <QStandardPaths>
 
 QList<QImage> Utilities::captureScreenshots()
