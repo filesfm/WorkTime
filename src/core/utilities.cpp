@@ -311,7 +311,45 @@ QString Utilities::activeWindowExecutablePath()
 
 #if defined(Q_OS_LINUX)
 
-void Utilities::autostart(bool autostart) {}
+#    include <QDBusConnection>
+#    include <QDBusMessage>
+#    include <QDBusObjectPath>
+#    include <QRandomGenerator>
+
+void Utilities::autostart(bool autostart)
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.portal.Desktop",
+                                                      "/org/freedesktop/portal/desktop",
+                                                      "org.freedesktop.portal.Background",
+                                                      "RequestBackground");
+
+    int token = QRandomGenerator::global()->bounded(1000, 9999);
+    QMap<QString, QVariant> options = {{"autostart", autostart},
+                                       {"background", autostart},
+                                       //{"commandline", QStringList({"flatpak run io.github.filesfm.worktime"})},
+                                       /*#    ifdef BUILD_FLATPAK
+                                       {"commandline", QStringList({"flatpak run worktime"})},
+#    else
+                                       {"commandline", QStringList({"worktime"})},
+#    endif*/
+                                       {"reason", "Automatically launch application at login"},
+                                       {"handle_token", QString("worktime_%1").arg(token)}};
+
+    msg << "" << options;
+    QDBusMessage response = bus.call(msg);
+
+    /*if (response.type() == QDBusMessage::ReplyMessage) {
+        QDBusObjectPath handle = response.arguments().at(0).value<QDBusObjectPath>();
+        bus.connect("org.freedesktop.portal.Desktop",
+                    handle.path(),
+                    "org.freedesktop.portal.Request",
+                    "Response",
+                    this,
+                    SLOT(handleFlatpakResponse(uint, QVariantMap)));
+    }*/
+}
 
 #elif defined(Q_OS_MACOS)
 
