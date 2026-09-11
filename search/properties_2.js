@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['password_0',['password',['../classMainController.html#a931464ffdcfe7bc774660ecb6fa41245',1,'MainController']]],
-  ['postinterval_1',['postInterval',['../classMainController.html#a272c87f2edd6930a482a06f743990641',1,'MainController']]]
+  ['running_0',['running',['../classMainController.html#ac11b4b2381ed7c97a1232f274a42cdcb',1,'MainController']]]
 ];
