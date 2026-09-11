@@ -57,9 +57,9 @@ public:
     void setAutoStartup(bool enabled = true);
 
 signals:
-    void usernameChanged();        //!< Emitted when username() changes.
-    void passwordChanged();        //!< Emitted when password() changes.
-    void autoStartupChanged();     //!< Emitted when autoStartup() changes.
+    void usernameChanged();    //!< Emitted when username() changes.
+    void passwordChanged();    //!< Emitted when password() changes.
+    void autoStartupChanged(); //!< Emitted when autoStartup() changes.
 
 private:
     /*!
