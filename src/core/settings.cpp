@@ -25,10 +25,6 @@ Settings::Settings(QObject *parent)
     // Invariants:
     //   username, password  - no constraint, any string (including empty)
     //   autoStartup         - true or false
-    //   postInterval        - seconds, must be > 0
-    //   enableShots         - true or false
-    //   shotScale           - fraction of full resolution, (0.0, 1.0]
-    //   shotCompression     - percentage quality, [0, 100]
     const QList<SettingSpec> specs{
         {"username", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
         {"password", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
@@ -107,56 +103,4 @@ void Settings::setAutoStartup(bool enabled)
     m_settings.setValue("autoStartup", enabled);
     Utilities::autostart(enabled);
     emit autoStartupChanged();
-}
-
-int Settings::postInterval() const
-{
-    return m_settings.value("postInterval").toInt();
-}
-
-void Settings::setPostInterval(int seconds)
-{
-    if (postInterval() == seconds)
-        return;
-    m_settings.setValue("postInterval", seconds);
-    emit postIntervalChanged();
-}
-
-bool Settings::enableShots() const
-{
-    return m_settings.value("enableShots").toBool();
-}
-
-void Settings::setEnableShots(bool enabled)
-{
-    if (enableShots() == enabled)
-        return;
-    m_settings.setValue("enableShots", enabled);
-    emit enableShotsChanged();
-}
-
-qreal Settings::shotScale() const
-{
-    return m_settings.value("shotScale").toReal();
-}
-
-void Settings::setShotScale(qreal scale)
-{
-    if (qFuzzyCompare(shotScale(), scale))
-        return;
-    m_settings.setValue("shotScale", scale);
-    emit shotScaleChanged();
-}
-
-int Settings::shotCompression() const
-{
-    return m_settings.value("shotCompression").toInt();
-}
-
-void Settings::setShotCompression(int compression)
-{
-    if (shotCompression() == compression)
-        return;
-    m_settings.setValue("shotCompression", compression);
-    emit shotCompressionChanged();
 }

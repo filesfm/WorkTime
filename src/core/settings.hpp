@@ -56,64 +56,10 @@ public:
      */
     void setAutoStartup(bool enabled = true);
 
-    /*!
-     * \brief Interval, in seconds, between tracked-time submissions. Always > 0.
-     * \par Cyclomatic complexity: 1
-     */
-    int postInterval() const;
-    /*!
-     * \brief Sets postInterval().
-     * \param seconds Must be > 0 to satisfy the stored invariant.
-     * Emits postIntervalChanged() if the value changes.
-     * \par Cyclomatic complexity: 2
-     */
-    void setPostInterval(int seconds);
-
-    /*!
-     * \brief Whether periodic screenshots are captured while tracking.
-     * \par Cyclomatic complexity: 1
-     */
-    bool enableShots() const;
-    /*!
-     * \brief Sets enableShots(). Emits enableShotsChanged() if the value changes.
-     * \par Cyclomatic complexity: 2
-     */
-    void setEnableShots(bool enabled = true);
-
-    /*!
-     * \brief Screenshot downscale factor, as a fraction of full resolution in (0.0, 1.0].
-     * \par Cyclomatic complexity: 1
-     */
-    qreal shotScale() const;
-    /*!
-     * \brief Sets shotScale().
-     * \param scale Must be in (0.0, 1.0] to satisfy the stored invariant.
-     * Emits shotScaleChanged() if the value changes.
-     * \par Cyclomatic complexity: 2
-     */
-    void setShotScale(qreal scale);
-
-    /*!
-     * \brief Screenshot compression/quality percentage, in [0, 100].
-     * \par Cyclomatic complexity: 1
-     */
-    int shotCompression() const;
-    /*!
-     * \brief Sets shotCompression().
-     * \param compression Must be in [0, 100] to satisfy the stored invariant.
-     * Emits shotCompressionChanged() if the value changes.
-     * \par Cyclomatic complexity: 2
-     */
-    void setShotCompression(int compression);
-
 signals:
     void usernameChanged();        //!< Emitted when username() changes.
     void passwordChanged();        //!< Emitted when password() changes.
     void autoStartupChanged();     //!< Emitted when autoStartup() changes.
-    void postIntervalChanged();    //!< Emitted when postInterval() changes.
-    void enableShotsChanged();     //!< Emitted when enableShots() changes.
-    void shotScaleChanged();       //!< Emitted when shotScale() changes.
-    void shotCompressionChanged(); //!< Emitted when shotCompression() changes.
 
 private:
     /*!

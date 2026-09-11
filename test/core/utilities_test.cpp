@@ -13,18 +13,6 @@
 
 #include "core/utilities.hpp"
 
-TEST(UtilitiesTest, CaptureScreenshotsReturnsOneImagePerScreen)
-{
-    const QList<QScreen *> screens = QGuiApplication::screens();
-    const QList<QImage> images = Utilities::captureScreenshots();
-
-    ASSERT_EQ(images.size(), screens.size());
-    for (qsizetype i = 0; i < images.size(); ++i) {
-        EXPECT_FALSE(images.at(i).isNull());
-        EXPECT_EQ(images.at(i).size(), screens.at(i)->geometry().size());
-    }
-}
-
 TEST(UtilitiesTest, FocusedApplicationNameDoesNotCrash)
 {
     // No assumption on the returned value: whether a name is available

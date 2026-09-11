@@ -32,10 +32,6 @@ TEST(SettingsTest, DefaultsArePopulatedOnFirstUse)
     EXPECT_EQ(settings->username(), QString());
     EXPECT_EQ(settings->password(), QString());
     EXPECT_FALSE(settings->autoStartup());
-    EXPECT_EQ(settings->postInterval(), 60);
-    EXPECT_FALSE(settings->enableShots());
-    EXPECT_DOUBLE_EQ(settings->shotScale(), 1.0);
-    EXPECT_EQ(settings->shotCompression(), 80);
 }
 
 TEST(SettingsTest, UsernameRoundTrips)
@@ -59,34 +55,4 @@ TEST(SettingsTest, AutoStartupRoundTrips)
     EXPECT_TRUE(settings->autoStartup());
     settings->setAutoStartup(false);
     EXPECT_FALSE(settings->autoStartup());
-}
-
-TEST(SettingsTest, PostIntervalRoundTrips)
-{
-    Settings *settings = Settings::instance();
-    settings->setPostInterval(600);
-    EXPECT_EQ(settings->postInterval(), 600);
-}
-
-TEST(SettingsTest, EnableShotsRoundTrips)
-{
-    Settings *settings = Settings::instance();
-    settings->setEnableShots(true);
-    EXPECT_TRUE(settings->enableShots());
-    settings->setEnableShots(false);
-    EXPECT_FALSE(settings->enableShots());
-}
-
-TEST(SettingsTest, ShotScaleRoundTrips)
-{
-    Settings *settings = Settings::instance();
-    settings->setShotScale(0.5);
-    EXPECT_DOUBLE_EQ(settings->shotScale(), 0.5);
-}
-
-TEST(SettingsTest, ShotCompressionRoundTrips)
-{
-    Settings *settings = Settings::instance();
-    settings->setShotCompression(50);
-    EXPECT_EQ(settings->shotCompression(), 50);
 }

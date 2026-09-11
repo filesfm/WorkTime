@@ -10,10 +10,6 @@ MainController::MainController(QObject *parent)
     connect(Settings::instance(), &Settings::usernameChanged, this, &MainController::usernameChanged);
     connect(Settings::instance(), &Settings::passwordChanged, this, &MainController::passwordChanged);
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::autoStartupChanged);
-    connect(Settings::instance(), &Settings::postIntervalChanged, this, &MainController::postIntervalChanged);
-    connect(Settings::instance(), &Settings::enableShotsChanged, this, &MainController::enableShotsChanged);
-    connect(Settings::instance(), &Settings::shotScaleChanged, this, &MainController::shotScaleChanged);
-    connect(Settings::instance(), &Settings::shotCompressionChanged, this, &MainController::shotCompressionChanged);
 }
 
 bool MainController::running() const
@@ -66,44 +62,4 @@ bool MainController::autoStartup() const
 void MainController::setAutoStartup(bool enabled) const
 {
     Settings::instance()->setAutoStartup(enabled);
-}
-
-int MainController::postInterval() const
-{
-    return Settings::instance()->postInterval();
-}
-
-void MainController::setPostInterval(int seconds) const
-{
-    Settings::instance()->setPostInterval(seconds);
-}
-
-bool MainController::enableShots() const
-{
-    return Settings::instance()->enableShots();
-}
-
-void MainController::setEnableShots(bool enabled) const
-{
-    Settings::instance()->setEnableShots(enabled);
-}
-
-qreal MainController::shotScale() const
-{
-    return Settings::instance()->shotScale();
-}
-
-void MainController::setShotScale(qreal scale) const
-{
-    Settings::instance()->setShotScale(scale);
-}
-
-int MainController::shotCompression() const
-{
-    return Settings::instance()->shotCompression();
-}
-
-void MainController::setShotCompression(int compression) const
-{
-    Settings::instance()->setShotCompression(compression);
 }

@@ -8,15 +8,6 @@
 #include <QSettings>
 #include <QStandardPaths>
 
-QList<QImage> Utilities::captureScreenshots()
-{
-    QList<QImage> images;
-    for (QScreen *screen : QGuiApplication::screens())
-        images.append(screen->grabWindow(0).toImage());
-
-    return images;
-}
-
 QUrl Utilities::extractResourceToDisk(const QString &sourcePath, const QString &fileName)
 {
     const QString destinationPath

@@ -19,14 +19,6 @@ public:
     Utilities() = delete;
 
     /*!
-     * \brief Captures every connected screen.
-     * \return One image per screen, in QGuiApplication::screens() order.
-     * Empty if no screens are available.
-     * \par Cyclomatic complexity: 2
-     */
-    static QList<QImage> captureScreenshots();
-
-    /*!
      * \brief Name of the application owning the currently focused window.
      *
      * \return The focused application's name (its process's base

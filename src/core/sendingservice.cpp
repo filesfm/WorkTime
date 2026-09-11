@@ -29,11 +29,6 @@ SendingService::SendingService(QObject *parent)
 {
     connect(&m_timer, &QTimer::timeout, this, &SendingService::sendNow);
     connect(&m_networkManager, &QNetworkAccessManager::finished, this, &SendingService::handleReplyFinished);
-
-    connect(Settings::instance(), &Settings::postIntervalChanged, this, [this] {
-        if (isActive())
-            m_timer.setInterval(Settings::instance()->postInterval() * 1000);
-    });
 }
 
 QUrl SendingService::serverUrl() const
@@ -48,7 +43,7 @@ void SendingService::setServerUrl(const QUrl &url)
 
 void SendingService::start()
 {
-    m_timer.setInterval(Settings::instance()->postInterval() * 1000);
+    m_timer.setInterval(60000);
     m_timer.start();
     sendNow();
 }

@@ -25,10 +25,6 @@ class MainController : public QObject
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
     Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
     Q_PROPERTY(bool autoStartup READ autoStartup WRITE setAutoStartup NOTIFY autoStartupChanged)
-    Q_PROPERTY(int postInterval READ postInterval WRITE setPostInterval NOTIFY postIntervalChanged)
-    Q_PROPERTY(bool enableShots READ enableShots WRITE setEnableShots NOTIFY enableShotsChanged)
-    Q_PROPERTY(qreal shotScale READ shotScale WRITE setShotScale NOTIFY shotScaleChanged)
-    Q_PROPERTY(int shotCompression READ shotCompression WRITE setShotCompression NOTIFY shotCompressionChanged)
 
 public:
     /*!
@@ -79,60 +75,12 @@ public:
      */
     void setAutoStartup(bool enabled) const;
 
-    /*!
-     * \brief Forwards to Settings::postInterval().
-     * \par Cyclomatic complexity: 1
-     */
-    int postInterval() const;
-    /*!
-     * \brief Forwards to Settings::setPostInterval().
-     * \par Cyclomatic complexity: 1
-     */
-    void setPostInterval(int seconds) const;
-
-    /*!
-     * \brief Forwards to Settings::enableShots().
-     * \par Cyclomatic complexity: 1
-     */
-    bool enableShots() const;
-    /*!
-     * \brief Forwards to Settings::setEnableShots().
-     * \par Cyclomatic complexity: 1
-     */
-    void setEnableShots(bool enabled) const;
-
-    /*!
-     * \brief Forwards to Settings::shotScale().
-     * \par Cyclomatic complexity: 1
-     */
-    qreal shotScale() const;
-    /*!
-     * \brief Forwards to Settings::setShotScale().
-     * \par Cyclomatic complexity: 1
-     */
-    void setShotScale(qreal scale) const;
-
-    /*!
-     * \brief Forwards to Settings::shotCompression().
-     * \par Cyclomatic complexity: 1
-     */
-    int shotCompression() const;
-    /*!
-     * \brief Forwards to Settings::setShotCompression().
-     * \par Cyclomatic complexity: 1
-     */
-    void setShotCompression(int compression) const;
-
 signals:
     void runningChanged();
 
     void usernameChanged();
     void passwordChanged();
     void autoStartupChanged();
-    void postIntervalChanged();
-    void enableShotsChanged();
-    void shotScaleChanged();
-    void shotCompressionChanged();
 
 private:
     void setRunning(bool running);

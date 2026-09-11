@@ -152,67 +152,6 @@ ApplicationWindow {
                         Layout.fillWidth: true
                     }
                 }
-
-                Label {
-                    text: "Tracking"
-                    font.bold: true
-                    Material.foreground: Material.accent
-                    Layout.topMargin: 8
-                }
-
-                GridLayout {
-                    columns: 2
-                    columnSpacing: 10
-                    rowSpacing: 8
-                    Layout.fillWidth: true
-
-                    Label { text: "Post Interval (s)" }
-                    SpinBox {
-                        from: 1
-                        to: 86400
-                        value: controller.postInterval
-                        onValueModified: controller.postInterval = value
-                        Layout.fillWidth: true
-                    }
-                }
-
-                Label {
-                    text: "Screenshots"
-                    font.bold: true
-                    Material.foreground: Material.accent
-                    Layout.topMargin: 8
-                }
-
-                GridLayout {
-                    columns: 2
-                    columnSpacing: 10
-                    rowSpacing: 8
-                    Layout.fillWidth: true
-
-                    Label { text: "Enabled" }
-                    CheckBox {
-                        checked: controller.enableShots
-                        onToggled: controller.enableShots = checked
-                    }
-
-                    Label { text: "Scale" }
-                    Slider {
-                        from: 0.01
-                        to: 1.0
-                        value: controller.shotScale
-                        onMoved: controller.shotScale = value
-                        Layout.fillWidth: true
-                    }
-
-                    Label { text: "Compression" }
-                    SpinBox {
-                        from: 0
-                        to: 100
-                        value: controller.shotCompression
-                        onValueModified: controller.shotCompression = value
-                        Layout.fillWidth: true
-                    }
-                }
             }
         }
     }
