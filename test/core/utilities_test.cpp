@@ -22,20 +22,6 @@ TEST(UtilitiesTest, FocusedApplicationNameDoesNotCrash)
     (void)Utilities::focusedApplicationName();
 }
 
-TEST(UtilitiesTest, ActiveWindowTitleDoesNotCrash)
-{
-    // Same caveat as FocusedApplicationNameDoesNotCrash: no assumption on
-    // the returned value, only that the call itself doesn't crash.
-    (void)Utilities::activeWindowTitle();
-}
-
-TEST(UtilitiesTest, ActiveWindowExecutablePathDoesNotCrash)
-{
-    // Same caveat as FocusedApplicationNameDoesNotCrash: no assumption on
-    // the returned value, only that the call itself doesn't crash.
-    (void)Utilities::activeWindowExecutablePath();
-}
-
 TEST(UtilitiesTest, ExtractResourceToDiskCopiesContentAndReturnsFileUrl)
 {
     QTemporaryDir sourceDir;
@@ -140,34 +126,6 @@ TEST(UtilitiesTest, FocusedApplicationNameIsEmptyUnderWayland)
 
     qputenv("WAYLAND_DISPLAY", "wayland-0");
     EXPECT_TRUE(Utilities::focusedApplicationName().isEmpty());
-
-    if (hadWaylandDisplay)
-        qputenv("WAYLAND_DISPLAY", previousValue);
-    else
-        qunsetenv("WAYLAND_DISPLAY");
-}
-
-TEST(UtilitiesTest, ActiveWindowTitleIsEmptyUnderWayland)
-{
-    const QByteArray previousValue = qgetenv("WAYLAND_DISPLAY");
-    const bool hadWaylandDisplay = qEnvironmentVariableIsSet("WAYLAND_DISPLAY");
-
-    qputenv("WAYLAND_DISPLAY", "wayland-0");
-    EXPECT_TRUE(Utilities::activeWindowTitle().isEmpty());
-
-    if (hadWaylandDisplay)
-        qputenv("WAYLAND_DISPLAY", previousValue);
-    else
-        qunsetenv("WAYLAND_DISPLAY");
-}
-
-TEST(UtilitiesTest, ActiveWindowExecutablePathIsEmptyUnderWayland)
-{
-    const QByteArray previousValue = qgetenv("WAYLAND_DISPLAY");
-    const bool hadWaylandDisplay = qEnvironmentVariableIsSet("WAYLAND_DISPLAY");
-
-    qputenv("WAYLAND_DISPLAY", "wayland-0");
-    EXPECT_TRUE(Utilities::activeWindowExecutablePath().isEmpty());
 
     if (hadWaylandDisplay)
         qputenv("WAYLAND_DISPLAY", previousValue);

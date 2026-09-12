@@ -30,33 +30,6 @@ public:
     static QString focusedApplicationName();
 
     /*!
-     * \brief Title of the currently focused window.
-     *
-     * \return The focused window's title, or an empty string if it could
-     * not be determined. On Linux this is `_NET_WM_NAME`, falling back to
-     * the legacy `WM_NAME`. On macOS this requires the Accessibility
-     * permission (System Settings > Privacy & Security > Accessibility) to
-     * be granted to this app; without it, an empty string is returned, same
-     * as any other "unavailable" case.
-     * \par Cyclomatic complexity: 5 (Linux), 3 (Windows), 4 (macOS), 1 (other
-     * platforms) - the implementation differs per platform (see
-     * utilities.cpp / utilities_mac.mm).
-     */
-    static QString activeWindowTitle();
-
-    /*!
-     * \brief Executable path of the process owning the currently focused window.
-     *
-     * \return The focused window's owning process's executable path, or an
-     * empty string if it could not be determined. On Linux this is the
-     * resolved target of `/proc/<pid>/exe`.
-     * \par Cyclomatic complexity: 4 (Linux), 5 (Windows), 2 (macOS), 1 (other
-     * platforms) - the implementation differs per platform (see
-     * utilities.cpp / utilities_mac.mm).
-     */
-    static QString activeWindowExecutablePath();
-
-    /*!
      * \brief Copies a file (e.g. a `:/` Qt resource) to a fixed path under
      * the system temp directory, overwriting any file already there.
      *
