@@ -56,48 +56,19 @@ QString Utilities::focusedApplicationName()
 
 #elif defined(Q_OS_WIN)
 
-#    include <QFileInfo>
-#    include <QVarLengthArray>
-
 #    include <windows.h>
-
-namespace {
-
-// Full path to the executable owning the current foreground window, or
-// empty if it could not be determined. Shared by focusedApplicationName()
-// and activeWindowExecutablePath() so each doesn't repeat the same lookup.
-QString foregroundWindowExecutablePath()
-{
-    const HWND window = GetForegroundWindow();
-    if (!window)
-        return QString();
-
-    DWORD pid = 0;
-    GetWindowThreadProcessId(window, &pid);
-    if (pid == 0)
-        return QString();
-
-    const HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
-    if (!process)
-        return QString();
-
-    wchar_t path[MAX_PATH];
-    DWORD size = MAX_PATH;
-    const bool ok = QueryFullProcessImageNameW(process, 0, path, &size);
-    CloseHandle(process);
-
-    if (!ok)
-        return QString();
-
-    return QString::fromWCharArray(path, size);
-}
-
-} // namespace
 
 QString Utilities::focusedApplicationName()
 {
-    const QString path = foregroundWindowExecutablePath();
-    return path.isEmpty() ? QString() : QFileInfo(path).completeBaseName();
+    HWND hwnd = GetForegroundWindow();
+    if (!hwnd) {
+        return QString();
+    }
+
+    wchar_t title[256]{};
+    GetWindowTextW(hwnd, title, std::size(title));
+
+    return QString::fromWCharArray(title);
 }
 
 #elif defined(Q_OS_MACOS)
