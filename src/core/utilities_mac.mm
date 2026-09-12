@@ -1,29 +1,46 @@
-// macOS implementation of Utilities::focusedApplicationName(),
-// activeWindowTitle(), and activeWindowExecutablePath(). Split into its own
-// Objective-C++ translation unit because NSWorkspace has no C++ API.
-
 #include "utilities.hpp"
 
 #import <AppKit/AppKit.h>
 #import <ApplicationServices/ApplicationServices.h>
 #include <ServiceManagement/ServiceManagement.h>
 
-namespace {
-
-NSRunningApplication *frontmostApplication()
-{
-    return [[NSWorkspace sharedWorkspace] frontmostApplication];
-}
-
-} // namespace
-
 QString Utilities::focusedApplicationName()
 {
-    NSRunningApplication *app = frontmostApplication();
-    if (!app)
-        return QString();
+    NSRunningApplication *app = [[NSWorkspace sharedWorkspace] frontmostApplication];
+    pid_t pid = [app processIdentifier];
 
-    return QString::fromNSString(app.localizedName);
+    NSDictionary *options = @{(id)kAXTrustedCheckOptionPrompt: @YES};
+    Boolean appHasPermission = AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
+
+    if (!appHasPermission) {
+        return QString();
+    }
+
+    AXUIElementRef appElem = AXUIElementCreateApplication(pid);
+    if (!appElem) {
+        return QString();
+    }
+
+    AXUIElementRef window = NULL;
+    if (AXUIElementCopyAttributeValue(appElem, kAXFocusedWindowAttribute, (CFTypeRef *)&window) != kAXErrorSuccess) {
+        CFRelease(appElem);
+        return QString();
+    }
+
+    CFStringRef title = NULL;
+    AXError result = AXUIElementCopyAttributeValue(window, kAXTitleAttribute, (CFTypeRef *)&title);
+
+    CFRelease(window);
+    CFRelease(appElem);
+
+    if (result != kAXErrorSuccess) {
+        return QString();
+    }
+
+    QString titleStr = QString::fromCFString(title);
+    CFRelease(title);
+
+    return titleStr;
 }
 
 void Utilities::autostart(bool autostart)
