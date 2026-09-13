@@ -25,11 +25,11 @@ Settings::Settings(QObject *parent)
     // Invariants:
     //   username, password  - no constraint, any string (including empty)
     //   autoStartup         - true or false
-    const QList<SettingSpec> specs{
-        {"username", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
-        {"password", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
-        {"autoStartup", false, [](const QVariant &v) { return v.canConvert<bool>(); }},
-    };
+    //   startButtonPushed   - true or false
+    const QList<SettingSpec> specs{{"username", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
+                                   {"password", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
+                                   {"autoStartup", false, [](const QVariant &v) { return v.canConvert<bool>(); }},
+                                   {"startButtonPushed", false, [](const QVariant &v) { return v.canConvert<bool>(); }}};
 
     for (const auto &spec : specs) {
         if (!m_settings.contains(spec.key) || !spec.isValid(m_settings.value(spec.key)))
@@ -81,4 +81,17 @@ void Settings::setAutoStartup(bool enabled)
     m_settings.setValue("autoStartup", enabled);
     Utilities::autostart(enabled);
     emit autoStartupChanged();
+}
+
+bool Settings::startButtonPushed() const
+{
+    return m_settings.value("startButtonPushed").toBool();
+}
+
+void Settings::setStartButtonPushed(bool pushed)
+{
+    if (startButtonPushed() == pushed)
+        return;
+    m_settings.setValue("startButtonPushed", pushed);
+    emit startButtonChanged();
 }

@@ -56,10 +56,23 @@ public:
      */
     void setAutoStartup(bool enabled = true);
 
+    /*!
+     * \brief Whether the start button in main window pushed.
+     * \par Cyclomatic complexity: 1
+     */
+    bool startButtonPushed() const;
+
+    /*!
+     * \brief Sets startButtonPushed(). Emits startButtonChanged() if the value changes.
+     * \param Cyclomatic complexity: 2
+     */
+    void setStartButtonPushed(bool pushed = true);
+
 signals:
     void usernameChanged();    //!< Emitted when username() changes.
     void passwordChanged();    //!< Emitted when password() changes.
     void autoStartupChanged(); //!< Emitted when autoStartup() changes.
+    void startButtonChanged(); //!< Emitted when startButtonPushed() changes.
 
 private:
     /*!
