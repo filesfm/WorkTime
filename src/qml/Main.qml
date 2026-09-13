@@ -59,6 +59,10 @@ ApplicationWindow {
                 onTriggered: window.visible = !window.visible
             }
             Platform.MenuItem {
+                text: "My overview"
+                onTriggered: Qt.openUrlExternally("https://worktime.lv/user/read")
+            }
+            Platform.MenuItem {
                 text: "Quit"
                 onTriggered: appQuitter.quit()
             }
