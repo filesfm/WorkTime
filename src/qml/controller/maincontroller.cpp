@@ -10,28 +10,30 @@ MainController::MainController(QObject *parent)
     connect(Settings::instance(), &Settings::usernameChanged, this, &MainController::usernameChanged);
     connect(Settings::instance(), &Settings::passwordChanged, this, &MainController::passwordChanged);
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::autoStartupChanged);
-}
+    connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::startButtonChanged);
 
-bool MainController::running() const
-{
-    return m_running;
+    if (startButtonPushed()) {
+        m_sendingService.start();
+    } else {
+        m_sendingService.stop();
+    }
 }
 
 void MainController::setRunning(bool running)
 {
-    if (m_running == running)
+    if (startButtonPushed() == running)
         return;
-    m_running = running;
-    if (m_running)
+    setStartButtonPushed(running);
+    if (running)
         m_sendingService.start();
     else
         m_sendingService.stop();
-    emit runningChanged();
+    emit startButtonChanged();
 }
 
 void MainController::toggleTracking()
 {
-    setRunning(!m_running);
+    setRunning(!startButtonPushed());
 }
 
 QString MainController::username() const
@@ -62,4 +64,15 @@ bool MainController::autoStartup() const
 void MainController::setAutoStartup(bool enabled) const
 {
     Settings::instance()->setAutoStartup(enabled);
+}
+
+bool MainController::startButtonPushed() const
+{
+    return Settings::instance()->startButtonPushed();
+}
+
+void MainController::setStartButtonPushed(bool pushed) const
+{
+    Settings::instance()->setStartButtonPushed(pushed);
+    emit startButtonChanged();
 }

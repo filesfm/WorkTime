@@ -19,12 +19,10 @@ class MainController : public QObject
     Q_OBJECT
     QML_ELEMENT
 
-    /*! \brief Whether tracking is currently active. */
-    Q_PROPERTY(bool running READ running NOTIFY runningChanged)
-
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
     Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
     Q_PROPERTY(bool autoStartup READ autoStartup WRITE setAutoStartup NOTIFY autoStartupChanged)
+    Q_PROPERTY(bool startButtonPushed READ startButtonPushed WRITE setStartButtonPushed NOTIFY startButtonChanged)
 
 public:
     /*!
@@ -32,8 +30,6 @@ public:
      * \par Cyclomatic complexity: 1
      */
     explicit MainController(QObject *parent = nullptr);
-
-    bool running() const;
 
     /*!
      * \brief Starts tracking if stopped, stops it if running.
@@ -75,16 +71,25 @@ public:
      */
     void setAutoStartup(bool enabled) const;
 
-signals:
-    void runningChanged();
+    /*!
+     * \brief Forwards to Settings::startButtonPushed().
+     * \par Cyclomatic complexity: 1
+     */
+    bool startButtonPushed() const;
+    /*!
+     * \brief Forwards to Settings::setStartButtonPushed().
+     * \par Cyclomatic complexity: 1
+     */
+    void setStartButtonPushed(bool pushed) const;
 
+signals:
     void usernameChanged();
     void passwordChanged();
     void autoStartupChanged();
+    void startButtonChanged() const;
 
 private:
     void setRunning(bool running);
 
-    bool m_running = false;
     SendingService m_sendingService;
 };

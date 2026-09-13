@@ -83,20 +83,20 @@ ApplicationWindow {
                 Layout.preferredWidth: 12
                 Layout.preferredHeight: 12
                 radius: 6
-                color: controller.running ? "#2ecc71" : "#95a5a6"
+                color: controller.startButtonPushed ? "#2ecc71" : "#95a5a6"
 
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
 
             Label {
-                text: controller.running ? "Tracking" : "Stopped"
+                text: controller.startButtonPushed ? "Tracking" : "Stopped"
                 font.pixelSize: 16
                 font.bold: true
                 Layout.fillWidth: true
             }
 
             Button {
-                text: controller.running ? "Stop" : "Start"
+                text: controller.startButtonPushed ? "Stop" : "Start"
                 highlighted: true
                 onClicked: controller.toggleTracking()
             }
