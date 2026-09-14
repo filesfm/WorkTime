@@ -3,11 +3,24 @@
 #include <QQmlContext>
 #include <QSystemTrayIcon>
 
+#include <iostream>
+
+#include <cstdlib>
+
+#include "core/oneinstanceguarantor.h"
 #include "core/utilities.hpp"
 #include "qml/controller/appquitter.hpp"
 
 int main(int argc, char *argv[])
 {
+    try {
+        OneInstanceGuarantor::createPidFile();
+    } catch (const std::runtime_error &e) {
+        std::cerr << e.what() << '\n';
+        return 1;
+    }
+    std::atexit(&OneInstanceGuarantor::deletePidFile);
+
     QGuiApplication app(argc, argv);
 
     app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));

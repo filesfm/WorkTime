@@ -24,6 +24,8 @@ qt_add_qml_module(worktime
         core/sendingservice.hpp
         core/utilities.cpp
         core/utilities.hpp
+        core/oneinstanceguarantor.cpp
+        core/oneinstanceguarantor.h
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
         ${CMAKE_SOURCE_DIR}/resource/icon.png
