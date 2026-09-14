@@ -12,7 +12,7 @@
 #include <signal.h>
 
 #if defined(Q_OS_WINDOWS)
-#include <windows.h>
+#    include <windows.h>
 #endif
 
 QString runtimeDir;

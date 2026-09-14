@@ -30,28 +30,52 @@ QString Utilities::truncateUtf8Safe(const QString &value, qsizetype maxCodePoint
 
 #    include <QDBusConnection>
 #    include <QDBusMessage>
+#    include <QJsonArray>
 #    include <QJsonDocument>
 #    include <QJsonObject>
 
 QString Utilities::focusedApplicationName()
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell",
-                                                      "/org/gnome/shell/extensions/FocusedWindow",
-                                                      "org.gnome.shell.extensions.FocusedWindow",
-                                                      "Get");
-    QDBusMessage reply = QDBusConnection::sessionBus().call(msg);
-    QString title;
+    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "GNOME") {
+        QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell",
+                                                          "/org/gnome/shell/extensions/FocusedWindow",
+                                                          "org.gnome.shell.extensions.FocusedWindow",
+                                                          "Get");
+        QDBusMessage reply = QDBusConnection::sessionBus().call(msg);
+        QString title;
 
-    if (reply.type() == QDBusMessage::ReplyMessage && !reply.arguments().isEmpty()) {
-        const QString json = reply.arguments().at(0).toString();
+        if (reply.type() == QDBusMessage::ReplyMessage && !reply.arguments().isEmpty()) {
+            const QString json = reply.arguments().at(0).toString();
 
-        QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
-        QJsonObject obj = doc.object();
+            QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
+            QJsonObject obj = doc.object();
 
-        title = obj["title"].toString();
+            title = obj["title"].toString();
+        }
+
+        return title;
+    } else if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "Cinnamon") {
+        QDBusMessage msg = QDBusMessage::createMethodCall("org.Cinnamon", "/org/Cinnamon", "org.Cinnamon", "Eval");
+        msg << QVariant("global.display.focus_window.title");
+        QDBusMessage reply = QDBusConnection::sessionBus().call(msg);
+        QString title;
+
+        if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().size() >= 2) {
+            const bool success = reply.arguments().at(0).toBool();
+            const QString result = reply.arguments().at(1).toString();
+
+            if (success) {
+                QJsonDocument doc = QJsonDocument::fromJson('[' + result.toUtf8() + ']');
+                if (doc.isArray() && !doc.array().isEmpty()) {
+                    title = doc.array().first().toString();
+                }
+            }
+        }
+
+        return title;
     }
 
-    return title;
+    return QString();
 }
 
 #elif defined(Q_OS_WIN)
