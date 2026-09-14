@@ -114,6 +114,9 @@ Signals</h2></td></tr>
 <tr class="memitem:a0bf6272b3b051efe2ebd6efbab6c573c" id="r_a0bf6272b3b051efe2ebd6efbab6c573c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSettings.html#a0bf6272b3b051efe2ebd6efbab6c573c">autoStartupChanged</a> ()</td></tr>
 <tr class="memdesc:a0bf6272b3b051efe2ebd6efbab6c573c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emitted when <a class="el" href="classSettings.html#a16004f7f538f06d72c43beb69739e62c" title="Whether the app should launch automatically on system startup.">autoStartup()</a> changes.  <br /></td></tr>
 <tr class="separator:a0bf6272b3b051efe2ebd6efbab6c573c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfc08a4f65f74cd346f3312f2cc7c3c4" id="r_abfc08a4f65f74cd346f3312f2cc7c3c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4">startButtonChanged</a> ()</td></tr>
+<tr class="memdesc:abfc08a4f65f74cd346f3312f2cc7c3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emitted when <a class="el" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1" title="Whether the start button in main window pushed.">startButtonPushed()</a> changes.  <br /></td></tr>
+<tr class="separator:abfc08a4f65f74cd346f3312f2cc7c3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -135,6 +138,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad7aa200f1dafa08cfc810291c7d32dc9" id="r_ad7aa200f1dafa08cfc810291c7d32dc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSettings.html#ad7aa200f1dafa08cfc810291c7d32dc9">setAutoStartup</a> (bool enabled=true)</td></tr>
 <tr class="memdesc:ad7aa200f1dafa08cfc810291c7d32dc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets <a class="el" href="classSettings.html#a16004f7f538f06d72c43beb69739e62c" title="Whether the app should launch automatically on system startup.">autoStartup()</a>. Emits <a class="el" href="classSettings.html#a0bf6272b3b051efe2ebd6efbab6c573c" title="Emitted when autoStartup() changes.">autoStartupChanged()</a> if the value changes.  <br /></td></tr>
 <tr class="separator:ad7aa200f1dafa08cfc810291c7d32dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2f834a5d54962a7ded4a316559f94b1" id="r_ab2f834a5d54962a7ded4a316559f94b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1">startButtonPushed</a> () const</td></tr>
+<tr class="memdesc:ab2f834a5d54962a7ded4a316559f94b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the start button in main window pushed.  <br /></td></tr>
+<tr class="separator:ab2f834a5d54962a7ded4a316559f94b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00dab332ef70dafde2df9eeeec793369" id="r_a00dab332ef70dafde2df9eeeec793369"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSettings.html#a00dab332ef70dafde2df9eeeec793369">setStartButtonPushed</a> (bool pushed=true)</td></tr>
+<tr class="memdesc:a00dab332ef70dafde2df9eeeec793369"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets <a class="el" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1" title="Whether the start button in main window pushed.">startButtonPushed()</a>. Emits <a class="el" href="classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4" title="Emitted when startButtonPushed() changes.">startButtonChanged()</a> if the value changes.  <br /></td></tr>
+<tr class="separator:a00dab332ef70dafde2df9eeeec793369"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -310,6 +319,32 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a00dab332ef70dafde2df9eeeec793369" name="a00dab332ef70dafde2df9eeeec793369"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00dab332ef70dafde2df9eeeec793369">&#9670;&#160;</a></span>setStartButtonPushed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Settings::setStartButtonPushed </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>pushed</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets <a class="el" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1" title="Whether the start button in main window pushed.">startButtonPushed()</a>. Emits <a class="el" href="classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4" title="Emitted when startButtonPushed() changes.">startButtonChanged()</a> if the value changes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Cyclomatic</td><td>complexity: 2 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="afe37c1523033ac62b459b7887c4164c0" name="afe37c1523033ac62b459b7887c4164c0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afe37c1523033ac62b459b7887c4164c0">&#9670;&#160;</a></span>setUsername()</h2>
 
@@ -328,6 +363,53 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Sets <a class="el" href="classSettings.html#a2dd990f24f454a583b13fe20ca74953a" title="Server account username. No constraint; may be empty.">username()</a>. Emits <a class="el" href="classSettings.html#a2ed184026b41135288447db16a2002fe" title="Emitted when username() changes.">usernameChanged()</a> if the value changes. </p>
 <dl class="section user"><dt>Cyclomatic complexity: 2</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="abfc08a4f65f74cd346f3312f2cc7c3c4" name="abfc08a4f65f74cd346f3312f2cc7c3c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfc08a4f65f74cd346f3312f2cc7c3c4">&#9670;&#160;</a></span>startButtonChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Settings::startButtonChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emitted when <a class="el" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1" title="Whether the start button in main window pushed.">startButtonPushed()</a> changes. </p>
+
+</div>
+</div>
+<a id="ab2f834a5d54962a7ded4a316559f94b1" name="ab2f834a5d54962a7ded4a316559f94b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2f834a5d54962a7ded4a316559f94b1">&#9670;&#160;</a></span>startButtonPushed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Settings::startButtonPushed </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether the start button in main window pushed. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
 
 </div>
 </div>
