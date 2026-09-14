@@ -11,10 +11,19 @@
 
 #include <signal.h>
 
+#if defined(Q_OS_WINDOWS)
+#include <windows.h>
+#endif
+
+QString runtimeDir;
+
 void OneInstanceGuarantor::createPidFile()
 {
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
-    QString runtimeDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+    runtimeDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+#elif defined(Q_OS_WINDOWS)
+    runtimeDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+#endif
     if (runtimeDir.isEmpty()) {
         throw std::runtime_error("Cannot find runtime dir.");
     }
@@ -31,7 +40,13 @@ void OneInstanceGuarantor::createPidFile()
         in >> pid;
         pidFile.close();
 
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
         if ((kill(pid, 0) == 0) || (errno == EPERM)) {
+#elif defined(Q_OS_WINDOWS)
+        HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+        if (hProcess != NULL) {
+            CloseHandle(hProcess);
+#endif
             throw std::runtime_error("One program instance already exists.");
         } else {
             if (pidFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
@@ -52,16 +67,10 @@ void OneInstanceGuarantor::createPidFile()
             throw std::runtime_error("Cannot create pid file.");
         }
     }
-#elif defined(Q_OS_WINDOWS)
-#endif
 }
 
 void OneInstanceGuarantor::deletePidFile()
 {
-#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
-    QString runtimeDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
     QString pidFilePath = QString("%1/files-fm-worktime.pid").arg(runtimeDir);
     QFile::remove(pidFilePath);
-#elif defined(Q_OS_WINDOWS)
-#endif
 }
