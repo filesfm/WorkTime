@@ -18,8 +18,21 @@ A Qt6/QML desktop time-tracking app.
 
 ## Contents
 
+- [Supported Operating Systems](#supported-operating-systems)
+- [Supported Desktop Environments](#supported-desktop-environments)
 - [Build for development](#build-for-development)
 - [Build for usage](#build-for-usage)
+
+## Supported operating systems
+
+- Linux
+- macOS
+- Windows
+
+## Supported desktop environments
+
+- GNOME
+- Cinnamon
 
 ## Build for development
 
