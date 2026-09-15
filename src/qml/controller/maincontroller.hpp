@@ -2,7 +2,11 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QTimer>
 
+#include <atomic>
+
+#include "core/activitymonitor.hpp"
 #include "core/sendingservice.hpp"
 
 /*!
@@ -87,9 +91,32 @@ signals:
     void passwordChanged();
     void autoStartupChanged();
     void startButtonChanged() const;
+    void userStatusChanged();
+
+private:
+    enum class UserStatus : std::int8_t { ACTIVE, INACTIVE, ERROR };
+
+    /*!
+     * \brief Wires up the inactivity timer and the global activity monitor, then
+     * starts both: activityMonitor's activityDetected() marks the user ACTIVE and
+     * restarts the 1-minute timer; the timer firing (no activity for a minute)
+     * marks the user INACTIVE.
+     * \par Cyclomatic complexity: 1
+     */
+    void activityChecker();
+
+    /*!
+     * \brief Sets userStatus, starting/stopping the sending service to match
+     * whenever tracking is running (see startButtonPushed()).
+     * \par Cyclomatic complexity: 3
+     */
+    void setUserStatus(UserStatus status);
 
 private:
     void setRunning(bool running);
 
+    std::atomic<UserStatus> userStatus;
     SendingService m_sendingService;
+    ActivityMonitor m_activityMonitor;
+    QTimer m_inactivityTimer;
 };

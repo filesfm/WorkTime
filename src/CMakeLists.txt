@@ -22,6 +22,8 @@ qt_add_qml_module(worktime
         core/settings.hpp
         core/sendingservice.cpp
         core/sendingservice.hpp
+        core/activitymonitor.cpp
+        core/activitymonitor.hpp
         core/utilities.cpp
         core/utilities.hpp
         core/oneinstanceguarantor.cpp
@@ -33,10 +35,12 @@ qt_add_qml_module(worktime
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
 elseif(WIN32)
     target_sources(worktime PRIVATE ${CMAKE_SOURCE_DIR}/resource/windows/icon.rc)
 elseif(APPLE)
-    target_sources(worktime PRIVATE core/utilities_mac.mm)
+    target_sources(worktime PRIVATE core/utilities_mac.mm core/activitymonitor_mac.mm)
 
     set(ICON_FILE ${CMAKE_SOURCE_DIR}/resource/macos/icon.icns)
     set_source_files_properties(${ICON_FILE} PROPERTIES
@@ -89,9 +93,11 @@ if(APPLE)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_libraries(worktime PRIVATE X11::X11)
+    target_link_libraries(worktime PRIVATE X11::X11 PkgConfig::UDEV)
 elseif(APPLE)
     target_link_libraries(worktime PRIVATE "-framework Cocoa" "-framework ApplicationServices")
+elseif(WIN32)
+    target_link_libraries(worktime PRIVATE User32)
 endif()
 
 include(GNUInstallDirs)

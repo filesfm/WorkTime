@@ -2,6 +2,42 @@
 
 #include "core/settings.hpp"
 
+namespace {
+constexpr int kInactivityTimeoutMs = 60000;
+}
+
+void MainController::activityChecker()
+{
+    m_inactivityTimer.setSingleShot(true);
+    m_inactivityTimer.setInterval(kInactivityTimeoutMs);
+
+    connect(&m_inactivityTimer, &QTimer::timeout, this, [this]() { setUserStatus(UserStatus::INACTIVE); });
+
+    connect(&m_activityMonitor, &ActivityMonitor::activityDetected, this, [this]() {
+        setUserStatus(UserStatus::ACTIVE);
+        m_inactivityTimer.start();
+    });
+
+    m_activityMonitor.start();
+    m_inactivityTimer.start();
+}
+
+void MainController::setUserStatus(UserStatus status)
+{
+    if (userStatus.exchange(status) == status)
+        return;
+
+    emit userStatusChanged();
+
+    if (!startButtonPushed())
+        return;
+
+    if (status == UserStatus::ACTIVE)
+        m_sendingService.start();
+    else
+        m_sendingService.stop();
+}
+
 MainController::MainController(QObject *parent)
     : QObject(parent)
 {
@@ -12,11 +48,13 @@ MainController::MainController(QObject *parent)
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::autoStartupChanged);
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::startButtonChanged);
 
-    if (startButtonPushed()) {
+    if (startButtonPushed() && userStatus == UserStatus::ACTIVE) {
         m_sendingService.start();
     } else {
         m_sendingService.stop();
     }
+
+    activityChecker();
 }
 
 void MainController::setRunning(bool running)
@@ -24,7 +62,7 @@ void MainController::setRunning(bool running)
     if (startButtonPushed() == running)
         return;
     setStartButtonPushed(running);
-    if (running)
+    if (running && userStatus == UserStatus::ACTIVE)
         m_sendingService.start();
     else
         m_sendingService.stop();
