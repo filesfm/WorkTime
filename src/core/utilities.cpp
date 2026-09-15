@@ -54,7 +54,8 @@ QString Utilities::focusedApplicationName()
         }
 
         return title;
-    } else if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "Cinnamon") {
+    } else if ((qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "Cinnamon")
+               || (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "X-Cinnamon")) {
         QDBusMessage msg = QDBusMessage::createMethodCall("org.Cinnamon", "/org/Cinnamon", "org.Cinnamon", "Eval");
         msg << QVariant("global.display.focus_window.title");
         QDBusMessage reply = QDBusConnection::sessionBus().call(msg);
