@@ -41,7 +41,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0
+          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libudev-dev
 
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
@@ -86,7 +86,7 @@ jobs:
       - name: Install Linux runtime dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 gcovr
+          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libudev-dev gcovr
 
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
@@ -135,7 +135,7 @@ jobs:
       - name: Install Linux runtime dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0
+          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libudev-dev
 
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4

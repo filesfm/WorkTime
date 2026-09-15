@@ -23,7 +23,7 @@ jobs:
       - name: Install Linux build/runtime dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libxkbcommon-x11-0 libx11-dev fuse libfuse2
+          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libxkbcommon-x11-0 libx11-dev libudev-dev fuse libfuse2
 
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4

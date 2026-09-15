@@ -43,6 +43,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr
     build-packages:
       - libx11-dev
+      - libudev-dev
 
   desktop-assets:
     plugin: dump
