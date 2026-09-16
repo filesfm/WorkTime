@@ -8,6 +8,10 @@
 #include <QSettings>
 #include <QStandardPaths>
 
+#if defined(Q_OS_LINUX)
+#    include "kdefocusedwindowtitle.hpp"
+#endif
+
 QUrl Utilities::extractResourceToDisk(const QString &sourcePath, const QString &fileName)
 {
     const QString destinationPath
@@ -54,6 +58,8 @@ QString Utilities::focusedApplicationName()
         }
 
         return title;
+    } else if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "KDE") {
+        return KDEFocusedWindowTitle::instance()->activeWindowTitle();
     } else if ((qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "Cinnamon")
                || (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "X-Cinnamon")) {
         QDBusMessage msg = QDBusMessage::createMethodCall("org.Cinnamon", "/org/Cinnamon", "org.Cinnamon", "Eval");

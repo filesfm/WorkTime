@@ -8,6 +8,9 @@ set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.svg PROPERTIES
 set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.png PROPERTIES
     QT_RESOURCE_ALIAS "icon.png"
 )
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/kwin/focused-window-title.js PROPERTIES
+    QT_RESOURCE_ALIAS "focused-window-title.js"
+)
 
 qt_add_qml_module(worktime
     URI Worktime
@@ -28,9 +31,12 @@ qt_add_qml_module(worktime
         core/utilities.hpp
         core/oneinstanceguarantor.cpp
         core/oneinstanceguarantor.h
+        core/kdefocusedwindowtitle.cpp
+        core/kdefocusedwindowtitle.hpp
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
         ${CMAKE_SOURCE_DIR}/resource/icon.png
+        ${CMAKE_SOURCE_DIR}/resource/kwin/focused-window-title.js
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

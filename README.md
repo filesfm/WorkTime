@@ -32,6 +32,7 @@ A Qt6/QML desktop time-tracking app.
 ## Supported desktop environments
 
 - GNOME
+- KDE Plasma
 - Cinnamon
 
 ## Build for development

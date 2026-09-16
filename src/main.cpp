@@ -11,6 +11,10 @@
 #include "core/utilities.hpp"
 #include "qml/controller/appquitter.hpp"
 
+#if defined(Q_OS_LINUX)
+#    include "core/kdefocusedwindowtitle.hpp"
+#endif
+
 int main(int argc, char *argv[])
 {
     try {
@@ -25,6 +29,13 @@ int main(int argc, char *argv[])
 
     app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
     app.setQuitOnLastWindowClosed(false);
+
+#if defined(Q_OS_LINUX)
+    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "KDE") {
+        KDEFocusedWindowTitle::instance()->start();
+        QObject::connect(&app, &QCoreApplication::aboutToQuit, [] { KDEFocusedWindowTitle::instance()->stop(); });
+    }
+#endif
 
     QQmlApplicationEngine engine;
     AppQuitter appQuitter;
