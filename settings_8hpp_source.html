@@ -83,45 +83,52 @@ $(document).ready(function() { init_codefold(0); });
 <div class="contents">
 <a href="settings_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QSettings&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QtClassHelperMacros&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classSettings.html">   14</a></span><span class="keyword">class </span><a class="code hl_class" href="classSettings.html">Settings</a> : <span class="keyword">public</span> QObject</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    Q_OBJECT</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    Q_DISABLE_COPY_MOVE(<a class="code hl_class" href="classSettings.html">Settings</a>)</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classSettings.html#a43bc7afd43a5f5b9457ac4e0c5e8d4cd">   24</a></span>    <span class="keyword">static</span> <a class="code hl_class" href="classSettings.html">Settings</a> *<a class="code hl_function" href="classSettings.html#a43bc7afd43a5f5b9457ac4e0c5e8d4cd">instance</a>();</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classSettings.html#a2dd990f24f454a583b13fe20ca74953a">   30</a></span>    QString <a class="code hl_function" href="classSettings.html#a2dd990f24f454a583b13fe20ca74953a">username</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classSettings.html#afe37c1523033ac62b459b7887c4164c0">   35</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#afe37c1523033ac62b459b7887c4164c0">setUsername</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classSettings.html#a2dd990f24f454a583b13fe20ca74953a">username</a>);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classSettings.html#ad7a5bf897ebf81b3d0dc0c105ab0a081">   41</a></span>    QString <a class="code hl_function" href="classSettings.html#ad7a5bf897ebf81b3d0dc0c105ab0a081">password</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classSettings.html#aefd5ae26097e537a4ddbac179a383687">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#aefd5ae26097e537a4ddbac179a383687">setPassword</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classSettings.html#ad7a5bf897ebf81b3d0dc0c105ab0a081">password</a>);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classSettings.html#a16004f7f538f06d72c43beb69739e62c">   52</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSettings.html#a16004f7f538f06d72c43beb69739e62c">autoStartup</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classSettings.html#ad7aa200f1dafa08cfc810291c7d32dc9">   57</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#ad7aa200f1dafa08cfc810291c7d32dc9">setAutoStartup</a>(<span class="keywordtype">bool</span> enabled = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1">   63</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1">startButtonPushed</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classSettings.html#a00dab332ef70dafde2df9eeeec793369">   69</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#a00dab332ef70dafde2df9eeeec793369">setStartButtonPushed</a>(<span class="keywordtype">bool</span> pushed = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>signals:</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classSettings.html#a2ed184026b41135288447db16a2002fe">   72</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#a2ed184026b41135288447db16a2002fe">usernameChanged</a>();    </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classSettings.html#a4462c1bc2bf3b3eddf50873dd05ce34f">   73</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#a4462c1bc2bf3b3eddf50873dd05ce34f">passwordChanged</a>();    </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classSettings.html#a0bf6272b3b051efe2ebd6efbab6c573c">   74</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#a0bf6272b3b051efe2ebd6efbab6c573c">autoStartupChanged</a>(); </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4">   75</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4">startButtonChanged</a>(); </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classSettings.html">Settings</a>(QObject *parent = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    QSettings m_settings;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;QLoggingCategory&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QSettings&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;QtClassHelperMacros&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>Q_DECLARE_LOGGING_CATEGORY(worktimeSettings)</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classSettings.html">   17</a></span>class <a class="code hl_class" href="classSettings.html">Settings</a> : public QObject</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    Q_OBJECT</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    Q_DISABLE_COPY_MOVE(<a class="code hl_class" href="classSettings.html">Settings</a>)</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classSettings.html#a43bc7afd43a5f5b9457ac4e0c5e8d4cd">   27</a></span>    <span class="keyword">static</span> <a class="code hl_class" href="classSettings.html">Settings</a> *<a class="code hl_function" href="classSettings.html#a43bc7afd43a5f5b9457ac4e0c5e8d4cd">instance</a>();</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classSettings.html#a2dd990f24f454a583b13fe20ca74953a">   33</a></span>    QString <a class="code hl_function" href="classSettings.html#a2dd990f24f454a583b13fe20ca74953a">username</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classSettings.html#afe37c1523033ac62b459b7887c4164c0">   38</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#afe37c1523033ac62b459b7887c4164c0">setUsername</a>(<span class="keyword">const</span> QString &amp;username);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classSettings.html#ad7a5bf897ebf81b3d0dc0c105ab0a081">   44</a></span>    QString <a class="code hl_function" href="classSettings.html#ad7a5bf897ebf81b3d0dc0c105ab0a081">password</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classSettings.html#aefd5ae26097e537a4ddbac179a383687">   49</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#aefd5ae26097e537a4ddbac179a383687">setPassword</a>(<span class="keyword">const</span> QString &amp;password);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classSettings.html#a16004f7f538f06d72c43beb69739e62c">   55</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSettings.html#a16004f7f538f06d72c43beb69739e62c">autoStartup</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classSettings.html#ad7aa200f1dafa08cfc810291c7d32dc9">   60</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#ad7aa200f1dafa08cfc810291c7d32dc9">setAutoStartup</a>(<span class="keywordtype">bool</span> enabled = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1">   66</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSettings.html#ab2f834a5d54962a7ded4a316559f94b1">startButtonPushed</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classSettings.html#a00dab332ef70dafde2df9eeeec793369">   72</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSettings.html#a00dab332ef70dafde2df9eeeec793369">setStartButtonPushed</a>(<span class="keywordtype">bool</span> pushed = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>signals:</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classSettings.html#a2ed184026b41135288447db16a2002fe">   75</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#a2ed184026b41135288447db16a2002fe">usernameChanged</a>();    </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classSettings.html#a4462c1bc2bf3b3eddf50873dd05ce34f">   76</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#a4462c1bc2bf3b3eddf50873dd05ce34f">passwordChanged</a>();    </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classSettings.html#a0bf6272b3b051efe2ebd6efbab6c573c">   77</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#a0bf6272b3b051efe2ebd6efbab6c573c">autoStartupChanged</a>(); </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4">   78</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4">startButtonChanged</a>(); </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classSettings.html">Settings</a>(QObject *parent = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">void</span> sanitize();</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    QSettings m_settings;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>};</div>
 </div>
-<div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Persisted application configuration, backed by QSettings.</div><div class="ttdef"><b>Definition</b> settings.hpp:15</div></div>
+<div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Persisted application configuration, backed by QSettings.</div><div class="ttdef"><b>Definition</b> settings.hpp:18</div></div>
 <div class="ttc" id="aclassSettings_html_a00dab332ef70dafde2df9eeeec793369"><div class="ttname"><a href="classSettings.html#a00dab332ef70dafde2df9eeeec793369">Settings::setStartButtonPushed</a></div><div class="ttdeci">void setStartButtonPushed(bool pushed=true)</div><div class="ttdoc">Sets startButtonPushed(). Emits startButtonChanged() if the value changes.</div></div>
 <div class="ttc" id="aclassSettings_html_a0bf6272b3b051efe2ebd6efbab6c573c"><div class="ttname"><a href="classSettings.html#a0bf6272b3b051efe2ebd6efbab6c573c">Settings::autoStartupChanged</a></div><div class="ttdeci">void autoStartupChanged()</div><div class="ttdoc">Emitted when autoStartup() changes.</div></div>
 <div class="ttc" id="aclassSettings_html_a16004f7f538f06d72c43beb69739e62c"><div class="ttname"><a href="classSettings.html#a16004f7f538f06d72c43beb69739e62c">Settings::autoStartup</a></div><div class="ttdeci">bool autoStartup() const</div><div class="ttdoc">Whether the app should launch automatically on system startup.</div></div>
