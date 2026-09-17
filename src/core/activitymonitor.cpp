@@ -2,6 +2,8 @@
 
 #include <QSocketNotifier>
 
+Q_LOGGING_CATEGORY(worktimeActivityMonitor, "worktime.activity.monitor")
+
 ActivityMonitor::ActivityMonitor(QObject *parent)
     : QObject(parent)
 {}
@@ -13,6 +15,8 @@ ActivityMonitor::~ActivityMonitor()
 
 #if defined(Q_OS_LINUX)
 
+#    include <cerrno>
+#    include <cstring>
 #    include <fcntl.h>
 #    include <linux/input.h>
 #    include <unistd.h>
@@ -35,18 +39,27 @@ void ActivityMonitor::start()
     if (m_running)
         return;
 
+    qCInfo(worktimeActivityMonitor) << "starting activity monitor";
+
     m_udev = udev_new();
-    if (!m_udev)
+    if (!m_udev) {
+        qCCritical(worktimeActivityMonitor) << "failed to create udev context";
         return;
+    }
 
     m_udevMonitor = udev_monitor_new_from_netlink(m_udev, "udev");
-    if (m_udevMonitor) {
-        udev_monitor_filter_add_match_subsystem_devtype(m_udevMonitor, "input", nullptr);
-        udev_monitor_enable_receiving(m_udevMonitor);
-
-        m_udevMonitorNotifier = new QSocketNotifier(udev_monitor_get_fd(m_udevMonitor), QSocketNotifier::Read, this);
-        connect(m_udevMonitorNotifier, &QSocketNotifier::activated, this, &ActivityMonitor::readUdevMonitor);
+    if (!m_udevMonitor) {
+        qCCritical(worktimeActivityMonitor) << "failed to create udev monitor";
+        udev_unref(m_udev);
+        m_udev = nullptr;
+        return;
     }
+
+    udev_monitor_filter_add_match_subsystem_devtype(m_udevMonitor, "input", nullptr);
+    udev_monitor_enable_receiving(m_udevMonitor);
+
+    m_udevMonitorNotifier = new QSocketNotifier(udev_monitor_get_fd(m_udevMonitor), QSocketNotifier::Read, this);
+    connect(m_udevMonitorNotifier, &QSocketNotifier::activated, this, &ActivityMonitor::readUdevMonitor);
 
     scanInputDevices();
     m_running = true;
@@ -56,6 +69,8 @@ void ActivityMonitor::stop()
 {
     if (!m_running)
         return;
+
+    qCInfo(worktimeActivityMonitor) << "stopping activity monitor";
 
     const QStringList devNodes = m_deviceNotifiers.keys();
     for (const QString &devNode : devNodes)
@@ -105,8 +120,12 @@ void ActivityMonitor::addInputDevice(const QString &devNode)
         return;
 
     const int fd = ::open(devNode.toUtf8().constData(), O_RDONLY | O_NONBLOCK);
-    if (fd < 0)
+    if (fd < 0) {
+        qCWarning(worktimeActivityMonitor) << "failed to open" << devNode << ":" << std::strerror(errno);
         return;
+    }
+
+    qCDebug(worktimeActivityMonitor) << "watching input device" << devNode;
 
     auto *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(notifier, &QSocketNotifier::activated, this, [this, fd]() { readInputDevice(fd); });
@@ -118,6 +137,8 @@ void ActivityMonitor::removeInputDevice(const QString &devNode)
     QSocketNotifier *notifier = m_deviceNotifiers.take(devNode);
     if (!notifier)
         return;
+
+    qCDebug(worktimeActivityMonitor) << "no longer watching input device" << devNode;
 
     const int fd = static_cast<int>(notifier->socket());
     delete notifier;
@@ -150,10 +171,12 @@ void ActivityMonitor::readUdevMonitor()
     if (action && devNode) {
         const QString devNodeStr = QString::fromUtf8(devNode);
 
-        if (QLatin1String(action) == "remove")
+        if (QLatin1String(action) == "remove") {
             removeInputDevice(devNodeStr);
-        else if (QLatin1String(action) == "add" && isKeyboardOrMouse(device))
+        } else if (QLatin1String(action) == "add" && isKeyboardOrMouse(device)) {
+            qCDebug(worktimeActivityMonitor) << "detected new keyboard/mouse device" << devNodeStr;
             addInputDevice(devNodeStr);
+        }
     }
 
     udev_device_unref(device);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QHash>
+#include <QLoggingCategory>
 #include <QObject>
 
 class QSocketNotifier;
@@ -9,6 +10,8 @@ class QSocketNotifier;
 struct udev;
 struct udev_monitor;
 #endif
+
+Q_DECLARE_LOGGING_CATEGORY(worktimeActivityMonitor)
 
 /*!
  * \brief Emits activityDetected() on any global keyboard or mouse input,
