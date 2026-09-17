@@ -121,7 +121,7 @@ ApplicationWindow {
                     rowSpacing: 8
                     Layout.fillWidth: true
 
-                    Label { text: "Auto Startup" }
+                    Label { text: "Launch at Startup" }
                     CheckBox {
                         checked: controller.autoStartup
                         onToggled: controller.autoStartup = checked
