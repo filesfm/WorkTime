@@ -10,7 +10,7 @@ description: |
   settings table (server credentials, post interval, screenshot capture
   options).
 grade: stable
-confinement: strict
+confinement: devmode
 
 apps:
   files-fm-worktime:
