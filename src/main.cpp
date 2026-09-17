@@ -1,4 +1,5 @@
 #include <QGuiApplication>
+#include <QLoggingCategory>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QSystemTrayIcon>
@@ -17,6 +18,8 @@
 
 int main(int argc, char *argv[])
 {
+    QLoggingCategory::setFilterRules(QStringLiteral("worktime.*=false"));
+
     try {
         OneInstanceGuarantor::createPidFile();
     } catch (const std::runtime_error &e) {

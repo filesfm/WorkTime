@@ -1,8 +1,11 @@
 #pragma once
 
+#include <QLoggingCategory>
 #include <QObject>
 #include <QSettings>
 #include <QtClassHelperMacros>
+
+Q_DECLARE_LOGGING_CATEGORY(worktimeSettings)
 
 /*!
  * \brief Persisted application configuration, backed by QSettings.
@@ -81,5 +84,11 @@ private:
      */
     explicit Settings(QObject *parent = nullptr);
 
+    /*!
+     * \brief Deletes unknown/invalid options and resets missing ones to their defaults.
+     */
+    void sanitize();
+
+private:
     QSettings m_settings;
 };
