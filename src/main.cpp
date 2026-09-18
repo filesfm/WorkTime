@@ -8,7 +8,7 @@
 
 #include <cstdlib>
 
-#include "core/oneinstanceguarantor.h"
+#include "core/oneinstanceguarantor.hpp"
 #include "core/utilities.hpp"
 #include "qml/controller/appquitter.hpp"
 
@@ -20,13 +20,13 @@ int main(int argc, char *argv[])
 {
     QLoggingCategory::setFilterRules(QStringLiteral("worktime.*=false"));
 
+    std::unique_ptr<OneInstanceGuarantor> instanceGuard;
     try {
-        OneInstanceGuarantor::createPidFile();
+        instanceGuard = std::make_unique<OneInstanceGuarantor>();
     } catch (const std::runtime_error &e) {
         std::cerr << e.what() << '\n';
         return 1;
     }
-    std::atexit(&OneInstanceGuarantor::deletePidFile);
 
     QGuiApplication app(argc, argv);
 

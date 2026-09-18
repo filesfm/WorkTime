@@ -30,7 +30,7 @@ qt_add_qml_module(worktime
         core/utilities.cpp
         core/utilities.hpp
         core/oneinstanceguarantor.cpp
-        core/oneinstanceguarantor.h
+        core/oneinstanceguarantor.hpp
         core/kdefocusedwindowtitle.cpp
         core/kdefocusedwindowtitle.hpp
     RESOURCES

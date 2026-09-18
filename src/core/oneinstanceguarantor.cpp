@@ -1,76 +1,43 @@
-#include "oneinstanceguarantor.h"
+#include "oneinstanceguarantor.hpp"
 
-#include <QCoreApplication>
-#include <QFile>
-#include <QFileInfo>
 #include <QStandardPaths>
-#include <QTextStream>
 #include <QtSystemDetection>
 
 #include <stdexcept>
 
-#include <signal.h>
+Q_LOGGING_CATEGORY(worktimeOneInstanceGuarantor, "worktime.one.instance.guarantor")
 
-#if defined(Q_OS_WINDOWS)
-#    include <windows.h>
-#endif
-
-QString runtimeDir;
-
-void OneInstanceGuarantor::createPidFile()
+QString OneInstanceGuarantor::lockFilePath()
 {
+    QString runtimeDir;
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
     runtimeDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 #elif defined(Q_OS_WINDOWS)
     runtimeDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 #endif
     if (runtimeDir.isEmpty()) {
+        qCCritical(worktimeOneInstanceGuarantor) << "cannot find runtime dir";
         throw std::runtime_error("Cannot find runtime dir.");
     }
-    QString pidFilePath = QString("%1/files-fm-worktime.pid").arg(runtimeDir);
 
-    QFileInfo pidFileInfo(pidFilePath);
-    if (pidFileInfo.exists() && pidFileInfo.isFile()) {
-        QFile pidFile(pidFilePath);
-        if (!pidFile.open(QIODevice::ReadOnly)) {
-            throw std::runtime_error("Cannot open pid file.");
-        }
-        QTextStream in(&pidFile);
-        int pid;
-        in >> pid;
-        pidFile.close();
-
-#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
-        if ((kill(pid, 0) == 0) || (errno == EPERM)) {
-#elif defined(Q_OS_WINDOWS)
-        HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
-        if (hProcess != NULL) {
-            CloseHandle(hProcess);
-#endif
-            throw std::runtime_error("One program instance already exists.");
-        } else {
-            if (pidFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-                QTextStream out(&pidFile);
-                out << QCoreApplication::applicationPid();
-                pidFile.close();
-            } else {
-                throw std::runtime_error("Cannot open pid file.");
-            }
-        }
-    } else {
-        QFile pidFile(pidFilePath);
-        if (pidFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-            QTextStream out(&pidFile);
-            out << QCoreApplication::applicationPid();
-            pidFile.close();
-        } else {
-            throw std::runtime_error("Cannot create pid file.");
-        }
-    }
+    return QString("%1/files-fm-worktime.lock").arg(runtimeDir);
 }
 
-void OneInstanceGuarantor::deletePidFile()
+OneInstanceGuarantor::OneInstanceGuarantor()
+    : m_lockFile(lockFilePath())
 {
-    QString pidFilePath = QString("%1/files-fm-worktime.pid").arg(runtimeDir);
-    QFile::remove(pidFilePath);
+    qCInfo(worktimeOneInstanceGuarantor) << "acquiring single-instance lock at" << m_lockFile.fileName();
+
+    m_lockFile.setStaleLockTime(0);
+
+    if (!m_lockFile.tryLock()) {
+        qint64 pid = 0;
+        QString hostname;
+        m_lockFile.getLockInfo(&pid, &hostname, nullptr);
+        qCCritical(worktimeOneInstanceGuarantor)
+            << "another instance is already running (pid" << pid << "on" << hostname << ")";
+        throw std::runtime_error("One program instance already exists.");
+    }
+
+    qCInfo(worktimeOneInstanceGuarantor) << "lock acquired";
 }
