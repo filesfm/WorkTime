@@ -269,11 +269,23 @@ jobs:
           if-no-files-found: error
 
   windows:
-    name: Windows
+    name: Windows (${{ matrix.arch }})
     runs-on: windows-2022
     defaults:
       run:
         shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            msvc_arch: x64
+            qt_host: windows
+            qt_arch: win64_msvc2022_64
+          - arch: arm64
+            msvc_arch: amd64_arm64
+            qt_host: windows_arm64
+            qt_arch: win64_msvc2022_arm64
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -284,18 +296,21 @@ jobs:
       - name: Set up MSVC environment
         uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
         with:
-          arch: x64
+          arch: ${{ matrix.msvc_arch }}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
         with:
           version: '6.8.1'
-          arch: win64_msvc2022_64
+          host: ${{ matrix.qt_host }}
+          arch: ${{ matrix.qt_arch }}
           modules: 'qtshadertools'
           cache: true
 
       - name: Configure
-        run: cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+        run: |
+          cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+            ${QT_HOST_PATH:+-DQT_HOST_PATH="$QT_HOST_PATH"}
 
       - name: Build
         run: cmake --build build/Release
@@ -308,21 +323,23 @@ jobs:
       - name: Package portable ZIP
         env:
           VERSION: ${{ github.ref_name }}
+          ARCH: ${{ matrix.arch }}
         run: |
           mkdir -p dist
-          package_dir="worktime-${VERSION}-x64"
+          package_dir="worktime-${VERSION}-${ARCH}"
           cp -r build/Release/bin "$package_dir"
           cp LICENSE "$package_dir"
-          7z a -tzip "dist/worktime-${VERSION}-x64.zip" "$package_dir" >/dev/null
+          7z a -tzip "dist/worktime-${VERSION}-${ARCH}.zip" "$package_dir" >/dev/null
 
       - name: Build NSIS installer
         env:
           VERSION: ${{ github.ref_name }}
+          ARCH: ${{ matrix.arch }}
           MSYS_NO_PATHCONV: '1'
         run: |
           version_number="${VERSION#v}"
-          package_dir="$PWD/worktime-${VERSION}-x64"
-          out_file="$PWD/dist/worktime-${VERSION}-x64-setup.exe"
+          package_dir="$PWD/worktime-${VERSION}-${ARCH}"
+          out_file="$PWD/dist/worktime-${VERSION}-${ARCH}-setup.exe"
           makensis.exe \
             /DVERSION="${version_number}" \
             /DSOURCE_DIR="$(cygpath -w "$package_dir")" \
@@ -332,7 +349,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: windows
+          name: windows-${{ matrix.arch }}
           path: |
             dist/*.zip
             dist/*-setup.exe
