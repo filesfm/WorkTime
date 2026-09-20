@@ -137,8 +137,12 @@ jobs:
           if-no-files-found: error
 
   macos:
-    name: macOS
+    name: macOS (${{ matrix.arch }})
     runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, x86_64]
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -175,7 +179,9 @@ jobs:
           cache: true
 
       - name: Configure
-        run: cmake -S . -B build/Release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+        run: |
+          cmake -S . -B build/Release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+            -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
 
       - name: Build
         run: cmake --build build/Release
@@ -201,7 +207,7 @@ jobs:
           VERSION: ${{ github.ref_name }}
         run: |
           mkdir -p dist
-          dmg_path="dist/worktime-${VERSION}-arm64.dmg"
+          dmg_path="dist/worktime-${VERSION}-${{ matrix.arch }}.dmg"
           hdiutil create -volname "WorkTime" -srcfolder build/Release/bin/WorkTime.app -ov -format UDZO \
             "$dmg_path"
 
@@ -214,7 +220,7 @@ jobs:
           VERSION: ${{ github.ref_name }}
         run: |
           mkdir -p dist
-          pkg_path="dist/worktime-${VERSION}-arm64.pkg"
+          pkg_path="dist/worktime-${VERSION}-${{ matrix.arch }}.pkg"
           pkgbuild --component build/Release/bin/worktime.app \
             --install-location /Applications \
             --identifier io.github.filesfm.worktime \
@@ -256,7 +262,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: macos
+          name: macos-${{ matrix.arch }}
           path: |
             dist/*.dmg
             dist/*.pkg
