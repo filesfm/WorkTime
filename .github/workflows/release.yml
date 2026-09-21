@@ -338,6 +338,55 @@ jobs:
             dist/*-setup.exe
           if-no-files-found: error
 
+  fedora:
+    name: Fedora (rpm)
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:37
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install build dependencies
+        run: |
+          dnf install -y --setopt=install_weak_deps=False \
+            cmake ninja-build gcc-c++ pkgconf-pkg-config \
+            qt6-qtbase-devel qt6-qtdeclarative-devel libX11-devel systemd-devel \
+            rpm-build git
+
+      - name: Update spec version
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          version="${VERSION#v}"
+          sed -i "s/^Version:.*/Version:        ${version}/" resource/fedora/worktime.spec
+
+      - name: Build source tarball
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          version="${VERSION#v}"
+          mkdir -p rpmbuild/SOURCES rpmbuild/SPECS
+          git archive --prefix="WorkTime-${version}/" -o "rpmbuild/SOURCES/v${version}.tar.gz" HEAD
+          cp resource/fedora/worktime.spec rpmbuild/SPECS/worktime.spec
+
+      - name: Build package
+        run: rpmbuild --define "_topdir $PWD/rpmbuild" -bb rpmbuild/SPECS/worktime.spec
+
+      - name: Rename package
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          mkdir -p dist
+          cp rpmbuild/RPMS/x86_64/*.rpm "dist/worktime-${VERSION}.fc37.x86_64.rpm"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: fedora
+          path: dist/*.rpm
+          if-no-files-found: error
+
   arch:
     name: Arch Linux
     runs-on: ubuntu-22.04
@@ -384,7 +433,7 @@ jobs:
 
   release:
     name: Publish release
-    needs: [appimage, flatpak, snap, macos, windows, arch]
+    needs: [appimage, flatpak, snap, macos, windows, fedora, arch]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
