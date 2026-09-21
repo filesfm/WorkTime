@@ -1,0 +1,16 @@
+Source: worktime
+Section: utils
+Priority: optional
+Maintainer: artyom-fedosov <artjomsfedosovs2@gmail.com>
+Build-Depends: cmake, ninja-build, g++, pkg-config, qt6-base-dev, qt6-declarative-dev, libx11-dev, libudev-dev
+Standards-Version: 4.6.2
+Homepage: https://github.com/filesfm/WorkTime
+
+Package: worktime
+Architecture: amd64
+Version: __VERSION__
+Depends: __DEPENDS__, hicolor-icon-theme
+Description: A Qt6/QML desktop time-tracking app
+ WorkTime tracks working time with a simple Start/Stop button. It uses a
+ system tray icon when one is available on the current desktop, falling
+ back to a normal always-visible window otherwise).

@@ -338,6 +338,75 @@ jobs:
             dist/*-setup.exe
           if-no-files-found: error
 
+  ubuntu:
+    name: Ubuntu (deb)
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            cmake ninja-build g++ pkg-config \
+            qt6-base-dev qt6-declarative-dev libx11-dev libudev-dev \
+            dpkg-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+            -DCMAKE_INSTALL_PREFIX=/usr
+
+      - name: Build
+        run: cmake --build build/Release
+
+      - name: Stage package contents
+        run: |
+          DESTDIR="$PWD/pkgroot" cmake --install build/Release
+
+          install -Dm644 resource/io.github.filesfm.worktime.desktop \
+            pkgroot/usr/share/applications/io.github.filesfm.worktime.desktop
+          install -Dm644 resource/icon.svg \
+            pkgroot/usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg
+          install -Dm644 resource/icon.png \
+            pkgroot/usr/share/icons/hicolor/128x128/apps/io.github.filesfm.worktime.png
+          install -Dm644 resource/io.github.filesfm.worktime.metainfo.xml \
+            pkgroot/usr/share/metainfo/io.github.filesfm.worktime.metainfo.xml
+          install -Dm644 LICENSE \
+            pkgroot/usr/share/doc/worktime/LICENSE
+
+      - name: Build control file
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          version="${VERSION#v}"
+
+          mkdir -p debian
+          cp resource/debian/control debian/control
+          shlibs_depends=$(dpkg-shlibdeps -O pkgroot/usr/bin/worktime | sed -n 's/^shlibs:Depends=//p')
+
+          mkdir -p pkgroot/DEBIAN
+          awk 'BEGIN{RS=""} NR==2' resource/debian/control \
+            | sed -e "s|__VERSION__|${version}|" -e "s|__DEPENDS__|${shlibs_depends}|" \
+            > pkgroot/DEBIAN/control
+
+      - name: Build deb package
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          mkdir -p dist
+          dpkg-deb --root-owner-group --build pkgroot "dist/worktime-${VERSION}-amd64.deb"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ubuntu
+          path: dist/*.deb
+          if-no-files-found: error
+
   fedora:
     name: Fedora (rpm)
     runs-on: ubuntu-latest
@@ -437,7 +506,7 @@ jobs:
 
   release:
     name: Publish release
-    needs: [appimage, flatpak, snap, macos, windows, fedora, arch]
+    needs: [appimage, flatpak, snap, macos, windows, ubuntu, fedora, arch]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
