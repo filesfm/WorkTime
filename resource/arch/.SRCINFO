@@ -1,6 +1,6 @@
 pkgbase = filesfm-worktime
 	pkgdesc = A Qt6/QML desktop time-tracking app
-	pkgver = 0.5.11
+	pkgver = 0.5.12
 	pkgrel = 1
 	url = https://github.com/filesfm/WorkTime
 	arch = x86_64
