@@ -382,7 +382,7 @@ jobs:
           VERSION: ${{ github.ref_name }}
         run: |
           mkdir -p dist
-          cp rpmbuild/RPMS/x86_64/*.rpm "dist/worktime-${VERSION}.fc37.x86_64.rpm"
+          cp rpmbuild/RPMS/x86_64/*.rpm "dist/worktime-${VERSION}-x86_64.rpm"
 
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

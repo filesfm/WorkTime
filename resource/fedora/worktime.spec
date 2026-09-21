@@ -1,6 +1,8 @@
+%global debug_package %{nil}
+
 Name:           worktime
 Version:        __VERSION__
-Release:        1%{?dist}
+Release:        1
 Summary:        A Qt6/QML desktop time-tracking app
 
 License:        Apache-2.0
