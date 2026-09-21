@@ -338,9 +338,41 @@ jobs:
             dist/*-setup.exe
           if-no-files-found: error
 
+  arch:
+    name: Arch Linux
+    runs-on: ubuntu-22.04
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install build dependencies
+        run: pacman -Syu --noconfirm --needed cmake make pkgconf gcc fakeroot debugedit qt6-base qt6-declarative libx11 systemd-libs git
+
+      - name: Build package
+        run: |
+          useradd -m builder
+          chown -R builder:builder resource/arch
+          su builder -c 'cd resource/arch && makepkg --noconfirm'
+
+      - name: Rename package
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          mkdir -p dist
+          cp resource/arch/*.pkg.tar.zst "dist/worktime-${VERSION}-x86_64.pkg.tar.zst"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: arch
+          path: dist/*.pkg.tar.zst
+          if-no-files-found: error
+
   release:
     name: Publish release
-    needs: [appimage, flatpak, snap, macos, windows]
+    needs: [appimage, flatpak, snap, macos, windows, arch]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts

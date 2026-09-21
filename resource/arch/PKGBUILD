@@ -1,0 +1,38 @@
+# Maintainer: artyom-fedosov <artjomsfedosovs2@gmail.com>
+pkgname=filesfm-worktime
+pkgver=0.5.11
+pkgrel=1
+pkgdesc="A Qt6/QML desktop time-tracking app"
+arch=('x86_64')
+url="https://github.com/filesfm/WorkTime"
+license=('Apache-2.0')
+depends=('qt6-base' 'qt6-declarative' 'libx11' 'systemd-libs' 'hicolor-icon-theme')
+makedepends=('cmake' 'make' 'pkgconf' 'gcc' 'fakeroot' 'debugedit')
+provides=('worktime')
+conflicts=('worktime')
+options=('!debug')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/filesfm/WorkTime/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('309ff545f0e27c203035f1795f1f3a27be40806e7b0acfa9ebed5ef088d8ec2d')
+
+build() {
+  cmake -S "WorkTime-$pkgver" -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTING=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 "WorkTime-$pkgver/resource/io.github.filesfm.worktime.desktop" \
+    "$pkgdir/usr/share/applications/io.github.filesfm.worktime.desktop"
+  install -Dm644 "WorkTime-$pkgver/resource/icon.svg" \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg"
+  install -Dm644 "WorkTime-$pkgver/resource/icon.png" \
+    "$pkgdir/usr/share/icons/hicolor/128x128/apps/io.github.filesfm.worktime.png"
+  install -Dm644 "WorkTime-$pkgver/resource/io.github.filesfm.worktime.metainfo.xml" \
+    "$pkgdir/usr/share/metainfo/io.github.filesfm.worktime.metainfo.xml"
+  install -Dm644 "WorkTime-$pkgver/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

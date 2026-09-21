@@ -1,0 +1,25 @@
+pkgbase = filesfm-worktime
+	pkgdesc = A Qt6/QML desktop time-tracking app
+	pkgver = 0.5.11
+	pkgrel = 1
+	url = https://github.com/filesfm/WorkTime
+	arch = x86_64
+	license = Apache-2.0
+	makedepends = cmake
+	makedepends = make
+	makedepends = pkgconf
+	makedepends = gcc
+	makedepends = fakeroot
+	makedepends = debugedit
+	depends = qt6-base
+	depends = qt6-declarative
+	depends = libx11
+	depends = systemd-libs
+	depends = hicolor-icon-theme
+	provides = worktime
+	conflicts = worktime
+	options = !debug
+	source = filesfm-worktime-0.5.11.tar.gz::https://github.com/filesfm/WorkTime/archive/refs/tags/v0.5.11.tar.gz
+	sha256sums = 309ff545f0e27c203035f1795f1f3a27be40806e7b0acfa9ebed5ef088d8ec2d
+
+pkgname = filesfm-worktime
