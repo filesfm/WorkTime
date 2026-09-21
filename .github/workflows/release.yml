@@ -350,6 +350,18 @@ jobs:
       - name: Install build dependencies
         run: pacman -Syu --noconfirm --needed cmake make pkgconf gcc fakeroot debugedit qt6-base qt6-declarative libx11 systemd-libs git
 
+      - name: Update pkgver and checksum
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          version="${VERSION#v}"
+          checksum=$(curl -sL "https://github.com/filesfm/WorkTime/archive/refs/tags/${VERSION}.tar.gz" | sha256sum | cut -d' ' -f1)
+          sed -i \
+            -e "s/^pkgver=.*/pkgver=${version}/" \
+            -e "s/^pkgrel=.*/pkgrel=1/" \
+            -e "s/^sha256sums=('.*')/sha256sums=('${checksum}')/" \
+            resource/arch/PKGBUILD
+
       - name: Build package
         run: |
           useradd -m builder
