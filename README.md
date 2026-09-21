@@ -18,10 +18,32 @@ A Qt6/QML desktop time-tracking app.
 
 ## Contents
 
+- [Installing](#installing)
+- [Updating](#updating)
+- [Removing](#removing)
 - [Supported Operating Systems](#supported-operating-systems)
 - [Supported Desktop Environments](#supported-desktop-environments)
 - [Build for development](#build-for-development)
 - [Build for usage](#build-for-usage)
+
+## Installing
+
+### macOS
+
+`brew install --cask filesfm/macos/worktime`
+
+## Updating
+
+### macOS
+
+`brew upgrade --cask filesfm/macos/worktime`
+
+## Removing
+
+### macOS
+
+`brew uninstall --cask filesfm/macos/worktime`
+
 
 ## Supported operating systems
 
