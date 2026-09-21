@@ -352,7 +352,7 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False \
             cmake ninja-build gcc-c++ pkgconf-pkg-config \
             qt6-qtbase-devel qt6-qtdeclarative-devel libX11-devel systemd-devel \
-            rpm-build git
+            rpm-build
 
       - name: Update spec version
         env:
@@ -367,7 +367,11 @@ jobs:
         run: |
           version="${VERSION#v}"
           mkdir -p rpmbuild/SOURCES rpmbuild/SPECS
-          git archive --prefix="WorkTime-${version}/" -o "rpmbuild/SOURCES/v${version}.tar.gz" HEAD
+
+          tar -czf "rpmbuild/SOURCES/v${version}.tar.gz" \
+            --exclude-vcs --exclude=./rpmbuild \
+            --transform "s|^\./|WorkTime-${version}/|" \
+            .
           cp resource/fedora/worktime.spec rpmbuild/SPECS/worktime.spec
 
       - name: Build package
