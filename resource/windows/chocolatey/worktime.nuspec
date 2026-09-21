@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>worktime</id>
+    <version>0.5.10</version>
+    <packageSourceUrl>https://github.com/filesfm/WorkTime</packageSourceUrl>
+    <owners>filesfm</owners>
+    <title>WorkTime</title>
+    <authors>filesfm</authors>
+    <projectUrl>https://github.com/filesfm/WorkTime</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/filesfm/WorkTime/main/resource/icon.png</iconUrl>
+    <copyright>2026 filesfm</copyright>
+    <licenseUrl>https://github.com/filesfm/WorkTime/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/filesfm/WorkTime</projectSourceUrl>
+    <docsUrl>https://github.com/filesfm/WorkTime/blob/main/README.md</docsUrl>
+    <bugTrackerUrl>https://github.com/filesfm/WorkTime/issues</bugTrackerUrl>
+    <tags>worktime time-tracking time-tracker qt qml desktop</tags>
+    <summary>A Qt6/QML desktop time-tracking app</summary>
+    <description>WorkTime tracks working time with a simple Start/Stop button. It uses a system tray icon when one is available on the current desktop, falling back to a normal always-visible window otherwise.</description>
+  </metadata>
+  <files>
+    <file src="chocolateyinstall.ps1" target="tools" />
+    <file src="chocolateyuninstall.ps1" target="tools" />
+  </files>
+</package>

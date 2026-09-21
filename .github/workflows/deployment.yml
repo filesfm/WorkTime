@@ -55,3 +55,26 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         run: /snap/bin/snapcraft upload-metadata "$SNAP_FILE" --force
+
+  publish-chocolatey:
+    name: Publish Chocolatey
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Build Chocolatey package
+        run: |
+          $version = "${{ inputs.tag }}" -replace '^v', ''
+          ./resource/windows/chocolatey/build-package.ps1 -Version $version
+
+      - name: Push to Chocolatey Community Repository
+        env:
+          CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
+        run: |
+          $version = "${{ inputs.tag }}" -replace '^v', ''
+          $nupkg = "resource/windows/chocolatey/worktime.$version.nupkg"
+          choco push $nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCOLATEY_API_KEY
