@@ -28,9 +28,17 @@ A Qt6/QML desktop time-tracking app.
 
 ## Installing
 
-### macOS
+### macOS (works on x86-64 and ARM)
 
 `brew install --cask filesfm/macos/worktime`
+
+### Windows (works on x64)
+
+#### Manually
+
+- Download the latest version of the setup file from GitHub releases
+- Run the installer
+- Remove the installation file
 
 ## Updating
 
@@ -38,12 +46,26 @@ A Qt6/QML desktop time-tracking app.
 
 `brew upgrade --cask filesfm/macos/worktime`
 
+### Windows
+
+#### Manually
+
+- Download the latest version of the setup file from GitHub releases
+- Go through the installation steps
+- Remove the installation file
+
 ## Removing
 
 ### macOS
 
 `brew uninstall --cask filesfm/macos/worktime`
 
+### Windows
+
+#### Manually
+
+- Open the directory with the installed program
+- Run the uninstall file
 
 ## Supported operating systems
 
