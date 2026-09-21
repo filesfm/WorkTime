@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>worktime</id>
-    <version>0.5.10</version>
+    <version>0.5.11</version>
     <packageSourceUrl>https://github.com/filesfm/WorkTime</packageSourceUrl>
     <owners>filesfm</owners>
     <title>WorkTime</title>
