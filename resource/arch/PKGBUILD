@@ -1,6 +1,6 @@
 # Maintainer: artyom-fedosov <artjomsfedosovs2@gmail.com>
 pkgname=filesfm-worktime
-pkgver=0.5.12
+pkgver=0.5.13
 pkgrel=1
 pkgdesc="A Qt6/QML desktop time-tracking app"
 arch=('x86_64')
@@ -12,7 +12,7 @@ provides=('worktime')
 conflicts=('worktime')
 options=('!debug')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/filesfm/WorkTime/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('309ff545f0e27c203035f1795f1f3a27be40806e7b0acfa9ebed5ef088d8ec2d')
+sha256sums=('924e1a1b0fc6d1298a5ea382b3f6f863d5b948bd92f999d45c2a393c0377e6b0')
 
 build() {
   cmake -S "WorkTime-$pkgver" -B build \
