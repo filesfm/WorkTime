@@ -349,6 +349,11 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          sed -i \
+            -e 's|http://archive.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' \
+            -e 's|http://security.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' \
+            /etc/apt/sources.list.d/ubuntu.sources
+
           apt-get update
           apt-get install -y --no-install-recommends \
             cmake ninja-build g++ pkg-config \
