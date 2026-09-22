@@ -26,6 +26,8 @@ A Qt6/QML desktop time-tracking app.
 - [Build for development](#build-for-development)
 - [Build for usage](#build-for-usage)
 
+---
+
 ## Installing
 
 ### macOS (works on x86-64 and ARM)
@@ -39,6 +41,16 @@ A Qt6/QML desktop time-tracking app.
 - Download the latest version of the setup file from GitHub releases
 - Run the installer
 - Remove the installation file
+
+### Fedora (Copr)
+
+`sudo dnf copr enable -y filesfm/WorkTime && sudo dnf install -y worktime`
+
+### Ubuntu (PPA)
+
+`sudo add-apt-repository -y ppa:filesfm/worktime && sudo apt update && sudo apt install -y worktime`
+
+---
 
 ## Updating
 
@@ -54,6 +66,16 @@ A Qt6/QML desktop time-tracking app.
 - Go through the installation steps
 - Remove the installation file
 
+### Fedora (Copr)
+
+`sudo dnf upgrade -y worktime`
+
+### Ubuntu (PPA)
+
+`sudo apt update && sudo apt upgrade -y worktime`
+
+---
+
 ## Removing
 
 ### macOS
@@ -66,6 +88,16 @@ A Qt6/QML desktop time-tracking app.
 
 - Open the directory with the installed program
 - Run the uninstall file
+
+### Fedora (Copr)
+
+`sudo dnf remove -y worktime && sudo dnf copr disable -y filesfm/WorkTime`
+
+### Ubuntu (PPA)
+
+`sudo apt remove -y worktime && sudo add-apt-repository -y --remove ppa:filesfm/worktime`
+
+---
 
 ## Supported operating systems
 
