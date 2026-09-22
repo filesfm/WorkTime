@@ -181,4 +181,4 @@ jobs:
           rpmbuild --define "_topdir $PWD/rpmbuild" -bs rpmbuild/SPECS/worktime.spec
 
       - name: Submit build to Copr
-        run: copr-cli build @filesfm/worktime rpmbuild/SRPMS/*.src.rpm
+        run: copr-cli build filesfm/WorkTime rpmbuild/SRPMS/*.src.rpm
