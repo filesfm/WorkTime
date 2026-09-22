@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release tag whose snap to publish (e.g. v0.4.2)'
+        description: 'Release tag to publish (e.g. v0.4.2)'
         required: true
       channel:
         description: 'Snap Store channel to release to'
@@ -78,3 +78,66 @@ jobs:
           $version = "${{ inputs.tag }}" -replace '^v', ''
           $nupkg = "resource/windows/chocolatey/worktime.$version.nupkg"
           choco push $nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCOLATEY_API_KEY
+
+  publish-ppa:
+    name: Publish PPA (${{ matrix.series }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        series: [resolute, noble, jammy]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Install packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends devscripts debhelper dput gnupg
+
+      - name: Import GPG signing key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          {
+            echo "allow-loopback-pinentry"
+          } >> "$HOME/.gnupg/gpg-agent.conf"
+          echo "pinentry-mode loopback" >> "$HOME/.gnupg/gpg.conf"
+          gpgconf --kill gpg-agent
+
+      - name: Assemble debian/ source packaging
+        env:
+          VERSION_TAG: ${{ inputs.tag }}
+          SERIES: ${{ matrix.series }}
+        run: |
+          version="${VERSION_TAG#v}"
+          # "3.0 (native)" source format rejects a hyphen in the version
+          # (that would imply a separate upstream/debian revision), so the
+          # per-series suffix is tilde-only.
+          pkg_version="${version}~${SERIES}1"
+
+          cp -r resource/debian/ppa debian
+          chmod +x debian/rules
+
+          DEBEMAIL="artjomsfedosovs2@gmail.com" DEBFULLNAME="Artyom Fedosov" \
+            dch --create --package worktime --newversion "$pkg_version" \
+                --distribution "$SERIES" --urgency medium "Release ${version}."
+
+      - name: Build source package
+        run: dpkg-buildpackage -S -us -uc -d
+
+      - name: Sign source package
+        env:
+          GPG_KEY_ID: ${{ secrets.PPA_GPG_KEY_ID }}
+          GPG_PASSPHRASE: ${{ secrets.PPA_GPG_PASSPHRASE }}
+        run: |
+          changes_file=$(ls -- ../worktime_*_source.changes)
+          debsign -k"$GPG_KEY_ID" \
+            -p"gpg --batch --pinentry-mode loopback --passphrase $GPG_PASSPHRASE" \
+            "$changes_file"
+
+      - name: Upload to Launchpad PPA
+        run: dput ppa:filesfm/worktime ../worktime_*_source.changes

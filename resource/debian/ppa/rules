@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+
+override_dh_auto_install:
+	dh_auto_install
+	install -Dm644 resource/io.github.filesfm.worktime.desktop \
+		debian/worktime/usr/share/applications/io.github.filesfm.worktime.desktop
+	install -Dm644 resource/icon.svg \
+		debian/worktime/usr/share/icons/hicolor/scalable/apps/io.github.filesfm.worktime.svg
+	install -Dm644 resource/icon.png \
+		debian/worktime/usr/share/icons/hicolor/128x128/apps/io.github.filesfm.worktime.png
+	install -Dm644 resource/io.github.filesfm.worktime.metainfo.xml \
+		debian/worktime/usr/share/metainfo/io.github.filesfm.worktime.metainfo.xml
+
+override_dh_auto_test:
+	# No packaged test suite (BUILD_TESTING=OFF); nothing to run here.
