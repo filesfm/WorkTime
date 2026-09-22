@@ -101,7 +101,17 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classUtilities.html#a7bd5e103f7410901355a95fc70f9649a">   61</a></span>    <span class="keyword">static</span> QString <a class="code hl_function" href="classUtilities.html#a7bd5e103f7410901355a95fc70f9649a">truncateUtf8Safe</a>(<span class="keyword">const</span> QString &amp;value, qsizetype maxCodePoints);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">   63</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">autostart</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">autostart</a> = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#if defined(Q_OS_LINUX)</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> isGNOMEFocusedWindowDBusInstalled();</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> isGNOMEFocusedWindowDBusEnabled();</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> installGNOMEFocusedWindowDBus();</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> enableGNOMEFocusedWindowDBus();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>};</div>
 </div>
 <div class="ttc" id="aclassUtilities_html"><div class="ttname"><a href="classUtilities.html">Utilities</a></div><div class="ttdoc">Stateless OS-interaction helpers: screenshot capture and focused application detection.</div><div class="ttdef"><b>Definition</b> utilities.hpp:13</div></div>
 <div class="ttc" id="aclassUtilities_html_a09f3ef4048032217dcbb9da5178ce13f"><div class="ttname"><a href="classUtilities.html#a09f3ef4048032217dcbb9da5178ce13f">Utilities::focusedApplicationName</a></div><div class="ttdeci">static QString focusedApplicationName()</div><div class="ttdoc">Name of the application owning the currently focused window.</div></div>
