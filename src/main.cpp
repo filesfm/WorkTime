@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     }
 
 #if defined(Q_OS_LINUX)
-    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "GNOME") {
+    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("gnome", Qt::CaseInsensitive)) {
         if (Utilities::isGNOMEFocusedWindowDBusInstalled()) {
             if (!Utilities::isGNOMEFocusedWindowDBusEnabled()) {
                 Utilities::enableGNOMEFocusedWindowDBus();
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
 #if defined(Q_OS_LINUX)
-    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "KDE") {
+    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("kde", Qt::CaseInsensitive)) {
         KDEFocusedWindowTitle::instance()->start();
         QObject::connect(&app, &QCoreApplication::aboutToQuit, [] { KDEFocusedWindowTitle::instance()->stop(); });
     }

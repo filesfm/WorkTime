@@ -40,7 +40,7 @@ QString Utilities::truncateUtf8Safe(const QString &value, qsizetype maxCodePoint
 
 QString Utilities::focusedApplicationName()
 {
-    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "GNOME") {
+    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("gnome", Qt::CaseInsensitive)) {
         QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell",
                                                           "/org/gnome/shell/extensions/FocusedWindow",
                                                           "org.gnome.shell.extensions.FocusedWindow",
@@ -58,10 +58,9 @@ QString Utilities::focusedApplicationName()
         }
 
         return title;
-    } else if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "KDE") {
+    } else if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("kde", Qt::CaseInsensitive)) {
         return KDEFocusedWindowTitle::instance()->activeWindowTitle();
-    } else if ((qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "Cinnamon")
-               || (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "X-Cinnamon")) {
+    } else if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("cinnamon", Qt::CaseInsensitive)) {
         QDBusMessage msg = QDBusMessage::createMethodCall("org.Cinnamon", "/org/Cinnamon", "org.Cinnamon", "Eval");
         msg << QVariant("global.display.focus_window.title");
         QDBusMessage reply = QDBusConnection::sessionBus().call(msg);
