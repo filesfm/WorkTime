@@ -21,6 +21,10 @@ ActivityMonitor::~ActivityMonitor()
 #    include <linux/input.h>
 #    include <unistd.h>
 
+#    include <QDBusConnection>
+#    include <QDBusInterface>
+#    include <QDBusReply>
+
 extern "C" {
 #    include <libudev.h>
 }
@@ -32,7 +36,77 @@ bool isKeyboardOrMouse(udev_device *device)
     const char *isMouse = udev_device_get_property_value(device, "ID_INPUT_MOUSE");
     return (isKeyboard && QLatin1String(isKeyboard) == "1") || (isMouse && QLatin1String(isMouse) == "1");
 }
+
+constexpr QLatin1StringView kGnomeIdleMonitorService{"org.gnome.Mutter.IdleMonitor"};
+constexpr QLatin1StringView kGnomeIdleMonitorPath{"/org/gnome/Mutter/IdleMonitor/Core"};
+constexpr QLatin1StringView kGnomeIdleMonitorInterface{"org.gnome.Mutter.IdleMonitor"};
 } // namespace
+
+bool ActivityMonitor::startGnomeIdleMonitor()
+{
+    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") != "GNOME")
+        return false;
+
+    m_gnomeIdleMonitor = new QDBusInterface(QString(kGnomeIdleMonitorService),
+                                            QString(kGnomeIdleMonitorPath),
+                                            QString(kGnomeIdleMonitorInterface),
+                                            QDBusConnection::sessionBus(),
+                                            this);
+    if (!m_gnomeIdleMonitor->isValid()) {
+        qCWarning(worktimeActivityMonitor) << "org.gnome.Mutter.IdleMonitor unavailable, falling back to /dev/input";
+        delete m_gnomeIdleMonitor;
+        m_gnomeIdleMonitor = nullptr;
+        return false;
+    }
+
+    QDBusConnection::sessionBus().connect(QString(kGnomeIdleMonitorService),
+                                          QString(kGnomeIdleMonitorPath),
+                                          QString(kGnomeIdleMonitorInterface),
+                                          QStringLiteral("WatchFired"),
+                                          this,
+                                          SLOT(handleGnomeIdleWatchFired(uint)));
+
+    qCInfo(worktimeActivityMonitor) << "using org.gnome.Mutter.IdleMonitor for activity detection";
+    armGnomeUserActiveWatch();
+    return true;
+}
+
+void ActivityMonitor::stopGnomeIdleMonitor()
+{
+    QDBusConnection::sessionBus().disconnect(QString(kGnomeIdleMonitorService),
+                                             QString(kGnomeIdleMonitorPath),
+                                             QString(kGnomeIdleMonitorInterface),
+                                             QStringLiteral("WatchFired"),
+                                             this,
+                                             SLOT(handleGnomeIdleWatchFired(uint)));
+
+    if (m_gnomeIdleMonitor && m_gnomeWatchId != 0)
+        m_gnomeIdleMonitor->call(QStringLiteral("RemoveWatch"), m_gnomeWatchId);
+
+    delete m_gnomeIdleMonitor;
+    m_gnomeIdleMonitor = nullptr;
+    m_gnomeWatchId = 0;
+}
+
+void ActivityMonitor::armGnomeUserActiveWatch()
+{
+    if (!m_gnomeIdleMonitor)
+        return;
+
+    const QDBusReply<uint> reply = m_gnomeIdleMonitor->call(QStringLiteral("AddUserActiveWatch"));
+    m_gnomeWatchId = reply.isValid() ? reply.value() : 0;
+}
+
+void ActivityMonitor::handleGnomeIdleWatchFired(uint watchId)
+{
+    if (watchId != m_gnomeWatchId)
+        return;
+
+    // AddUserActiveWatch() is one-shot: fires once on the next input event,
+    // then must be re-added to keep receiving notifications.
+    emit activityDetected();
+    armGnomeUserActiveWatch();
+}
 
 void ActivityMonitor::start()
 {
@@ -40,6 +114,12 @@ void ActivityMonitor::start()
         return;
 
     qCInfo(worktimeActivityMonitor) << "starting activity monitor";
+
+    if (startGnomeIdleMonitor()) {
+        m_usingGnomeIdleMonitor = true;
+        m_running = true;
+        return;
+    }
 
     m_udev = udev_new();
     if (!m_udev) {
@@ -71,6 +151,13 @@ void ActivityMonitor::stop()
         return;
 
     qCInfo(worktimeActivityMonitor) << "stopping activity monitor";
+
+    if (m_usingGnomeIdleMonitor) {
+        stopGnomeIdleMonitor();
+        m_usingGnomeIdleMonitor = false;
+        m_running = false;
+        return;
+    }
 
     const QStringList devNodes = m_deviceNotifiers.keys();
     for (const QString &devNode : devNodes)

@@ -9,6 +9,7 @@ class QSocketNotifier;
 #if defined(Q_OS_LINUX)
 struct udev;
 struct udev_monitor;
+class QDBusInterface;
 #endif
 
 Q_DECLARE_LOGGING_CATEGORY(worktimeActivityMonitor)
@@ -48,11 +49,24 @@ signals:
 
 private:
 #if defined(Q_OS_LINUX)
+    // GNOME/Mutter session: no /dev/input access needed, so no "input" group
+    // membership is required. Preferred whenever available.
+    bool startGnomeIdleMonitor();
+    void stopGnomeIdleMonitor();
+    void armGnomeUserActiveWatch();
+
+    // Fallback for desktops without org.gnome.Mutter.IdleMonitor: reads
+    // /dev/input/event* directly, which requires "input" group membership
+    // (or an equivalent udev ACL) on most distros.
     void scanInputDevices();
     void addInputDevice(const QString &devNode);
     void removeInputDevice(const QString &devNode);
     void readInputDevice(int fd);
     void readUdevMonitor();
+
+    QDBusInterface *m_gnomeIdleMonitor = nullptr;
+    uint m_gnomeWatchId = 0;
+    bool m_usingGnomeIdleMonitor = false;
 
     udev *m_udev = nullptr;
     udev_monitor *m_udevMonitor = nullptr;
@@ -67,4 +81,9 @@ private:
 #endif
 
     bool m_running = false;
+
+#if defined(Q_OS_LINUX)
+private slots:
+    void handleGnomeIdleWatchFired(uint watchId);
+#endif
 };
