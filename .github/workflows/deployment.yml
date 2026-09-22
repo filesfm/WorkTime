@@ -141,3 +141,44 @@ jobs:
 
       - name: Upload to Launchpad PPA
         run: dput ppa:filesfm/worktime ../worktime_*_source.changes
+
+  publish-copr:
+    name: Publish Copr
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:37
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Install packaging tools
+        run: dnf install -y --setopt=install_weak_deps=False rpm-build copr-cli
+
+      - name: Configure copr-cli credentials
+        env:
+          COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
+        run: |
+          mkdir -p "$HOME/.config"
+          printf '%s' "$COPR_CONFIG" > "$HOME/.config/copr"
+          chmod 600 "$HOME/.config/copr"
+
+      - name: Build source RPM
+        env:
+          VERSION_TAG: ${{ inputs.tag }}
+        run: |
+          version="${VERSION_TAG#v}"
+          sed -i "s/^Version:.*/Version:        ${version}/" resource/fedora/worktime.spec
+
+          mkdir -p rpmbuild/SOURCES rpmbuild/SPECS
+          tar -czf "rpmbuild/SOURCES/v${version}.tar.gz" \
+            --exclude-vcs --exclude=./rpmbuild \
+            --transform "s|^\./|WorkTime-${version}/|" \
+            .
+          cp resource/fedora/worktime.spec rpmbuild/SPECS/worktime.spec
+
+          rpmbuild --define "_topdir $PWD/rpmbuild" -bs rpmbuild/SPECS/worktime.spec
+
+      - name: Submit build to Copr
+        run: copr-cli build @filesfm/worktime rpmbuild/SRPMS/*.src.rpm
