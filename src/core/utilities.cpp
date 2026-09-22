@@ -160,3 +160,72 @@ void Utilities::autostart(bool autostart)
 }
 
 #endif
+
+#if defined(Q_OS_LINUX)
+
+#    include <QDBusArgument>
+
+bool Utilities::isGNOMEFocusedWindowDBusInstalled()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+                                                      "/org/gnome/Shell/Extensions",
+                                                      "org.gnome.Shell.Extensions",
+                                                      "GetExtensionInfo");
+
+    msg << QStringLiteral("focused-window-dbus@flexagoon.com");
+    QDBusMessage response = bus.call(msg);
+
+    if (response.type() != QDBusMessage::ReplyMessage || response.arguments().isEmpty())
+        return false;
+
+    return !qdbus_cast<QVariantMap>(response.arguments().constFirst()).isEmpty();
+}
+
+bool Utilities::isGNOMEFocusedWindowDBusEnabled()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+                                                      "/org/gnome/Shell/Extensions",
+                                                      "org.gnome.Shell.Extensions",
+                                                      "GetExtensionInfo");
+
+    msg << QStringLiteral("focused-window-dbus@flexagoon.com");
+    QDBusMessage response = bus.call(msg);
+
+    if (response.type() != QDBusMessage::ReplyMessage || response.arguments().isEmpty())
+        return false;
+
+    const QVariantMap info = qdbus_cast<QVariantMap>(response.arguments().constFirst());
+    return info.value("state").toUInt() == 1;
+}
+
+void Utilities::installGNOMEFocusedWindowDBus()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+                                                      "/org/gnome/Shell/Extensions",
+                                                      "org.gnome.Shell.Extensions",
+                                                      "InstallRemoteExtension");
+
+    msg << QStringLiteral("focused-window-dbus@flexagoon.com");
+    bus.call(msg);
+}
+
+void Utilities::enableGNOMEFocusedWindowDBus()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+                                                      "/org/gnome/Shell/Extensions",
+                                                      "org.gnome.Shell.Extensions",
+                                                      "EnableExtension");
+
+    msg << QStringLiteral("focused-window-dbus@flexagoon.com");
+    bus.call(msg);
+}
+
+#endif

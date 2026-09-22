@@ -5,8 +5,7 @@
 #include <QSystemTrayIcon>
 
 #include <iostream>
-
-#include <cstdlib>
+#include <memory>
 
 #include "core/oneinstanceguarantor.hpp"
 #include "core/utilities.hpp"
@@ -27,6 +26,19 @@ int main(int argc, char *argv[])
         std::cerr << e.what() << '\n';
         return 1;
     }
+
+#if defined(Q_OS_LINUX)
+    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") == "GNOME") {
+        if (Utilities::isGNOMEFocusedWindowDBusInstalled()) {
+            if (!Utilities::isGNOMEFocusedWindowDBusEnabled()) {
+                Utilities::enableGNOMEFocusedWindowDBus();
+            }
+        } else {
+            Utilities::installGNOMEFocusedWindowDBus();
+            Utilities::enableGNOMEFocusedWindowDBus();
+        }
+    }
+#endif
 
     QGuiApplication app(argc, argv);
 

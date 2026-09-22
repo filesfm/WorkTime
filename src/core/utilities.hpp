@@ -61,4 +61,14 @@ public:
     static QString truncateUtf8Safe(const QString &value, qsizetype maxCodePoints);
 
     static void autostart(bool autostart = true);
+
+#if defined(Q_OS_LINUX)
+    static bool isGNOMEFocusedWindowDBusInstalled();
+
+    static bool isGNOMEFocusedWindowDBusEnabled();
+
+    static void installGNOMEFocusedWindowDBus();
+
+    static void enableGNOMEFocusedWindowDBus();
+#endif
 };
