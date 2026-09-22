@@ -1,6 +1,6 @@
 # Maintainer: artyom-fedosov <artjomsfedosovs2@gmail.com>
 pkgname=filesfm-worktime
-pkgver=0.5.16
+pkgver=0.5.17
 pkgrel=1
 pkgdesc="A Qt6/QML desktop time-tracking app"
 arch=('x86_64')
