@@ -50,6 +50,14 @@ A Qt6/QML desktop time-tracking app.
 
 `sudo add-apt-repository -y ppa:filesfm/worktime && sudo apt update && sudo apt install -y worktime`
 
+### Arch
+
+#### Manually
+
+- Download the latest version of the package file(.pkg.tar.zst) from GitHub releases
+- Enter the command and replace the *pathname* in it: `sudo pacman -U --noconfirm pathname`
+- Remove the package file(.pkg.tar.zst)
+
 ---
 
 ## Updating
@@ -74,6 +82,14 @@ A Qt6/QML desktop time-tracking app.
 
 `sudo apt update && sudo apt upgrade -y worktime`
 
+### Arch
+
+#### Manually
+
+- Download the latest version of the package file(.pkg.tar.zst) from GitHub releases
+- Enter the command and replace the *pathname* in it: `sudo pacman -U --noconfirm pathname`
+- Remove the package file(.pkg.tar.zst)
+
 ---
 
 ## Removing
@@ -96,6 +112,12 @@ A Qt6/QML desktop time-tracking app.
 ### Ubuntu (PPA)
 
 `sudo apt remove -y worktime && sudo add-apt-repository -y --remove ppa:filesfm/worktime`
+
+### Arch
+
+#### Manually
+
+`sudo pacman -Rs --noconfirm filesfm-worktime`
 
 ---
 
