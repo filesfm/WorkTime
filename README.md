@@ -18,13 +18,25 @@ A Qt6/QML desktop time-tracking app.
 
 ## Contents
 
+- [Supported Operating Systems](#supported-operating-systems)
+- [Supported Desktop Environments](#supported-desktop-environments-on-linux)
 - [Installing](#installing)
 - [Updating](#updating)
 - [Removing](#removing)
-- [Supported Operating Systems](#supported-operating-systems)
-- [Supported Desktop Environments](#supported-desktop-environments)
-- [Build for development](#build-for-development)
-- [Build for usage](#build-for-usage)
+
+---
+
+## Supported operating systems
+
+- macOS
+- Windows
+- Linux
+
+## Supported desktop environments on Linux
+
+- GNOME
+- KDE Plasma
+- Cinnamon
 
 ---
 
@@ -118,80 +130,3 @@ A Qt6/QML desktop time-tracking app.
 #### Manually
 
 `sudo pacman -Rs --noconfirm filesfm-worktime`
-
----
-
-## Supported operating systems
-
-- Linux
-- macOS
-- Windows
-
-## Supported desktop environments
-
-- GNOME
-- KDE Plasma
-- Cinnamon
-
-## Build for development
-
-Requirements: Qt 6.5+, CMake 3.19+, a C++17 compiler, a CMake generator (e.g.
-Ninja), and `clang-tidy` and `clang-format` on `PATH` (used by the
-pre-commit/pre-push git hooks, which CMake enables automatically on
-configure).
-
-```bash
-cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
-cmake --build build/Debug
-```
-
-Run the test suite:
-
-```bash
-ctest --test-dir build/Debug --output-on-failure
-```
-
-Optionally build the Doxygen API docs (requires Doxygen installed):
-
-```bash
-cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_DOCS=ON
-cmake --build build/Debug --target docs
-```
-
-Output is written to `build/Debug/docs/html/index.html`.
-
-Optionally measure test coverage (requires GCC or Clang, plus `gcovr`):
-
-```bash
-cmake -S . -B build/Coverage -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DENABLE_COVERAGE=ON
-cmake --build build/Coverage
-ctest --test-dir build/Coverage --output-on-failure
-gcovr --root . --filter 'src/core/' --html-details -o build/Coverage/coverage.html build/Coverage
-```
-
-CI uploads coverage from every push to `main` to
-[Codecov](https://codecov.io/gh/filesfm/WorkTime).
-
-CI also runs a [SonarCloud](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-static analysis pass on every push to `main`, tracking maintainability
-(tech debt), code smells, and duplication. Configuration lives in
-`sonar-project.properties`.
-
-## Build for usage
-
-Just want to run the app? Configure and build a Release binary — no tests,
-no docs:
-
-```bash
-cmake -S . -B build/Release -DCMAKE_BUILD_TYPE=Release
-cmake --build build/Release
-```
-
-The built app is at `build/Release/bin/worktime` (`worktime.exe` on Windows,
-`worktime.app` on macOS).
-
-On Linux, pushing a `vX.Y.Z` tag triggers the
-[Release](.github/workflows/release.yml) workflow, which builds an AppImage,
-a Flatpak bundle, and a Snap — manifests and desktop/AppStream metadata for
-all three live under `resource/` — then attaches all three to the
-resulting GitHub Release.
