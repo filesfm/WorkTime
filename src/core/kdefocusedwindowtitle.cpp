@@ -53,16 +53,16 @@ void KDEFocusedWindowTitle::start()
         scripting.call(QStringLiteral("unloadScript"), pluginName);
 
     const QString scriptPath = Utilities::extractResourceToDisk(QStringLiteral(
-                                                                    ":/qt/qml/Worktime/kwin-focused-window.js"),
-                                                                QStringLiteral("worktime-kwin-focused-window.js"))
+                                                                    ":/qt/qml/Worktime/focused-window-title.js"),
+                                                                QStringLiteral("worktime-focused-window-title.js"))
                                    .toLocalFile();
 
     const QDBusReply<int> scriptId = scripting.call(QStringLiteral("loadScript"), scriptPath, pluginName);
-    if (!scriptId.isValid())
+    if (!scriptId.isValid() || scriptId.value() < 0)
         return;
 
     QDBusInterface(QStringLiteral("org.kde.KWin"),
-                   QStringLiteral("/%1").arg(scriptId.value()),
+                   QStringLiteral("/Scripting/Script%1").arg(scriptId.value()),
                    QStringLiteral("org.kde.kwin.Scripting"),
                    bus)
         .call(QStringLiteral("run"));

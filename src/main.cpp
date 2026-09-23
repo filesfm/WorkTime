@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QLoggingCategory>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
     app.setQuitOnLastWindowClosed(false);
