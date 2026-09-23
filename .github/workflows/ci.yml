@@ -19,12 +19,15 @@ jobs:
           - os: ubuntu-latest
             qt_arch: linux_gcc_64
             qt_version: '6.8.1'
+            ccache_variant: ccache
           - os: windows-latest
             qt_arch: win64_msvc2022_64
             qt_version: '6.8.1'
+            ccache_variant: sccache
           - os: macos-latest
             qt_arch: clang_64
             qt_version: '6.11.1'
+            ccache_variant: ccache
 
     steps:
       - name: Checkout
@@ -51,8 +54,19 @@ jobs:
           modules: 'qtshadertools'
           cache: true
 
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
+        with:
+          key: ${{ matrix.os }}-${{ matrix.build_type }}
+          variant: ${{ matrix.ccache_variant }}
+          max-size: 300M
+
       - name: Configure
-        run: cmake -S . -B build/${{ matrix.build_type }} -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DBUILD_TESTING=ON
+        run: >
+          cmake -S . -B build/${{ matrix.build_type }} -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DBUILD_TESTING=ON
+          -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
+          -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache_variant }}
 
       - name: Build
         run: cmake --build build/${{ matrix.build_type }}
@@ -96,8 +110,16 @@ jobs:
           modules: 'qtshadertools'
           cache: true
 
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
+        with:
+          key: coverage
+          max-size: 300M
+
       - name: Configure
-        run: cmake -S . -B build/Coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DENABLE_COVERAGE=ON
+        run: >
+          cmake -S . -B build/Coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DENABLE_COVERAGE=ON
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Build
         run: cmake --build build/Coverage
@@ -145,8 +167,16 @@ jobs:
           modules: 'qtshadertools'
           cache: true
 
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
+        with:
+          key: sonar
+          max-size: 300M
+
       - name: Configure
-        run: cmake -S . -B build/Sonar -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+        run: >
+          cmake -S . -B build/Sonar -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Build
         run: cmake --build build/Sonar
