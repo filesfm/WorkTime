@@ -13,6 +13,8 @@
 #include <QNetworkRequest>
 #include <QUrl>
 
+Q_LOGGING_CATEGORY(worktimeSendingService, "worktime.sending.service")
+
 namespace {
 
 constexpr qsizetype kMaxMetadataLength = 255;
@@ -38,12 +40,14 @@ QUrl SendingService::serverUrl() const
 
 void SendingService::setServerUrl(const QUrl &url)
 {
+    qCDebug(worktimeSendingService) << "setServerUrl called with" << url;
     m_serverUrl = url;
     emit serverUrlChanged();
 }
 
 void SendingService::start()
 {
+    qCInfo(worktimeSendingService) << "starting sending service";
     m_timer.setInterval(60000);
     m_timer.start();
     sendNow();
@@ -51,6 +55,7 @@ void SendingService::start()
 
 void SendingService::stop()
 {
+    qCInfo(worktimeSendingService) << "stopping sending service";
     m_timer.stop();
 }
 
@@ -82,6 +87,7 @@ QByteArray SendingService::buildRequestBody() const
 void SendingService::sendNow()
 {
     if (!m_serverUrl.isValid()) {
+        qCWarning(worktimeSendingService) << "no server URL configured, skipping send";
         emit sendFailed(QStringLiteral("No server URL configured"));
         return;
     }
@@ -90,6 +96,7 @@ void SendingService::sendNow()
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
 
+    qCDebug(worktimeSendingService) << "posting activity sample to" << m_serverUrl;
     m_networkManager.post(request, buildRequestBody());
 }
 
@@ -99,10 +106,11 @@ void SendingService::handleReplyFinished(QNetworkReply *reply)
 
     if (reply->error() != QNetworkReply::NoError) {
         const QVariant status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-        qWarning() << "SendingService: submission failed (HTTP" << status << "):" << reply->errorString();
+        qCWarning(worktimeSendingService) << "submission failed (HTTP" << status << "):" << reply->errorString();
         emit sendFailed(reply->errorString());
         return;
     }
 
+    qCInfo(worktimeSendingService) << "submission succeeded";
     emit sendSucceeded();
 }

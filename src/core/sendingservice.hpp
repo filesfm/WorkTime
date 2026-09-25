@@ -1,9 +1,12 @@
 #pragma once
 
+#include <QLoggingCategory>
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QTimer>
 #include <QUrl>
+
+Q_DECLARE_LOGGING_CATEGORY(worktimeSendingService)
 
 class QNetworkReply;
 
