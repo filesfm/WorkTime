@@ -1,8 +1,11 @@
 #pragma once
 
+#include <QLoggingCategory>
 #include <QObject>
 #include <QString>
 #include <QtClassHelperMacros>
+
+Q_DECLARE_LOGGING_CATEGORY(worktimeKdeFocusedWindowTitle)
 
 /*!
  * \brief Tracks the focused window's title under KDE Plasma.
