@@ -78,7 +78,7 @@ void KDEFocusedWindowTitle::start()
 
     QDBusInterface(QStringLiteral("org.kde.KWin"),
                    QStringLiteral("/Scripting/Script%1").arg(scriptId.value()),
-                   QStringLiteral("org.kde.kwin.Scripting"),
+                   QStringLiteral("org.kde.kwin.Script"),
                    bus)
         .call(QStringLiteral("run"));
 
