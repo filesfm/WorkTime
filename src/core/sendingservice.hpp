@@ -51,6 +51,8 @@ public:
     bool isActive() const;
 
 signals:
+    /*! \brief Emmited after a server url changed. */
+    void serverUrlChanged();
     /*! \brief Emitted after a send request completes successfully. */
     void sendSucceeded();
     /*! \brief Emitted after a send request fails, with a human-readable reason. */

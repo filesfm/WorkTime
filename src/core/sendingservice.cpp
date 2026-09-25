@@ -39,6 +39,7 @@ QUrl SendingService::serverUrl() const
 void SendingService::setServerUrl(const QUrl &url)
 {
     m_serverUrl = url;
+    emit serverUrlChanged();
 }
 
 void SendingService::start()
