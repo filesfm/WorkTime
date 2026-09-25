@@ -60,21 +60,28 @@ signals:
 
 private:
     /*!
-     * \brief Builds the `application/x-www-form-urlencoded` request body for
-     * one activity sample, per the Worktime remote submission protocol:
-     * credentials and activity metadata as `Shoot[...]` fields, with
-     * `shoot_time`/`utc_timestamp` computed for the current instant.
-     *
-     * Credentials (`Shoot[user_name]`/`Shoot[password]`) are sent verbatim;
-     * metadata fields are truncated to 255 Unicode code points.
+     * \brief Builds the request body for one activity sample.
      * \par Cyclomatic complexity: 1
      */
     QByteArray buildRequestBody() const;
 
+    /*!
+     * \brief Sends buildRequestBody() to serverUrl(), or emits sendFailed()
+     * if no valid URL is set.
+     * \par Cyclomatic complexity: 2
+     */
     void sendNow();
+    /*!
+     * \brief Deletes \a reply and emits sendSucceeded() or sendFailed()
+     * depending on whether the request succeeded.
+     * \par Cyclomatic complexity: 2
+     */
     void handleReplyFinished(QNetworkReply *reply);
 
+    /*! \brief Issues the POST requests built by buildRequestBody(). */
     QNetworkAccessManager m_networkManager;
+    /*! \brief Drives the periodic sendNow() calls while active. */
     QTimer m_timer;
+    /*! \brief Stores serverUrl */
     QUrl m_serverUrl;
 };
