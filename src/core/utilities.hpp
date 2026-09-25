@@ -6,24 +6,19 @@
 #include <QUrl>
 
 /*!
- * \brief Stateless OS-interaction helpers: screenshot capture and focused
- * application detection.
+ * \brief Stateless OS-interaction helpers
  */
 class Utilities
 {
 public:
-    /*!
-     * \brief Deleted: Utilities is never instantiated, only used via its static members.
-     * \par Cyclomatic complexity: N/A (deleted - no body)
-     */
+    /*! \brief Deleted: Utilities is never instantiated, only used via its static members. */
     Utilities() = delete;
 
     /*!
-     * \brief Name of the application owning the currently focused window.
+     * \brief Title of the currently focused window.
      *
-     * \return The focused application's name (its process's base
-     * executable name, without path or extension), or an empty string if it
-     * could not be determined.
+     * \return The focused window's title, or an empty string if it could
+     * not be determined.
      * \par Cyclomatic complexity: 7 (Linux), 5 (Windows), 2 (macOS), 1 (other platforms) - the
      * implementation differs per platform (see utilities.cpp / utilities_mac.mm).
      */
@@ -60,15 +55,20 @@ public:
      */
     static QString truncateUtf8Safe(const QString &value, qsizetype maxCodePoints);
 
+    //! \brief Registers or unregisters the application to launch at login.
     static void autostart(bool autostart = true);
 
 #if defined(Q_OS_LINUX)
+    //! \brief Whether the GNOME focused-window D-Bus extension is installed.
     static bool isGNOMEFocusedWindowDBusInstalled();
 
+    //! \brief Whether the GNOME focused-window D-Bus extension is enabled.
     static bool isGNOMEFocusedWindowDBusEnabled();
 
+    //! \brief Installs the GNOME focused-window D-Bus extension.
     static void installGNOMEFocusedWindowDBus();
 
+    //! \brief Enables the GNOME focused-window D-Bus extension.
     static void enableGNOMEFocusedWindowDBus();
 #endif
 };
