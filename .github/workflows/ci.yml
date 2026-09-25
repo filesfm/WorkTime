@@ -23,7 +23,7 @@ jobs:
           - os: windows-latest
             qt_arch: win64_msvc2022_64
             qt_version: '6.8.1'
-            ccache_variant: sccache
+            ccache_variant: ''
           - os: macos-latest
             qt_arch: clang_64
             qt_version: '6.11.1'
@@ -55,6 +55,7 @@ jobs:
           cache: true
 
       - name: ccache
+        if: matrix.os != 'windows-latest'
         uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
         with:
           key: ${{ matrix.os }}-${{ matrix.build_type }}
