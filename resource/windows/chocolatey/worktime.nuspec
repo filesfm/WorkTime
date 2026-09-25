@@ -8,7 +8,7 @@
     <title>WorkTime</title>
     <authors>filesfm</authors>
     <projectUrl>https://github.com/filesfm/WorkTime</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/filesfm/WorkTime/main/resource/icon.png</iconUrl>
+    <iconUrl>https://cdn.jsdelivr.net/gh/filesfm/WorkTime@0.5.11/resource/icon.png</iconUrl>
     <copyright>2026 filesfm</copyright>
     <licenseUrl>https://github.com/filesfm/WorkTime/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
