@@ -26,4 +26,7 @@
 
   <!-- Center pin -->
   <circle cx="32" cy="36" r="2.5" fill="#2c3e50"/>
+
+  <!-- Notification badge -->
+  <circle cx="50" cy="50" r="11" fill="#ff0000" stroke="#ffffff" stroke-width="3"/>
 </svg>
