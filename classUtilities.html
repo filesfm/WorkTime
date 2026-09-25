@@ -77,7 +77,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Stateless OS-interaction helpers: screenshot capture and focused application detection.  
+<p>Stateless OS-interaction helpers.  
  <a href="classUtilities.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="utilities_8hpp_source.html">utilities.hpp</a>&gt;</code></p>
@@ -85,13 +85,13 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:add2daec2ff80b02ca600da10f53ef1f0" id="r_add2daec2ff80b02ca600da10f53ef1f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#add2daec2ff80b02ca600da10f53ef1f0">Utilities</a> ()=delete</td></tr>
-<tr class="memdesc:add2daec2ff80b02ca600da10f53ef1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted: <a class="el" href="classUtilities.html" title="Stateless OS-interaction helpers: screenshot capture and focused application detection.">Utilities</a> is never instantiated, only used via its static members.  <br /></td></tr>
+<tr class="memdesc:add2daec2ff80b02ca600da10f53ef1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted: <a class="el" href="classUtilities.html" title="Stateless OS-interaction helpers.">Utilities</a> is never instantiated, only used via its static members.  <br /></td></tr>
 <tr class="separator:add2daec2ff80b02ca600da10f53ef1f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a09f3ef4048032217dcbb9da5178ce13f" id="r_a09f3ef4048032217dcbb9da5178ce13f"><td class="memItemLeft" align="right" valign="top">static QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#a09f3ef4048032217dcbb9da5178ce13f">focusedApplicationName</a> ()</td></tr>
-<tr class="memdesc:a09f3ef4048032217dcbb9da5178ce13f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the application owning the currently focused window.  <br /></td></tr>
+<tr class="memdesc:a09f3ef4048032217dcbb9da5178ce13f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Title of the currently focused window.  <br /></td></tr>
 <tr class="separator:a09f3ef4048032217dcbb9da5178ce13f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a713e231cfe16927125a67f7e42972e19" id="r_a713e231cfe16927125a67f7e42972e19"><td class="memItemLeft" align="right" valign="top">static QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#a713e231cfe16927125a67f7e42972e19">extractResourceToDisk</a> (const QString &amp;sourcePath, const QString &amp;fileName)</td></tr>
 <tr class="memdesc:a713e231cfe16927125a67f7e42972e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies a file (e.g. a <code>:/</code> Qt resource) to a fixed path under the system temp directory, overwriting any file already there.  <br /></td></tr>
@@ -100,10 +100,11 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7bd5e103f7410901355a95fc70f9649a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncates <em>value</em> to at most <em>maxCodePoints</em> Unicode code points.  <br /></td></tr>
 <tr class="separator:a7bd5e103f7410901355a95fc70f9649a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7693b4dd83127e42bc92ecd929762db6" id="r_a7693b4dd83127e42bc92ecd929762db6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">autostart</a> (bool autostart=true)</td></tr>
+<tr class="memdesc:a7693b4dd83127e42bc92ecd929762db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers or unregisters the application to launch at login.  <br /></td></tr>
 <tr class="separator:a7693b4dd83127e42bc92ecd929762db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Stateless OS-interaction helpers: screenshot capture and focused application detection. </p>
+<div class="textblock"><p>Stateless OS-interaction helpers. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="add2daec2ff80b02ca600da10f53ef1f0" name="add2daec2ff80b02ca600da10f53ef1f0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#add2daec2ff80b02ca600da10f53ef1f0">&#9670;&#160;</a></span>Utilities()</h2>
@@ -128,8 +129,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Deleted: <a class="el" href="classUtilities.html" title="Stateless OS-interaction helpers: screenshot capture and focused application detection.">Utilities</a> is never instantiated, only used via its static members. </p>
-<dl class="section user"><dt>Cyclomatic complexity: N/A (deleted - no body)</dt><dd></dd></dl>
+<p>Deleted: <a class="el" href="classUtilities.html" title="Stateless OS-interaction helpers.">Utilities</a> is never instantiated, only used via its static members. </p>
 
 </div>
 </div>
@@ -157,6 +157,8 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Registers or unregisters the application to launch at login. </p>
 
 </div>
 </div>
@@ -231,8 +233,8 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Name of the application owning the currently focused window. </p>
-<dl class="section return"><dt>Returns</dt><dd>The focused application's name (its process's base executable name, without path or extension), or an empty string if it could not be determined. </dd></dl>
+<p>Title of the currently focused window. </p>
+<dl class="section return"><dt>Returns</dt><dd>The focused window's title, or an empty string if it could not be determined. </dd></dl>
 <dl class="section user"><dt>Cyclomatic complexity: 7 (Linux), 5 (Windows), 2 (macOS), 1 (other platforms) - the</dt><dd>implementation differs per platform (see utilities.cpp / utilities_mac.mm). </dd></dl>
 
 </div>
