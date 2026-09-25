@@ -2,8 +2,11 @@
 
 #include <QImage>
 #include <QList>
+#include <QLoggingCategory>
 #include <QString>
 #include <QUrl>
+
+Q_DECLARE_LOGGING_CATEGORY(worktimeUtilities)
 
 /*!
  * \brief Stateless OS-interaction helpers

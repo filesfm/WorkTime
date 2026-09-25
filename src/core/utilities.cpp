@@ -12,12 +12,15 @@
 #    include "kdefocusedwindowtitle.hpp"
 #endif
 
+Q_LOGGING_CATEGORY(worktimeUtilities, "worktime.utilities")
+
 QUrl Utilities::extractResourceToDisk(const QString &sourcePath, const QString &fileName)
 {
     const QString destinationPath
         = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).filePath(fileName);
     QFile::remove(destinationPath);
-    QFile::copy(sourcePath, destinationPath);
+    if (!QFile::copy(sourcePath, destinationPath))
+        qCWarning(worktimeUtilities) << "failed to copy" << sourcePath << "to" << destinationPath;
     return QUrl::fromLocalFile(destinationPath);
 }
 
@@ -55,6 +58,8 @@ QString Utilities::focusedApplicationName()
             QJsonObject obj = doc.object();
 
             title = obj["title"].toString();
+        } else {
+            qCWarning(worktimeUtilities) << "GNOME FocusedWindow D-Bus call failed:" << reply.errorMessage();
         }
 
         return title;
@@ -76,6 +81,8 @@ QString Utilities::focusedApplicationName()
                     title = doc.array().first().toString();
                 }
             }
+        } else {
+            qCWarning(worktimeUtilities) << "Cinnamon Eval D-Bus call failed:" << reply.errorMessage();
         }
 
         return title;
@@ -92,6 +99,7 @@ QString Utilities::focusedApplicationName()
 {
     HWND hwnd = GetForegroundWindow();
     if (!hwnd) {
+        qCWarning(worktimeUtilities) << "GetForegroundWindow returned no window";
         return QString();
     }
 
@@ -116,6 +124,8 @@ QString Utilities::focusedApplicationName()
 
 void Utilities::autostart(bool autostart)
 {
+    qCInfo(worktimeUtilities) << (autostart ? "enabling" : "disabling") << "autostart";
+
     QDBusConnection bus = QDBusConnection::sessionBus();
 
     QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.portal.Desktop",
@@ -131,6 +141,10 @@ void Utilities::autostart(bool autostart)
 
     msg << "" << options;
     QDBusMessage response = bus.call(msg);
+
+    if (response.type() != QDBusMessage::ReplyMessage) {
+        qCWarning(worktimeUtilities) << "RequestBackground D-Bus call failed:" << response.errorMessage();
+    }
 
     /*if (response.type() == QDBusMessage::ReplyMessage) {
         QDBusObjectPath handle = response.arguments().at(0).value<QDBusObjectPath>();
@@ -149,6 +163,8 @@ void Utilities::autostart(bool autostart)
 
 void Utilities::autostart(bool autostart)
 {
+    qCInfo(worktimeUtilities) << (autostart ? "enabling" : "disabling") << "autostart";
+
     QSettings registry(QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"),
                        QSettings::NativeFormat);
 
@@ -176,8 +192,10 @@ bool Utilities::isGNOMEFocusedWindowDBusInstalled()
     msg << QStringLiteral("focused-window-dbus@flexagoon.com");
     QDBusMessage response = bus.call(msg);
 
-    if (response.type() != QDBusMessage::ReplyMessage || response.arguments().isEmpty())
+    if (response.type() != QDBusMessage::ReplyMessage || response.arguments().isEmpty()) {
+        qCWarning(worktimeUtilities) << "GetExtensionInfo D-Bus call failed:" << response.errorMessage();
         return false;
+    }
 
     return !qdbus_cast<QVariantMap>(response.arguments().constFirst()).isEmpty();
 }
@@ -194,8 +212,10 @@ bool Utilities::isGNOMEFocusedWindowDBusEnabled()
     msg << QStringLiteral("focused-window-dbus@flexagoon.com");
     QDBusMessage response = bus.call(msg);
 
-    if (response.type() != QDBusMessage::ReplyMessage || response.arguments().isEmpty())
+    if (response.type() != QDBusMessage::ReplyMessage || response.arguments().isEmpty()) {
+        qCWarning(worktimeUtilities) << "GetExtensionInfo D-Bus call failed:" << response.errorMessage();
         return false;
+    }
 
     const QVariantMap info = qdbus_cast<QVariantMap>(response.arguments().constFirst());
     return info.value("state").toUInt() == 1;
@@ -203,6 +223,8 @@ bool Utilities::isGNOMEFocusedWindowDBusEnabled()
 
 void Utilities::installGNOMEFocusedWindowDBus()
 {
+    qCInfo(worktimeUtilities) << "installing GNOME focused-window D-Bus extension";
+
     QDBusConnection bus = QDBusConnection::sessionBus();
 
     QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
@@ -211,11 +233,17 @@ void Utilities::installGNOMEFocusedWindowDBus()
                                                       "InstallRemoteExtension");
 
     msg << QStringLiteral("focused-window-dbus@flexagoon.com");
-    bus.call(msg);
+    QDBusMessage response = bus.call(msg);
+
+    if (response.type() != QDBusMessage::ReplyMessage) {
+        qCWarning(worktimeUtilities) << "InstallRemoteExtension D-Bus call failed:" << response.errorMessage();
+    }
 }
 
 void Utilities::enableGNOMEFocusedWindowDBus()
 {
+    qCInfo(worktimeUtilities) << "enabling GNOME focused-window D-Bus extension";
+
     QDBusConnection bus = QDBusConnection::sessionBus();
 
     QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
@@ -224,7 +252,11 @@ void Utilities::enableGNOMEFocusedWindowDBus()
                                                       "EnableExtension");
 
     msg << QStringLiteral("focused-window-dbus@flexagoon.com");
-    bus.call(msg);
+    QDBusMessage response = bus.call(msg);
+
+    if (response.type() != QDBusMessage::ReplyMessage) {
+        qCWarning(worktimeUtilities) << "EnableExtension D-Bus call failed:" << response.errorMessage();
+    }
 }
 
 #endif
