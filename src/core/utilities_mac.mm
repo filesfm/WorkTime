@@ -4,7 +4,7 @@
 #import <ApplicationServices/ApplicationServices.h>
 #include <ServiceManagement/ServiceManagement.h>
 
-QString Utilities::focusedApplicationName()
+QString Utilities::focusedWindowTitle()
 {
     NSRunningApplication *app = [[NSWorkspace sharedWorkspace] frontmostApplication];
     pid_t pid = [app processIdentifier];
@@ -61,6 +61,7 @@ void Utilities::autostart(bool autostart)
     }
 
     if (error) {
-        qCWarning(worktimeUtilities) << "SMAppService call failed:" << QString::fromNSString(error.localizedDescription);
+        qCWarning(worktimeUtilities) << "SMAppService call failed:"
+                                     << QString::fromNSString(error.localizedDescription);
     }
 }

@@ -19,7 +19,7 @@ TEST(UtilitiesTest, FocusedApplicationNameDoesNotCrash)
     // depends on the desktop session (X11 vs Wayland) and which window (if
     // any) currently has focus. This only guards against the call itself
     // crashing.
-    (void)Utilities::focusedApplicationName();
+    (void)Utilities::focusedWindowTitle();
 }
 
 TEST(UtilitiesTest, ExtractResourceToDiskCopiesContentAndReturnsFileUrl)
@@ -125,7 +125,7 @@ TEST(UtilitiesTest, FocusedApplicationNameIsEmptyUnderWayland)
     const bool hadWaylandDisplay = qEnvironmentVariableIsSet("WAYLAND_DISPLAY");
 
     qputenv("WAYLAND_DISPLAY", "wayland-0");
-    EXPECT_TRUE(Utilities::focusedApplicationName().isEmpty());
+    EXPECT_TRUE(Utilities::focusedWindowTitle().isEmpty());
 
     if (hadWaylandDisplay)
         qputenv("WAYLAND_DISPLAY", previousValue);

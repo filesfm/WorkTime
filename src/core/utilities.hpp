@@ -25,7 +25,7 @@ public:
      * \par Cyclomatic complexity: 7 (Linux), 5 (Windows), 2 (macOS), 1 (other platforms) - the
      * implementation differs per platform (see utilities.cpp / utilities_mac.mm).
      */
-    static QString focusedApplicationName();
+    static QString focusedWindowTitle();
 
     /*!
      * \brief Copies a file (e.g. a `:/` Qt resource) to a fixed path under

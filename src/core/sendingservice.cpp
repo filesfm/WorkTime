@@ -66,7 +66,7 @@ bool SendingService::isActive() const
 
 QByteArray SendingService::buildRequestBody() const
 {
-    const QString title = Utilities::focusedApplicationName();
+    const QString title = Utilities::focusedWindowTitle();
     const qint64 utcTimestamp = QDateTime::currentSecsSinceEpoch();
     const qint64 shootTime = utcTimestamp + QDateTime::currentDateTime().offsetFromUtc();
 

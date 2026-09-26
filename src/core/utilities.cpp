@@ -41,7 +41,7 @@ QString Utilities::truncateUtf8Safe(const QString &value, qsizetype maxCodePoint
 #    include <QJsonDocument>
 #    include <QJsonObject>
 
-QString Utilities::focusedApplicationName()
+QString Utilities::focusedWindowTitle()
 {
     if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("gnome", Qt::CaseInsensitive)) {
         QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell",
@@ -95,7 +95,7 @@ QString Utilities::focusedApplicationName()
 
 #    include <windows.h>
 
-QString Utilities::focusedApplicationName()
+QString Utilities::focusedWindowTitle()
 {
     HWND hwnd = GetForegroundWindow();
     if (!hwnd) {
