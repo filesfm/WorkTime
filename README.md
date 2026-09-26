@@ -50,7 +50,7 @@ A Qt6/QML desktop time-tracking app.
 
 #### PowerShell
 
-- Install the choco package manager if not installed: https://chocolatey.org/install
+- Install the choco package manager if not installed: [chocolatey.org/install](https://chocolatey.org/install)
 - `choco install -y worktime`
 
 #### Manually
