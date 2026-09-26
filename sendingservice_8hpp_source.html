@@ -83,48 +83,51 @@ $(document).ready(function() { init_codefold(0); });
 <div class="contents">
 <a href="sendingservice_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;QLoggingCategory&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QNetworkAccessManager&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;QTimer&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;QUrl&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>Q_DECLARE_LOGGING_CATEGORY(worktimeSendingService)</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;core/sqliteconnection.hpp&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QLoggingCategory&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;QNetworkAccessManager&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;QTimer&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;QUrl&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">class </span>QNetworkReply;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>Q_DECLARE_LOGGING_CATEGORY(worktimeSendingService)</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classSendingService.html">   17</a></span><span class="keyword">class </span><a class="code hl_class" href="classSendingService.html">SendingService</a> : <span class="keyword">public</span> QObject</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    Q_OBJECT</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">   27</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">SendingService</a>(QObject *parent = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">   33</a></span>    QUrl <a class="code hl_function" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">serverUrl</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">   38</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">setServerUrl</a>(<span class="keyword">const</span> QUrl &amp;url);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">   44</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">start</a>();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">   49</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">stop</a>();</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">   54</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">isActive</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>signals:</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classSendingService.html#a0986f7ee849ac65afa3d20168dae6d25">   58</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a0986f7ee849ac65afa3d20168dae6d25">serverUrlChanged</a>();</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">   60</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">sendSucceeded</a>();</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">   62</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">sendFailed</a>(<span class="keyword">const</span> QString &amp;errorString);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    QByteArray buildRequestBody() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">void</span> sendNow();</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordtype">void</span> handleReplyFinished(QNetworkReply *reply);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    QNetworkAccessManager m_networkManager;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    QTimer m_timer;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    QUrl m_serverUrl;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>};</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">class </span>QNetworkReply;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classSendingService.html">   19</a></span><span class="keyword">class </span><a class="code hl_class" href="classSendingService.html">SendingService</a> : <span class="keyword">public</span> QObject</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    Q_OBJECT</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">   29</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classSendingService.html#a4725127232ea47a6cd1708510d5abec8">SendingService</a>(QObject *parent = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">   35</a></span>    QUrl <a class="code hl_function" href="classSendingService.html#ab0196fe402ec1fcef247564586c41eaf">serverUrl</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">   40</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a42dda7b4c7af2a3e19fa5d680219b99c">setServerUrl</a>(<span class="keyword">const</span> QUrl &amp;url);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">start</a>();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">   51</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a">stop</a>();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">   56</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9">isActive</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>signals:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classSendingService.html#a0986f7ee849ac65afa3d20168dae6d25">   60</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a0986f7ee849ac65afa3d20168dae6d25">serverUrlChanged</a>();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">   62</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694">sendSucceeded</a>();</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">sendFailed</a>(<span class="keyword">const</span> QString &amp;errorString);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    QByteArray buildRequestBody(<span class="keyword">const</span> QString &amp;title, qint64 utcTimestamp, qint64 shootTime) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordtype">void</span> sendNow();</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">void</span> handleReplyFinished(QNetworkReply *reply);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    QNetworkAccessManager m_networkManager;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    QTimer m_timer;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    QUrl m_serverUrl;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    SQLiteConnection m_sqliteConnection;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>};</div>
 </div>
-<div class="ttc" id="aclassSendingService_html"><div class="ttname"><a href="classSendingService.html">SendingService</a></div><div class="ttdoc">Periodically submits one activity sample to the Worktime remote endpoint.</div><div class="ttdef"><b>Definition</b> sendingservice.hpp:18</div></div>
+<div class="ttc" id="aclassSendingService_html"><div class="ttname"><a href="classSendingService.html">SendingService</a></div><div class="ttdoc">Periodically submits one activity sample to the Worktime remote endpoint.</div><div class="ttdef"><b>Definition</b> sendingservice.hpp:20</div></div>
 <div class="ttc" id="aclassSendingService_html_a0986f7ee849ac65afa3d20168dae6d25"><div class="ttname"><a href="classSendingService.html#a0986f7ee849ac65afa3d20168dae6d25">SendingService::serverUrlChanged</a></div><div class="ttdeci">void serverUrlChanged()</div><div class="ttdoc">Emmited after a server url changed.</div></div>
 <div class="ttc" id="aclassSendingService_html_a1dc0c0ecfaf50a86b735775b8eb60a0a"><div class="ttname"><a href="classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a">SendingService::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Starts the periodic send timer and sends immediately once.</div></div>
 <div class="ttc" id="aclassSendingService_html_a1f06beef9e350a0218e68dca42828a12"><div class="ttname"><a href="classSendingService.html#a1f06beef9e350a0218e68dca42828a12">SendingService::sendFailed</a></div><div class="ttdeci">void sendFailed(const QString &amp;errorString)</div><div class="ttdoc">Emitted after a send request fails, with a human-readable reason.</div></div>
