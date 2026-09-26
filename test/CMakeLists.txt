@@ -26,6 +26,8 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/core/oneinstanceguarantor_test.cpp
 )
 
+target_compile_definitions(worktime_tests PRIVATE BUILD_TESTING)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
 elseif(APPLE)

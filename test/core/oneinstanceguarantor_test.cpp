@@ -55,3 +55,24 @@ TEST(OneInstanceGuarantorTest, SupportsRepeatedAcquireReleaseCycles)
         EXPECT_NO_THROW(OneInstanceGuarantor guard{});
     }
 }
+
+namespace {
+
+class TestableOneInstanceGuarantor : public OneInstanceGuarantor
+{
+public:
+    using OneInstanceGuarantor::lockFilePath;
+
+    bool isLocked() const { return m_lockFile.isLocked(); }
+    QString fileName() const { return m_lockFile.fileName(); }
+};
+
+} // namespace
+
+TEST(OneInstanceGuarantorTest, LockFileIsActuallyLockedAfterConstruction)
+{
+    TestableOneInstanceGuarantor guard{};
+
+    EXPECT_TRUE(guard.isLocked());
+    EXPECT_EQ(guard.fileName(), TestableOneInstanceGuarantor::lockFilePath());
+}
