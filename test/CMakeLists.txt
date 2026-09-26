@@ -43,6 +43,7 @@ target_link_libraries(worktime_tests
         Qt6::Network
         Qt6::Test
         Qt6::DBus
+        Qt6::Sql
 )
 
 if(APPLE)

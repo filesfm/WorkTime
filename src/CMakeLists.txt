@@ -33,6 +33,8 @@ qt_add_qml_module(worktime
         core/oneinstanceguarantor.hpp
         core/kdefocusedwindowtitle.cpp
         core/kdefocusedwindowtitle.hpp
+        core/sqliteconnection.hpp
+        core/sqliteconnection.cpp
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
         ${CMAKE_SOURCE_DIR}/resource/icon.png
@@ -87,6 +89,7 @@ target_link_libraries(worktime
         Qt6::QuickControls2
         Qt6::Widgets
         Qt6::DBus
+        Qt6::Sql
 )
 
 if(APPLE)
