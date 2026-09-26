@@ -58,8 +58,8 @@ void KDEFocusedWindowTitle::start()
     }
 
     const QString pluginName(kKWinPluginName);
-    const QDBusReply<bool> alreadyLoaded = scripting.call(QStringLiteral("isScriptLoaded"), pluginName);
-    if (alreadyLoaded.isValid() && alreadyLoaded.value()) {
+    if (const QDBusReply<bool> alreadyLoaded = scripting.call(QStringLiteral("isScriptLoaded"), pluginName);
+        alreadyLoaded.isValid() && alreadyLoaded.value()) {
         qCDebug(worktimeKdeFocusedWindowTitle) << "unloading already-loaded KWin script" << pluginName;
         scripting.call(QStringLiteral("unloadScript"), pluginName);
     }
@@ -94,8 +94,7 @@ void KDEFocusedWindowTitle::stop()
 
     qCInfo(worktimeKdeFocusedWindowTitle) << "stopping";
 
-    QDBusInterface scripting = kwinScriptingInterface();
-    if (scripting.isValid())
+    if (QDBusInterface scripting = kwinScriptingInterface(); scripting.isValid())
         scripting.call(QStringLiteral("unloadScript"), QString(kKWinPluginName));
 
     QDBusConnection bus = QDBusConnection::sessionBus();
