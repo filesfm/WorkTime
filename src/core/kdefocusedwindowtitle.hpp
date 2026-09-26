@@ -10,7 +10,11 @@ Q_DECLARE_LOGGING_CATEGORY(worktimeKdeFocusedWindowTitle)
 /*!
  * \brief Tracks the focused window's title under KDE Plasma.
  */
+#if defined(BUILD_TESTING)
 class KDEFocusedWindowTitle : public QObject
+#else
+class KDEFocusedWindowTitle final : public QObject
+#endif
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(KDEFocusedWindowTitle)
@@ -22,6 +26,10 @@ public:
      * \par Cyclomatic complexity: 1
      */
     static KDEFocusedWindowTitle *instance();
+
+#if defined(BUILD_TESTING)
+    ~KDEFocusedWindowTitle() = default;
+#endif
 
     /*!
      * \brief Registers the D-Bus service and (re)loads the KWin script that
@@ -53,7 +61,11 @@ public slots:
      */
     Q_SCRIPTABLE void setActiveWindowTitle(const QString &title);
 
+#if defined(BUILD_TESTING)
+protected:
+#else
 private:
+#endif
     explicit KDEFocusedWindowTitle(QObject *parent = nullptr);
 
     QString m_activeWindowTitle;

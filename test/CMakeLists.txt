@@ -24,6 +24,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/core/sendingservice_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/utilities_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/oneinstanceguarantor_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/kdefocusedwindowtitle_test.cpp
 )
 
 target_compile_definitions(worktime_tests PRIVATE BUILD_TESTING)
