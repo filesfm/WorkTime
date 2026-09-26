@@ -14,7 +14,11 @@ Q_DECLARE_LOGGING_CATEGORY(worktimeSettings)
  * any setting missing from the backing store, or holding a value outside
  * its documented invariant, is reset to its default (see settings.cpp).
  */
+#if defined(BUILD_TESTING)
 class Settings : public QObject
+#else
+class Settings final : public QObject
+#endif
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(Settings)
@@ -25,6 +29,10 @@ public:
      * \par Cyclomatic complexity: 1
      */
     static Settings *instance();
+
+#if defined(BUILD_TESTING)
+    virtual ~Settings() = default;
+#endif
 
     /*!
      * \brief Server account username. No constraint; may be empty.
@@ -77,7 +85,11 @@ signals:
     void autoStartupChanged(); //!< Emitted when autoStartup() changes.
     void startButtonChanged(); //!< Emitted when startButtonPushed() changes.
 
+#if defined(BUILD_TESTING)
+protected:
+#else
 private:
+#endif
     /*!
      * \brief Constructs the singleton, resetting any missing/invalid setting to its default.
      * \par Cyclomatic complexity: 4
@@ -89,6 +101,10 @@ private:
      */
     void sanitize();
 
+#if defined(BUILD_TESTING)
+protected:
+#else
 private:
+#endif
     QSettings m_settings;
 };
