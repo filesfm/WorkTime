@@ -65,3 +65,8 @@ void Utilities::autostart(bool autostart)
                                      << QString::fromNSString(error.localizedDescription);
     }
 }
+
+void Utilities::showNotification(const QString &title, const QString &message)
+{
+    qCWarning(worktimeUtilities) << "showNotification not yet implemented on macOS:" << title << message;
+}

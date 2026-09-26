@@ -74,4 +74,11 @@ public:
     //! \brief Enables the GNOME focused-window D-Bus extension.
     static void enableGNOMEFocusedWindowDBus();
 #endif
+
+    /*!
+     * \brief Shows a desktop notification with \a title and \a message.
+     *
+     * \par Cyclomatic complexity: 1 (Linux).
+     */
+    static void showNotification(const QString &title, const QString &message);
 };

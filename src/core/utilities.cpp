@@ -260,3 +260,34 @@ void Utilities::enableGNOMEFocusedWindowDBus()
 }
 
 #endif
+
+#if defined(Q_OS_LINUX)
+
+void Utilities::showNotification(const QString &title, const QString &message)
+{
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.Notifications",
+                                                      "/org/freedesktop/Notifications",
+                                                      "org.freedesktop.Notifications",
+                                                      "Notify");
+
+    msg << QStringLiteral("WorkTime") << quint32(0) << QStringLiteral("io.github.filesfm.worktime") << title << message
+        << QStringList() << QVariantMap() << qint32(-1);
+
+    QDBusMessage response = QDBusConnection::sessionBus().call(msg);
+
+    if (response.type() != QDBusMessage::ReplyMessage)
+        qCWarning(worktimeUtilities) << "Notify D-Bus call failed:" << response.errorMessage();
+}
+
+#elif defined(Q_OS_WIN)
+
+void Utilities::showNotification(const QString &title, const QString &message)
+{
+    qCWarning(worktimeUtilities) << "showNotification not yet implemented on Windows:" << title << message;
+}
+
+#elif defined(Q_OS_MACOS)
+
+// Implemented in utilities_mac.mm
+
+#endif
