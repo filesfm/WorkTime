@@ -141,7 +141,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    QSettings m_settings;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    QSettings m_settings{QSettings::NativeFormat, QSettings::UserScope, <span class="stringliteral">&quot;Files.fm&quot;</span>, <span class="stringliteral">&quot;Worktime&quot;</span>};</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>};</div>
 </div>
 <div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Persisted application configuration, backed by QSettings.</div><div class="ttdef"><b>Definition</b> settings.hpp:22</div></div>
