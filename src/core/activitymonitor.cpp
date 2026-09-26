@@ -2,19 +2,7 @@
 
 #include <QSocketNotifier>
 
-Q_LOGGING_CATEGORY(worktimeActivityMonitor, "worktime.activity.monitor")
-
-ActivityMonitor::ActivityMonitor(QObject *parent)
-    : QObject(parent)
-{}
-
-ActivityMonitor::~ActivityMonitor()
-{
-    stop();
-}
-
 #if defined(Q_OS_LINUX)
-
 #    include <cerrno>
 #    include <cstring>
 #    include <fcntl.h>
@@ -28,6 +16,22 @@ ActivityMonitor::~ActivityMonitor()
 extern "C" {
 #    include <libudev.h>
 }
+#elif defined(Q_OS_WINDOWS)
+#    include <windows.h>
+#endif
+
+Q_LOGGING_CATEGORY(worktimeActivityMonitor, "worktime.activity.monitor")
+
+ActivityMonitor::ActivityMonitor(QObject *parent)
+    : QObject(parent)
+{}
+
+ActivityMonitor::~ActivityMonitor()
+{
+    stop();
+}
+
+#if defined(Q_OS_LINUX)
 
 namespace {
 bool isKeyboardOrMouse(udev_device *device)
@@ -270,8 +274,6 @@ void ActivityMonitor::readUdevMonitor()
 }
 
 #elif defined(Q_OS_WIN)
-
-#    include <windows.h>
 
 namespace {
 ActivityMonitor *g_activityMonitor = nullptr;
