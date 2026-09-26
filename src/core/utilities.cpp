@@ -9,7 +9,18 @@
 #include <QStandardPaths>
 
 #if defined(Q_OS_LINUX)
+#    include <QDBusArgument>
+#    include <QDBusConnection>
+#    include <QDBusMessage>
+#    include <QDBusObjectPath>
+#    include <QJsonArray>
+#    include <QJsonDocument>
+#    include <QJsonObject>
+#    include <QRandomGenerator>
+
 #    include "kdefocusedwindowtitle.hpp"
+#elif defined(Q_OS_WINDOWS)
+#    include <windows.h>
 #endif
 
 Q_LOGGING_CATEGORY(worktimeUtilities, "worktime.utilities")
@@ -34,12 +45,6 @@ QString Utilities::truncateUtf8Safe(const QString &value, qsizetype maxCodePoint
 }
 
 #if defined(Q_OS_LINUX)
-
-#    include <QDBusConnection>
-#    include <QDBusMessage>
-#    include <QJsonArray>
-#    include <QJsonDocument>
-#    include <QJsonObject>
 
 QString Utilities::focusedWindowTitle()
 {
@@ -93,8 +98,6 @@ QString Utilities::focusedWindowTitle()
 
 #elif defined(Q_OS_WIN)
 
-#    include <windows.h>
-
 QString Utilities::focusedWindowTitle()
 {
     HWND hwnd = GetForegroundWindow();
@@ -116,11 +119,6 @@ QString Utilities::focusedWindowTitle()
 #endif
 
 #if defined(Q_OS_LINUX)
-
-#    include <QDBusConnection>
-#    include <QDBusMessage>
-#    include <QDBusObjectPath>
-#    include <QRandomGenerator>
 
 void Utilities::autostart(bool autostart)
 {
@@ -177,8 +175,6 @@ void Utilities::autostart(bool autostart)
 #endif
 
 #if defined(Q_OS_LINUX)
-
-#    include <QDBusArgument>
 
 bool Utilities::isGNOMEFocusedWindowDBusInstalled()
 {
