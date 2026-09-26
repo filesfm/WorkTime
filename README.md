@@ -1,8 +1,10 @@
-# worktime
+# WorkTime
 
-[![Test coverage](https://img.shields.io/codecov/c/github/filesfm/WorkTime?label=test%20coverage&style=for-the-badge&logo=codecov&logoColor=white)](https://codecov.io/gh/filesfm/WorkTime)
-[![Lines of code](https://www.aschey.tech/tokei/github.com/filesfm/WorkTime?category=code&style=for-the-badge)](https://github.com/filesfm/WorkTime)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/quality_gate?project=filesfm_WorkTime)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
+## SonarQube
+
+[![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=coverage)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
