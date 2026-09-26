@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['focusedapplicationname_0',['focusedApplicationName',['../classUtilities.html#a09f3ef4048032217dcbb9da5178ce13f',1,'Utilities']]]
+  ['focusedwindowtitle_0',['focusedWindowTitle',['../classUtilities.html#a6fcc6c62410cba290dc2f372bb1416d5',1,'Utilities']]]
 ];
