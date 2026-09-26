@@ -112,6 +112,10 @@ private:
      */
     void setUserStatus(UserStatus status);
 
+private slots:
+    void showStartButtonNotPushedNotification();
+    void toggleStartButtonNotPushedTimer();
+
 private:
     void setRunning(bool running);
 
@@ -119,4 +123,5 @@ private:
     SendingService m_sendingService;
     ActivityMonitor m_activityMonitor;
     QTimer m_inactivityTimer;
+    QTimer m_startButtonNotPushedTimer;
 };

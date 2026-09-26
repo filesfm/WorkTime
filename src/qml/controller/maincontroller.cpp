@@ -1,17 +1,23 @@
 #include "maincontroller.hpp"
 
 #include "core/settings.hpp"
+#include "core/utilities.hpp"
 
 namespace {
 constexpr int kInactivityTimeoutMs = 60000;
-}
+constexpr int kStartButtonNotPushedTimeoutMs = 1800000;
+} // namespace
 
 void MainController::activityChecker()
 {
     m_inactivityTimer.setSingleShot(true);
     m_inactivityTimer.setInterval(kInactivityTimeoutMs);
+    m_startButtonNotPushedTimer.setSingleShot(false);
+    m_startButtonNotPushedTimer.setInterval(kStartButtonNotPushedTimeoutMs);
 
     connect(&m_inactivityTimer, &QTimer::timeout, this, [this]() { setUserStatus(UserStatus::INACTIVE); });
+    connect(&m_startButtonNotPushedTimer, &QTimer::timeout, this, &MainController::showStartButtonNotPushedNotification);
+    connect(this, &MainController::startButtonChanged, this, &MainController::toggleStartButtonNotPushedTimer);
 
     connect(&m_activityMonitor, &ActivityMonitor::activityDetected, this, [this]() {
         setUserStatus(UserStatus::ACTIVE);
@@ -20,6 +26,12 @@ void MainController::activityChecker()
 
     m_activityMonitor.start();
     m_inactivityTimer.start();
+
+    if (startButtonPushed()) {
+        m_startButtonNotPushedTimer.stop();
+    } else {
+        m_startButtonNotPushedTimer.start();
+    }
 }
 
 void MainController::setUserStatus(UserStatus status)
@@ -113,4 +125,18 @@ void MainController::setStartButtonPushed(bool pushed) const
 {
     Settings::instance()->setStartButtonPushed(pushed);
     emit startButtonChanged();
+}
+
+void MainController::showStartButtonNotPushedNotification()
+{
+    Utilities::showNotification("WorkTime", "WorkTime is launched but the Start button is not pushed!");
+}
+
+void MainController::toggleStartButtonNotPushedTimer()
+{
+    if (startButtonPushed()) {
+        m_startButtonNotPushedTimer.stop();
+    } else {
+        m_startButtonNotPushedTimer.start();
+    }
 }
