@@ -76,3 +76,8 @@ TEST(OneInstanceGuarantorTest, LockFileIsActuallyLockedAfterConstruction)
     EXPECT_TRUE(guard.isLocked());
     EXPECT_EQ(guard.fileName(), TestableOneInstanceGuarantor::lockFilePath());
 }
+
+TEST(OneInstanceGuarantorTest, ThrowsWhenRuntimeDirIsEmpty)
+{
+    EXPECT_THROW(TestableOneInstanceGuarantor::lockFilePath(QString()), std::runtime_error);
+}

@@ -15,6 +15,11 @@ QString OneInstanceGuarantor::lockFilePath()
 #elif defined(Q_OS_WINDOWS)
     runtimeDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 #endif
+    return lockFilePath(runtimeDir);
+}
+
+QString OneInstanceGuarantor::lockFilePath(const QString &runtimeDir)
+{
     if (runtimeDir.isEmpty()) {
         qCCritical(worktimeOneInstanceGuarantor) << "cannot find runtime dir";
         throw std::runtime_error("Cannot find runtime dir.");

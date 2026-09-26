@@ -36,6 +36,7 @@ protected:
 private:
 #endif
     static QString lockFilePath();
+    static QString lockFilePath(const QString &runtimeDir);
 
     QLockFile m_lockFile{lockFilePath()};
 };
