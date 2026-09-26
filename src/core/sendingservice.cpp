@@ -64,12 +64,8 @@ bool SendingService::isActive() const
     return m_timer.isActive();
 }
 
-QByteArray SendingService::buildRequestBody() const
+QByteArray SendingService::buildRequestBody(const QString &title, qint64 utcTimestamp, qint64 shootTime) const
 {
-    const QString title = Utilities::focusedWindowTitle();
-    const qint64 utcTimestamp = QDateTime::currentSecsSinceEpoch();
-    const qint64 shootTime = utcTimestamp + QDateTime::currentDateTime().offsetFromUtc();
-
     QByteArray body = encodeField(QStringLiteral("Shoot[user_name]"), Settings::instance()->username()) + '&'
                       + encodeField(QStringLiteral("Shoot[password]"), Settings::instance()->password()) + '&'
                       + encodeField(QStringLiteral("Shoot[project_name]"), QString()) + '&'
@@ -97,20 +93,41 @@ void SendingService::sendNow()
                       QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
 
     qCDebug(worktimeSendingService) << "posting activity sample to" << m_serverUrl;
-    m_networkManager.post(request, buildRequestBody());
+
+    const QString title = Utilities::focusedWindowTitle();
+    const qint64 utcTimestamp = QDateTime::currentSecsSinceEpoch();
+    const qint64 shootTime = utcTimestamp + QDateTime::currentDateTime().offsetFromUtc();
+    const QByteArray body = buildRequestBody(title, utcTimestamp, shootTime);
+
+    QNetworkReply *reply = m_networkManager.post(request, body);
+    reply->setProperty("focusedWindowTitle", title);
+    reply->setProperty("utcTimestamp", utcTimestamp);
+    reply->setProperty("shootTime", shootTime);
+    reply->setProperty("httpSize", qint64(body.size()));
 }
 
 void SendingService::handleReplyFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
 
+    const QString focusedWindowTitle = reply->property("focusedWindowTitle").toString();
+    const qint64 utcTimestamp = reply->property("utcTimestamp").toLongLong();
+    const qint64 shootTime = reply->property("shootTime").toLongLong();
+    const qint64 httpSize = reply->property("httpSize").toLongLong();
+
     if (reply->error() != QNetworkReply::NoError) {
         const QVariant status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
         qCWarning(worktimeSendingService) << "submission failed (HTTP" << status << "):" << reply->errorString();
+
+        m_sqliteConnection.addEntryToNotSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
+
         emit sendFailed(reply->errorString());
         return;
     }
 
     qCInfo(worktimeSendingService) << "submission succeeded";
+
+    m_sqliteConnection.addEntryToSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
+
     emit sendSucceeded();
 }

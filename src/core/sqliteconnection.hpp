@@ -24,6 +24,7 @@ public:
         QString focusedWindowTitle;
         qint64 utcTimestamp = 0;
         qint64 shootTime = 0;
+        qint64 httpSize = 0;
     };
     struct NotSentTableRow
     {
@@ -43,7 +44,7 @@ public:
     /*!
      * \throws std::runtime_error if the entry can't be inserted.
      */
-    void addEntryToSentTable(const QString &focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime);
+    void addEntryToSentTable(const QString &focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime, qint64 httpSize);
 
     /*!
      * \return The oldest entry, or std::nullopt if the table is empty.

@@ -16,6 +16,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/src/core/settings.cpp
     ${CMAKE_SOURCE_DIR}/src/core/sendingservice.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/sqliteconnection.cpp
     ${CMAKE_SOURCE_DIR}/src/core/utilities.cpp
     ${CMAKE_SOURCE_DIR}/src/core/kdefocusedwindowtitle.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings_test.cpp

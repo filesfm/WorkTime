@@ -43,7 +43,8 @@ SQLiteConnection::SQLiteConnection()
                                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                                    "focused_window_title TEXT, "
                                    "utc_timestamp INTEGER NOT NULL, "
-                                   "shoot_time INTEGER NOT NULL"
+                                   "shoot_time INTEGER NOT NULL, "
+                                   "http_size INTEGER NOT NULL"
                                    ")"))) {
         qCCritical(worktimeSqliteConnection) << "failed to create sent table:" << query.lastError().text();
         throw std::runtime_error("Cannot create the sent table: " + query.lastError().text().toStdString());
@@ -72,14 +73,18 @@ SQLiteConnection::~SQLiteConnection()
     QSqlDatabase::removeDatabase(connectionName);
 }
 
-void SQLiteConnection::addEntryToSentTable(const QString &focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime)
+void SQLiteConnection::addEntryToSentTable(const QString &focusedWindowTitle,
+                                           qint64 utcTimestamp,
+                                           qint64 shootTime,
+                                           qint64 httpSize)
 {
     QSqlQuery query(m_databaseConnection);
-    query.prepare(QStringLiteral("INSERT INTO sent (focused_window_title, utc_timestamp, shoot_time) "
-                                 "VALUES (:focused_window_title, :utc_timestamp, :shoot_time)"));
+    query.prepare(QStringLiteral("INSERT INTO sent (focused_window_title, utc_timestamp, shoot_time, http_size) "
+                                 "VALUES (:focused_window_title, :utc_timestamp, :shoot_time, :http_size)"));
     query.bindValue(":focused_window_title", focusedWindowTitle);
     query.bindValue(":utc_timestamp", utcTimestamp);
     query.bindValue(":shoot_time", shootTime);
+    query.bindValue(":http_size", httpSize);
 
     if (!query.exec()) {
         qCWarning(worktimeSqliteConnection) << "failed to insert sent entry:" << query.lastError().text();
@@ -98,8 +103,8 @@ std::optional<SQLiteConnection::SentTableRow> SQLiteConnection::takeOldestEntryF
     }
 
     QSqlQuery selectQuery(m_databaseConnection);
-    selectQuery.prepare(
-        QStringLiteral("SELECT id, focused_window_title, utc_timestamp, shoot_time FROM sent ORDER BY id ASC LIMIT 1"));
+    selectQuery.prepare(QStringLiteral("SELECT id, focused_window_title, utc_timestamp, shoot_time, http_size "
+                                       "FROM sent ORDER BY id ASC LIMIT 1"));
 
     if (!selectQuery.exec()) {
         m_databaseConnection.rollback();
@@ -118,6 +123,7 @@ std::optional<SQLiteConnection::SentTableRow> SQLiteConnection::takeOldestEntryF
     row.focusedWindowTitle = selectQuery.value(1).toString();
     row.utcTimestamp = selectQuery.value(2).toLongLong();
     row.shootTime = selectQuery.value(3).toLongLong();
+    row.httpSize = selectQuery.value(4).toLongLong();
 
     QSqlQuery deleteQuery(m_databaseConnection);
     deleteQuery.prepare(QStringLiteral("DELETE FROM sent WHERE id = :id"));

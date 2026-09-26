@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/sqliteconnection.hpp"
+
 #include <QLoggingCategory>
 #include <QNetworkAccessManager>
 #include <QObject>
@@ -66,7 +68,7 @@ private:
      * \brief Builds the request body for one activity sample.
      * \par Cyclomatic complexity: 1
      */
-    QByteArray buildRequestBody() const;
+    QByteArray buildRequestBody(const QString &title, qint64 utcTimestamp, qint64 shootTime) const;
 
     /*!
      * \brief Sends buildRequestBody() to serverUrl(), or emits sendFailed()
@@ -87,4 +89,6 @@ private:
     QTimer m_timer;
     /*! \brief Stores serverUrl */
     QUrl m_serverUrl;
+    /*! \brief Records each send attempt's outcome in the `sent`/`not_sent` tables. */
+    SQLiteConnection m_sqliteConnection;
 };
