@@ -106,5 +106,5 @@ protected:
 #else
 private:
 #endif
-    QSettings m_settings;
+    QSettings m_settings{QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime"};
 };

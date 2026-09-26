@@ -32,7 +32,6 @@ const QList<SettingSpec> kSpecs{{"username", QString(), [](const QVariant &v) { 
 
 Settings::Settings(QObject *parent)
     : QObject{parent}
-    , m_settings{QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime"}
 {
     qCInfo(worktimeSettings) << "loading settings from" << m_settings.fileName();
 
