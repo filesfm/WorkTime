@@ -48,6 +48,11 @@ A Qt6/QML desktop time-tracking app.
 
 ### Windows (works on x64)
 
+#### PowerShell
+
+- Install the choco package manager if not installed: https://chocolatey.org/install
+- `choco install -y worktime`
+
 #### Manually
 
 - Download the latest version of the setup file from GitHub releases
@@ -80,6 +85,10 @@ A Qt6/QML desktop time-tracking app.
 
 ### Windows
 
+#### PowerShell
+
+`choco upgrade -y worktime`
+
 #### Manually
 
 - Download the latest version of the setup file from GitHub releases
@@ -111,6 +120,10 @@ A Qt6/QML desktop time-tracking app.
 `brew uninstall --cask filesfm/macos/worktime`
 
 ### Windows
+
+#### PowerShell
+
+`choco uninstall -y worktime`
 
 #### Manually
 
