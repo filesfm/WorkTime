@@ -88,60 +88,6 @@ jobs:
           path: build/${{ matrix.build_type }}/bin
           if-no-files-found: error
 
-  coverage:
-    name: Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@8b297075da4cd2a5f1fd21fe011b499edf06e9d2 # v4
-
-      - name: Install Linux runtime dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libudev-dev gcovr
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
-        with:
-          version: '6.8.1'
-          arch: linux_gcc_64
-          modules: 'qtshadertools'
-          cache: true
-
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
-        with:
-          key: coverage
-          max-size: 300M
-
-      - name: Configure
-        run: >
-          cmake -S . -B build/Coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DENABLE_COVERAGE=ON
-          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-      - name: Build
-        run: cmake --build build/Coverage
-
-      - name: Test
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: ctest --test-dir build/Coverage --output-on-failure
-
-      - name: Generate coverage report
-        run: >
-          gcovr --root . --filter 'src/core/' --exclude-unreachable-branches
-          --xml-pretty --output build/Coverage/coverage.xml build/Coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
-        with:
-          files: build/Coverage/coverage.xml
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
