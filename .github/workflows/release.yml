@@ -387,7 +387,7 @@ jobs:
         env:
           VERSION: ${{ github.ref_name }}
         run: |
-          version="${VERSION#v}"
+          version_number="${VERSION#v}"
 
           mkdir -p debian
           cp resource/debian/control debian/control
@@ -395,7 +395,7 @@ jobs:
 
           mkdir -p pkgroot/DEBIAN
           awk 'BEGIN{RS=""} NR==2' resource/debian/control \
-            | sed -e "s|__VERSION__|${version}|" -e "s|__DEPENDS__|${shlibs_depends}|" \
+            | sed -e "s|__VERSION__|${version_number}|" -e "s|__DEPENDS__|${shlibs_depends}|" \
             > pkgroot/DEBIAN/control
 
       - name: Build deb package
@@ -432,19 +432,19 @@ jobs:
         env:
           VERSION: ${{ github.ref_name }}
         run: |
-          version="${VERSION#v}"
-          sed -i "s/^Version:.*/Version:        ${version}/" resource/fedora/worktime.spec
+          version_number="${VERSION#v}"
+          sed -i "s/^Version:.*/Version:        ${version_number}/" resource/fedora/worktime.spec
 
       - name: Build source tarball
         env:
           VERSION: ${{ github.ref_name }}
         run: |
-          version="${VERSION#v}"
+          version_number="${VERSION#v}"
           mkdir -p rpmbuild/SOURCES rpmbuild/SPECS
 
-          tar -czf "rpmbuild/SOURCES/v${version}.tar.gz" \
+          tar -czf "rpmbuild/SOURCES/v${version_number}.tar.gz" \
             --exclude-vcs --exclude=./rpmbuild \
-            --transform "s|^\./|WorkTime-${version}/|" \
+            --transform "s|^\./|WorkTime-${version_number}/|" \
             .
           cp resource/fedora/worktime.spec rpmbuild/SPECS/worktime.spec
 
@@ -481,10 +481,10 @@ jobs:
         env:
           VERSION: ${{ github.ref_name }}
         run: |
-          version="${VERSION#v}"
+          version_number="${VERSION#v}"
           checksum=$(curl -sL "https://github.com/filesfm/WorkTime/archive/refs/tags/${VERSION}.tar.gz" | sha256sum | cut -d' ' -f1)
           sed -i \
-            -e "s/^pkgver=.*/pkgver=${version}/" \
+            -e "s/^pkgver=.*/pkgver=${version_number}/" \
             -e "s/^pkgrel=.*/pkgrel=1/" \
             -e "s/^sha256sums=('.*')/sha256sums=('${checksum}')/" \
             resource/arch/PKGBUILD
