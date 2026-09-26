@@ -24,7 +24,6 @@ QString OneInstanceGuarantor::lockFilePath()
 }
 
 OneInstanceGuarantor::OneInstanceGuarantor()
-    : m_lockFile(lockFilePath())
 {
     qCInfo(worktimeOneInstanceGuarantor) << "acquiring single-instance lock at" << m_lockFile.fileName();
 

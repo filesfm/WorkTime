@@ -37,5 +37,5 @@ private:
 #endif
     static QString lockFilePath();
 
-    QLockFile m_lockFile;
+    QLockFile m_lockFile{lockFilePath()};
 };
