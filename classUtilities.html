@@ -102,6 +102,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a7693b4dd83127e42bc92ecd929762db6" id="r_a7693b4dd83127e42bc92ecd929762db6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">autostart</a> (bool autostart=true)</td></tr>
 <tr class="memdesc:a7693b4dd83127e42bc92ecd929762db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers or unregisters the application to launch at login.  <br /></td></tr>
 <tr class="separator:a7693b4dd83127e42bc92ecd929762db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81bd8a89b7e558339bddac8c0965d493" id="r_a81bd8a89b7e558339bddac8c0965d493"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUtilities.html#a81bd8a89b7e558339bddac8c0965d493">showNotification</a> (const QString &amp;title, const QString &amp;message)</td></tr>
+<tr class="memdesc:a81bd8a89b7e558339bddac8c0965d493"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows a desktop notification with <em>title</em> and <em>message</em>.  <br /></td></tr>
+<tr class="separator:a81bd8a89b7e558339bddac8c0965d493"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stateless OS-interaction helpers. </p>
@@ -236,6 +239,45 @@ Static Public Member Functions</h2></td></tr>
 <p>Title of the currently focused window. </p>
 <dl class="section return"><dt>Returns</dt><dd>The focused window's title, or an empty string if it could not be determined. </dd></dl>
 <dl class="section user"><dt>Cyclomatic complexity: 7 (Linux), 5 (Windows), 2 (macOS), 1 (other platforms) - the</dt><dd>implementation differs per platform (see utilities.cpp / utilities_mac.mm). </dd></dl>
+
+</div>
+</div>
+<a id="a81bd8a89b7e558339bddac8c0965d493" name="a81bd8a89b7e558339bddac8c0965d493"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81bd8a89b7e558339bddac8c0965d493">&#9670;&#160;</a></span>showNotification()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void Utilities::showNotification </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>title</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>message</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Shows a desktop notification with <em>title</em> and <em>message</em>. </p>
+<dl class="section user"><dt>Cyclomatic complexity: 1 (Linux).</dt><dd></dd></dl>
 
 </div>
 </div>

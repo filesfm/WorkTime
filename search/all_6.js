@@ -13,8 +13,9 @@ var searchData=
   ['settings_10',['Settings',['../classSettings.html',1,'']]],
   ['settings_2ehpp_11',['settings.hpp',['../settings_8hpp.html',1,'']]],
   ['setusername_12',['setusername',['../classSettings.html#afe37c1523033ac62b459b7887c4164c0',1,'Settings::setUsername()'],['../classMainController.html#a62bc4d951c8437059f9ffaf1d6397c97',1,'MainController::setUsername()']]],
-  ['start_13',['start',['../classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a',1,'SendingService']]],
-  ['startbuttonchanged_14',['startbuttonchanged',['../classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4',1,'Settings::startButtonChanged()'],['../classMainController.html#a41a2e6fc4bbd8f2998da58d59b0adcaf',1,'MainController::startButtonChanged() const']]],
-  ['startbuttonpushed_15',['startbuttonpushed',['../classMainController.html#ae06e8a426abf727fe9dc8dd3401f8c5f',1,'MainController::startButtonPushed'],['../classSettings.html#ab2f834a5d54962a7ded4a316559f94b1',1,'Settings::startButtonPushed()'],['../classMainController.html#a3a2e210e17847e0c5ad3a7e39e0199c7',1,'MainController::startButtonPushed()']]],
-  ['stop_16',['stop',['../classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a',1,'SendingService']]]
+  ['shownotification_13',['showNotification',['../classUtilities.html#a81bd8a89b7e558339bddac8c0965d493',1,'Utilities']]],
+  ['start_14',['start',['../classSendingService.html#a1dc0c0ecfaf50a86b735775b8eb60a0a',1,'SendingService']]],
+  ['startbuttonchanged_15',['startbuttonchanged',['../classSettings.html#abfc08a4f65f74cd346f3312f2cc7c3c4',1,'Settings::startButtonChanged()'],['../classMainController.html#a41a2e6fc4bbd8f2998da58d59b0adcaf',1,'MainController::startButtonChanged() const']]],
+  ['startbuttonpushed_16',['startbuttonpushed',['../classMainController.html#ae06e8a426abf727fe9dc8dd3401f8c5f',1,'MainController::startButtonPushed'],['../classSettings.html#ab2f834a5d54962a7ded4a316559f94b1',1,'Settings::startButtonPushed()'],['../classMainController.html#a3a2e210e17847e0c5ad3a7e39e0199c7',1,'MainController::startButtonPushed()']]],
+  ['stop_17',['stop',['../classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a',1,'SendingService']]]
 ];
