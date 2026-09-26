@@ -13,15 +13,17 @@ FetchContent_MakeAvailable(googletest)
 find_package(Qt6 REQUIRED COMPONENTS Gui Network Test DBus)
 
 add_executable(worktime_tests
-    ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/src/core/settings.cpp
     ${CMAKE_SOURCE_DIR}/src/core/sendingservice.cpp
     ${CMAKE_SOURCE_DIR}/src/core/sqliteconnection.cpp
     ${CMAKE_SOURCE_DIR}/src/core/utilities.cpp
     ${CMAKE_SOURCE_DIR}/src/core/kdefocusedwindowtitle.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/oneinstanceguarantor.cpp
+    ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/sendingservice_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/utilities_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/oneinstanceguarantor_test.cpp
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
