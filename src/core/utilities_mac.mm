@@ -2,8 +2,8 @@
 
 #import <AppKit/AppKit.h>
 #import <ApplicationServices/ApplicationServices.h>
-#import <UserNotifications/UserNotifications.h>
 #include <ServiceManagement/ServiceManagement.h>
+#import <UserNotifications/UserNotifications.h>
 
 QString Utilities::focusedWindowTitle()
 {
@@ -80,9 +80,8 @@ void Utilities::showNotification(const QString &title, const QString &message)
     [center requestAuthorizationWithOptions:UNAuthorizationOptionAlert | UNAuthorizationOptionSound
                           completionHandler:^(BOOL granted, NSError *error) {
                             if (error) {
-                                qCWarning(worktimeUtilities)
-                                << "requestAuthorization failed:"
-                                << QString::fromNSString(error.localizedDescription);
+                                qCWarning(worktimeUtilities) << "requestAuthorization failed:"
+                                                             << QString::fromNSString(error.localizedDescription);
                             } else if (!granted) {
                                 qCWarning(worktimeUtilities) << "notification permission not granted";
                             }
@@ -96,15 +95,15 @@ void Utilities::showNotification(const QString &title, const QString &message)
     // A nil trigger delivers immediately; the identifier is unique so notifications never replace
     // one another.
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString]
-                                                                         content:content
-                                                                         trigger:nil];
+                                                                          content:content
+                                                                          trigger:nil];
     [content release];
 
     [center addNotificationRequest:request
-            withCompletionHandler:^(NSError *error) {
-                if (error) {
-                    qCWarning(worktimeUtilities)
-                        << "addNotificationRequest failed:" << QString::fromNSString(error.localizedDescription);
-                }
-            }];
+             withCompletionHandler:^(NSError *error) {
+               if (error) {
+                   qCWarning(worktimeUtilities)
+                       << "addNotificationRequest failed:" << QString::fromNSString(error.localizedDescription);
+               }
+             }];
 }
