@@ -2,6 +2,7 @@
 
 #import <AppKit/AppKit.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import <UserNotifications/UserNotifications.h>
 #include <ServiceManagement/ServiceManagement.h>
 
 QString Utilities::focusedWindowTitle()
@@ -68,5 +69,42 @@ void Utilities::autostart(bool autostart)
 
 void Utilities::showNotification(const QString &title, const QString &message)
 {
-    qCWarning(worktimeUtilities) << "showNotification not yet implemented on macOS:" << title << message;
+    // UNUserNotificationCenter raises an exception when the app has no bundle identifier, which
+    // happens when the executable is run directly instead of through WorkTime.app.
+    if (![NSBundle mainBundle].bundleIdentifier) {
+        qCWarning(worktimeUtilities) << "no bundle identifier, cannot notify:" << title << message;
+        return;
+    }
+
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:UNAuthorizationOptionAlert | UNAuthorizationOptionSound
+                          completionHandler:^(BOOL granted, NSError *error) {
+                            if (error) {
+                                qCWarning(worktimeUtilities)
+                                << "requestAuthorization failed:"
+                                << QString::fromNSString(error.localizedDescription);
+                            } else if (!granted) {
+                                qCWarning(worktimeUtilities) << "notification permission not granted";
+                            }
+                          }];
+
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.title = title.toNSString();
+    content.body = message.toNSString();
+    content.sound = [UNNotificationSound defaultSound];
+
+    // A nil trigger delivers immediately; the identifier is unique so notifications never replace
+    // one another.
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString]
+                                                                         content:content
+                                                                         trigger:nil];
+    [content release];
+
+    [center addNotificationRequest:request
+            withCompletionHandler:^(NSError *error) {
+                if (error) {
+                    qCWarning(worktimeUtilities)
+                        << "addNotificationRequest failed:" << QString::fromNSString(error.localizedDescription);
+                }
+            }];
 }

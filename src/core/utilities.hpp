@@ -78,7 +78,7 @@ public:
     /*!
      * \brief Shows a desktop notification with \a title and \a message.
      *
-     * \par Cyclomatic complexity: 1 (Linux).
+     * \par Cyclomatic complexity: 1 (Linux), 5 (macOS).
      */
     static void showNotification(const QString &title, const QString &message);
 };

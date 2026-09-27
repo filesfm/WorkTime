@@ -106,6 +106,7 @@ elseif(APPLE)
             "-framework ServiceManagement"
             "-framework CoreFoundation"
             "-framework AppKit"
+            "-framework UserNotifications"
     )
 elseif(WIN32)
     target_link_libraries(worktime

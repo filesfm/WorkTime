@@ -65,6 +65,7 @@ elseif(APPLE)
             "-framework ServiceManagement"
             "-framework CoreFoundation"
             "-framework AppKit"
+            "-framework UserNotifications"
     )
 endif()
 
