@@ -92,21 +92,26 @@ target_link_libraries(worktime
         Qt6::Sql
 )
 
-if(APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(worktime
         PRIVATE
+            X11::X11
+            PkgConfig::UDEV
+    )
+elseif(APPLE)
+    target_link_libraries(worktime
+        PRIVATE
+            "-framework Cocoa"
+            "-framework ApplicationServices"
             "-framework ServiceManagement"
             "-framework CoreFoundation"
             "-framework AppKit"
     )
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_libraries(worktime PRIVATE X11::X11 PkgConfig::UDEV)
-elseif(APPLE)
-    target_link_libraries(worktime PRIVATE "-framework Cocoa" "-framework ApplicationServices")
 elseif(WIN32)
-    target_link_libraries(worktime PRIVATE User32)
+    target_link_libraries(worktime
+        PRIVATE
+            User32
+    )
 endif()
 
 include(GNUInstallDirs)

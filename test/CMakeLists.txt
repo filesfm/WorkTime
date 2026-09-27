@@ -52,19 +52,20 @@ target_link_libraries(worktime_tests
         Qt6::Sql
 )
 
-if(APPLE)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(worktime_tests
         PRIVATE
+            X11::X11
+    )
+elseif(APPLE)
+    target_link_libraries(worktime_tests
+        PRIVATE
+            "-framework Cocoa"
+            "-framework ApplicationServices"
             "-framework ServiceManagement"
             "-framework CoreFoundation"
             "-framework AppKit"
     )
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_libraries(worktime_tests PRIVATE X11::X11)
-elseif(APPLE)
-    target_link_libraries(worktime_tests PRIVATE "-framework Cocoa" "-framework ApplicationServices")
 endif()
 
 if(ENABLE_COVERAGE)
