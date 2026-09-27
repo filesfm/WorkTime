@@ -132,10 +132,19 @@ void Utilities::autostart(bool autostart)
                                                       "RequestBackground");
 
     int token = QRandomGenerator::global()->bounded(1000, 9999);
+    QStringList commandLine;
+    if (qEnvironmentVariableIsSet("FLATPAK_ID")) {
+        commandLine = {"flatpak", "run", "io.github.filesfm.worktime"};
+    } else if (qEnvironmentVariableIsSet("SNAP")) {
+        commandLine = {"snap", "run", "files-fm-worktime"};
+    } else {
+        commandLine = {"worktime"};
+    }
     QMap<QString, QVariant> options = {{"autostart", autostart},
                                        {"background", autostart},
                                        {"reason", "Automatically launch application at login"},
-                                       {"handle_token", QString("worktime_%1").arg(token)}};
+                                       {"handle_token", QString("worktime_%1").arg(token)},
+                                       {"commandline", commandLine}};
 
     msg << "" << options;
     QDBusMessage response = bus.call(msg);
