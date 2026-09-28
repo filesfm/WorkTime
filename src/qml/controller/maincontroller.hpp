@@ -25,7 +25,9 @@ class MainController : public QObject
 
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
     Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
+#if !defined(BUILD_WITHOUT_AUTOSTART)
     Q_PROPERTY(bool autoStartup READ autoStartup WRITE setAutoStartup NOTIFY autoStartupChanged)
+#endif
     Q_PROPERTY(bool startButtonPushed READ startButtonPushed WRITE setStartButtonPushed NOTIFY startButtonChanged)
 
 public:
@@ -64,6 +66,7 @@ public:
      */
     void setPassword(const QString &password) const;
 
+#if !defined(BUILD_WITHOUT_AUTOSTART)
     /*!
      * \brief Forwards to Settings::autoStartup().
      * \par Cyclomatic complexity: 1
@@ -74,6 +77,7 @@ public:
      * \par Cyclomatic complexity: 1
      */
     void setAutoStartup(bool enabled) const;
+#endif
 
     /*!
      * \brief Forwards to Settings::startButtonPushed().
@@ -89,7 +93,9 @@ public:
 signals:
     void usernameChanged();
     void passwordChanged();
+#if !defined(BUILD_WITHOUT_AUTOSTART)
     void autoStartupChanged();
+#endif
     void startButtonChanged() const;
     void userStatusChanged();
 

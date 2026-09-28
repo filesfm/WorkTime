@@ -25,7 +25,9 @@ struct SettingSpec
 //   startButtonPushed   - true or false
 const QList<SettingSpec> kSpecs{{"username", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
                                 {"password", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
+#if !defined(BUILD_WITHOUT_AUTOSTART)
                                 {"autoStartup", false, [](const QVariant &v) { return v.canConvert<bool>(); }},
+#endif
                                 {"startButtonPushed", false, [](const QVariant &v) { return v.canConvert<bool>(); }}};
 
 } // namespace
@@ -74,6 +76,8 @@ void Settings::setPassword(const QString &password)
     emit passwordChanged();
 }
 
+#if !defined(BUILD_WITHOUT_AUTOSTART)
+
 bool Settings::autoStartup() const
 {
     return m_settings.value("autoStartup").toBool();
@@ -89,6 +93,8 @@ void Settings::setAutoStartup(bool enabled)
     Utilities::autostart(enabled);
     emit autoStartupChanged();
 }
+
+#endif // !defined(BUILD_WITHOUT_AUTOSTART)
 
 bool Settings::startButtonPushed() const
 {

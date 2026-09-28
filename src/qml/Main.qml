@@ -19,6 +19,7 @@ ApplicationWindow {
     // Set from C++
     property bool trayAvailable: false
     property url trayIconSource: ""
+    property bool autoStartupAvailable: true
 
     // Size to fit whatever content is actually in mainColumn, rather than a
     // guessed fixed size that can clip content as fields are added.
@@ -113,6 +114,7 @@ ApplicationWindow {
                     text: "General"
                     font.bold: true
                     Material.foreground: Material.accent
+                    visible: window.autoStartupAvailable
                 }
 
                 GridLayout {
@@ -120,6 +122,7 @@ ApplicationWindow {
                     columnSpacing: 10
                     rowSpacing: 8
                     Layout.fillWidth: true
+                    visible: window.autoStartupAvailable
 
                     Label { text: "Launch at Startup" }
                     CheckBox {

@@ -58,8 +58,10 @@ public:
      */
     static QString truncateUtf8Safe(const QString &value, qsizetype maxCodePoints);
 
+#if !defined(BUILD_WITHOUT_AUTOSTART)
     //! \brief Registers or unregisters the application to launch at login.
     static void autostart(bool autostart = true);
+#endif
 
 #if defined(Q_OS_LINUX)
     //! \brief Whether the GNOME focused-window D-Bus extension is installed.

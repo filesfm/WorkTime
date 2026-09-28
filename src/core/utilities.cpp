@@ -118,7 +118,9 @@ QString Utilities::focusedWindowTitle()
 
 #endif
 
-#if defined(Q_OS_LINUX)
+#if !defined(BUILD_WITHOUT_AUTOSTART)
+
+#    if defined(Q_OS_LINUX)
 
 void Utilities::autostart(bool autostart)
 {
@@ -164,9 +166,9 @@ void Utilities::autostart(bool autostart)
     }*/
 }
 
-#elif defined(Q_OS_MACOS)
+#    elif defined(Q_OS_MACOS)
 
-#elif defined(Q_OS_WINDOWS)
+#    elif defined(Q_OS_WINDOWS)
 
 void Utilities::autostart(bool autostart)
 {
@@ -181,7 +183,9 @@ void Utilities::autostart(bool autostart)
         registry.remove(QStringLiteral("WorkTime"));
 }
 
-#endif
+#    endif
+
+#endif // !defined(BUILD_WITHOUT_AUTOSTART)
 
 #if defined(Q_OS_LINUX)
 

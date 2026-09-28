@@ -48,6 +48,8 @@ QString Utilities::focusedWindowTitle()
     return titleStr;
 }
 
+#if !defined(BUILD_WITHOUT_AUTOSTART)
+
 void Utilities::autostart(bool autostart)
 {
     qCInfo(worktimeUtilities) << (autostart ? "enabling" : "disabling") << "autostart";
@@ -66,6 +68,8 @@ void Utilities::autostart(bool autostart)
                                      << QString::fromNSString(error.localizedDescription);
     }
 }
+
+#endif // !defined(BUILD_WITHOUT_AUTOSTART)
 
 void Utilities::showNotification(const QString &title, const QString &message)
 {

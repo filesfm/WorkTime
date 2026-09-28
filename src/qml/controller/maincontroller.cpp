@@ -57,8 +57,10 @@ MainController::MainController(QObject *parent)
 
     connect(Settings::instance(), &Settings::usernameChanged, this, &MainController::usernameChanged);
     connect(Settings::instance(), &Settings::passwordChanged, this, &MainController::passwordChanged);
+#if !defined(BUILD_WITHOUT_AUTOSTART)
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::autoStartupChanged);
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::startButtonChanged);
+#endif
 
     if (startButtonPushed() && userStatus == UserStatus::ACTIVE) {
         m_sendingService.start();
@@ -106,6 +108,8 @@ void MainController::setPassword(const QString &password) const
     Settings::instance()->setPassword(password);
 }
 
+#if !defined(BUILD_WITHOUT_AUTOSTART)
+
 bool MainController::autoStartup() const
 {
     return Settings::instance()->autoStartup();
@@ -115,6 +119,8 @@ void MainController::setAutoStartup(bool enabled) const
 {
     Settings::instance()->setAutoStartup(enabled);
 }
+
+#endif // !defined(BUILD_WITHOUT_AUTOSTART)
 
 bool MainController::startButtonPushed() const
 {

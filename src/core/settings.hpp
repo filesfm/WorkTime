@@ -56,6 +56,7 @@ public:
      */
     void setPassword(const QString &password);
 
+#if !defined(BUILD_WITHOUT_AUTOSTART)
     /*!
      * \brief Whether the app should launch automatically on system startup.
      * \par Cyclomatic complexity: 1
@@ -66,6 +67,7 @@ public:
      * \par Cyclomatic complexity: 2
      */
     void setAutoStartup(bool enabled = true);
+#endif
 
     /*!
      * \brief Whether the start button in main window pushed.
@@ -80,9 +82,11 @@ public:
     void setStartButtonPushed(bool pushed = true);
 
 signals:
-    void usernameChanged();    //!< Emitted when username() changes.
-    void passwordChanged();    //!< Emitted when password() changes.
+    void usernameChanged(); //!< Emitted when username() changes.
+    void passwordChanged(); //!< Emitted when password() changes.
+#if !defined(BUILD_WITHOUT_AUTOSTART)
     void autoStartupChanged(); //!< Emitted when autoStartup() changes.
+#endif
     void startButtonChanged(); //!< Emitted when startButtonPushed() changes.
 
 #if defined(BUILD_TESTING)

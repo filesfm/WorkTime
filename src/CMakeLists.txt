@@ -75,6 +75,10 @@ set_target_properties(worktime PROPERTIES
 
 target_compile_features(worktime PRIVATE cxx_std_17)
 
+if(BUILD_WITHOUT_AUTOSTART)
+    target_compile_definitions(worktime PRIVATE BUILD_WITHOUT_AUTOSTART)
+endif()
+
 target_include_directories(worktime
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
