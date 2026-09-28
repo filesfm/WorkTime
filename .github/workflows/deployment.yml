@@ -249,4 +249,3 @@ jobs:
           git commit -m "chore(arch-repo): publish ${VERSION_TAG}"
           git pull --rebase origin gh-pages
           git push origin gh-pages
-
