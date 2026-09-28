@@ -207,46 +207,46 @@ jobs:
           mkdir -p dist
           gh release download "${{ inputs.tag }}" \
             --repo "${{ github.repository }}" \
-            --pattern '*-x86_64.pkg.
+            --pattern '*-x86_64.pkg.tar.zst' \
             --dir dist
 
           count=$(find dist -maxdepth 1 -name '*.pkg.tar.zst' | wc -l)
-          if [ "$count" -ne 1 ]; the
+          if [ "$count" -ne 1 ]; then
             echo "::error::Expected exactly one Arch package asset on release ${{ inputs.tag }}, found $count"
             exit 1
           fi
 
       - name: Update repo database
         run: |
-          mkdir -p gh-pages/arch/x86
+          mkdir -p gh-pages/arch/x86_64
           cd gh-pages/arch/x86_64
 
           rm -f ./*.pkg.tar.zst worktime.db worktime.db.tar.gz worktime.files worktime.files.tar.gz
-          cp "$GITHUB_WORKSPACE"/dis
+          cp "$GITHUB_WORKSPACE"/dist/*.pkg.tar.zst .
 
-          repo-add worktime.db.tar.g
+          repo-add worktime.db.tar.gz ./*.pkg.tar.zst
 
-          # GitHub Pages serves a giet-path text
+          # GitHub Pages serves a symlink's target path as text
           # instead of following it, so replace repo-add's db/files symlinks
           # with real file copies.
           cp worktime.db.tar.gz worktime.db
-          cp worktime.files.tar.gz w
+          cp worktime.files.tar.gz worktime.files
 
-      - name: Publish to GitHub Page
+      - name: Publish to GitHub Pages
         env:
-          VERSION_TAG: ${{ inputs.ta
+          VERSION_TAG: ${{ inputs.tag }}
         run: |
           cd gh-pages
           git config user.name "filesfm"
-          git config user.email "fil"
+          git config user.email "support@files.fm"
           git add arch
 
           if git diff --cached --quiet; then
-            echo "No changes to publ
+            echo "No changes to publish"
             exit 0
           fi
 
-          git commit -m "chore(arch-"
+          git commit -m "chore(arch-repo): publish ${VERSION_TAG}"
           git pull --rebase origin gh-pages
           git push origin gh-pages
 
