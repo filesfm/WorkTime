@@ -48,7 +48,7 @@ WorkTime is a desktop app for tracking how you spend your work time.
 | Windows          | `choco install -y worktime`                                                                          |
 | Fedora           | `sudo dnf copr enable -y filesfm/WorkTime && sudo dnf install -y worktime`                           |
 | Ubuntu           | `sudo add-apt-repository -y ppa:filesfm/worktime && sudo apt update && sudo apt install -y worktime` |
-| Arch             | `sudo sh -c 'grep -q "^\[worktime\]" /etc/pacman.conf || printf "\n[worktime]\nSigLevel = Optional TrustAll\nServer = https://filesfm.github.io/WorkTime/arch/\$arch\n" >> /etc/pacman.conf' && sudo pacman -Sy --noconfirm filesfm-worktime` |
+| Arch             | `sudo sh -c 'grep -q "^\[worktime\]" /etc/pacman.conf \|\| printf "\n[worktime]\nSigLevel = Optional TrustAll\nServer = https://filesfm.github.io/WorkTime/arch/\$arch\n" >> /etc/pacman.conf' && sudo pacman -Sy --noconfirm filesfm-worktime` |
 
 ---
 
