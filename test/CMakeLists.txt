@@ -37,7 +37,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
 elseif(APPLE)
-    target_sources(worktime_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/core/utilities_mac.mm)
+    target_sources(worktime_tests
+        PRIVATE
+	    ${CMAKE_SOURCE_DIR}/src/core/utilities_mac.mm
+	    ${CMAKE_SOURCE_DIR}/src/core/activitymonitor_mac.mm
+    )
 endif()
 
 set_target_properties(worktime_tests PROPERTIES EXPORT_COMPILE_COMMANDS YES)
