@@ -20,8 +20,8 @@
 
 #    include "kdefocusedwindowtitle.hpp"
 #elif defined(Q_OS_WINDOWS)
-#    include <windows.h>
 #    include <shellapi.h>
+#    include <windows.h>
 #endif
 
 Q_LOGGING_CATEGORY(worktimeUtilities, "worktime.utilities")
@@ -293,13 +293,13 @@ void Utilities::showNotification(const QString &title, const QString &message)
 
 void Utilities::showNotification(const QString &title, const QString &message)
 {
-    NOTIFYICONDATAW nid = { sizeof(nid) };
-    nid.hWnd   = CreateWindowW(L"STATIC", L"", 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr);
+    NOTIFYICONDATAW nid = {sizeof(nid)};
+    nid.hWnd = CreateWindowW(L"STATIC", L"", 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr);
     nid.uFlags = NIF_ICON | NIF_INFO;
-    nid.hIcon  = (HICON)LoadImageW(nullptr, L"icon.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+    nid.hIcon = (HICON)LoadImageW(nullptr, L"icon.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
     nid.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
-    wcsncpy_s(nid.szInfoTitle, reinterpret_cast<const wchar_t *>(title.utf16()),   _TRUNCATE);
-    wcsncpy_s(nid.szInfo,      reinterpret_cast<const wchar_t *>(message.utf16()), _TRUNCATE);
+    wcsncpy_s(nid.szInfoTitle, reinterpret_cast<const wchar_t *>(title.utf16()), _TRUNCATE);
+    wcsncpy_s(nid.szInfo, reinterpret_cast<const wchar_t *>(message.utf16()), _TRUNCATE);
 
     Shell_NotifyIconW(NIM_ADD, &nid);
     Sleep(5000);
