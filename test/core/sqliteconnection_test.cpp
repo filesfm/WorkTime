@@ -2,6 +2,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QFileDevice>
 #include <QStandardPaths>
 #include <QString>
 
@@ -13,6 +14,7 @@ class TestableSQLiteConnection : public SQLiteConnection
 {
 public:
     using SQLiteConnection::filePath;
+    using SQLiteConnection::m_databaseConnection;
 };
 
 QString databaseFilePath()
@@ -175,4 +177,26 @@ TEST_F(SQLiteConnectionTest, FilePathMethodReturnsAbsoluteFilePath)
 {
     const QString path{TestableSQLiteConnection::filePath()};
     EXPECT_TRUE(QDir::isAbsolutePath(path));
+}
+
+TEST_F(SQLiteConnectionTest, ConstructorSetsCorrectDatabaseName)
+{
+    TestableSQLiteConnection connection;
+    EXPECT_EQ(connection.m_databaseConnection.databaseName(), TestableSQLiteConnection::filePath());
+}
+
+TEST_F(SQLiteConnectionTest, ConstructorThrowsExceptionIfCannotConnectToDatabase)
+{
+    QFile file{TestableSQLiteConnection::filePath()};
+    QFileDevice::Permissions startPermissions{file.permissions()};
+    bool opened{file.open(QIODevice::WriteOnly)};
+
+    if (opened) {
+        file.close();
+        file.setPermissions(QFileDevice::Permissions());
+        EXPECT_ANY_THROW(SQLiteConnection connection);
+        file.setPermissions(startPermissions);
+    } else {
+        FAIL(); // TODO: find out other way to break connection
+    }
 }
