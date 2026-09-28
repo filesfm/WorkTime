@@ -48,14 +48,7 @@ WorkTime is a desktop app for tracking how you spend your work time.
 | Windows          | `choco install -y worktime`                                                                          |
 | Fedora           | `sudo dnf copr enable -y filesfm/WorkTime && sudo dnf install -y worktime`                           |
 | Ubuntu           | `sudo add-apt-repository -y ppa:filesfm/worktime && sudo apt update && sudo apt install -y worktime` |
-
-### Arch
-
-#### Manually
-
-- Download the latest version of the package file(.pkg.tar.zst) from GitHub releases
-- Enter the command and replace the *pathname* in it: `sudo pacman -U --noconfirm pathname`
-- Remove the package file(.pkg.tar.zst)
+| Arch             | `sudo sh -c 'grep -q "^\[worktime\]" /etc/pacman.conf || printf "\n[worktime]\nSigLevel = Optional TrustAll\nServer = https://filesfm.github.io/WorkTime/arch/\$arch\n" >> /etc/pacman.conf' && sudo pacman -Sy --noconfirm filesfm-worktime` |
 
 ---
 
@@ -67,28 +60,17 @@ WorkTime is a desktop app for tracking how you spend your work time.
 | Windows          | `choco upgrade -y worktime`                       |
 | Fedora           | `sudo dnf upgrade -y worktime`                    |
 | Ubuntu           | `sudo apt update && sudo apt upgrade -y worktime` |
-
-### Arch
-
-#### Manually
-
-- Download the latest version of the package file(.pkg.tar.zst) from GitHub releases
-- Enter the command and replace the *pathname* in it: `sudo pacman -U --noconfirm pathname`
-- Remove the package file(.pkg.tar.zst)
+| Arch             | `sudo pacman -Sy --noconfirm filesfm-worktime`    |
 
 ---
 
 ## Removing
 
-| Operating system | Terminal command                                                                          |
-| ---------------- | ----------------------------------------------------------------------------------------- |
-| macOS            | `brew uninstall --cask filesfm/macos/worktime`                                            |
-| Windows          | `choco uninstall -y worktime`                                                             |
-| Fedora           | `sudo dnf remove -y worktime && sudo dnf copr disable -y filesfm/WorkTime`                |
-| Ubuntu           | `sudo apt remove -y worktime && sudo add-apt-repository -y --remove ppa:filesfm/worktime` |
+| Operating system | Terminal command                                                                                    |
+| ---------------- | --------------------------------------------------------------------------------------------------- |
+| macOS            | `brew uninstall --cask filesfm/macos/worktime`                                                      |
+| Windows          | `choco uninstall -y worktime`                                                                       |
+| Fedora           | `sudo dnf remove -y worktime && sudo dnf copr disable -y filesfm/WorkTime`                          |
+| Ubuntu           | `sudo apt remove -y worktime && sudo add-apt-repository -y --remove ppa:filesfm/worktime`           |
+| Arch             | `sudo pacman -Rs --noconfirm filesfm-worktime; sudo sed -i '/^\[worktime\]$/,+2d' /etc/pacman.conf` |
 
-### Arch
-
-#### Manually
-
-`sudo pacman -Rs --noconfirm filesfm-worktime`
