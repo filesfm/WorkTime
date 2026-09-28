@@ -9,25 +9,17 @@
 
 namespace {
 
-// Exposes the protected databasePath() so the test can locate the database
-// file on disk without hardcoding its name separately from the class.
 class TestableSQLiteConnection : public SQLiteConnection
 {
 public:
-    using SQLiteConnection::databasePath;
+    using SQLiteConnection::filePath;
 };
 
 QString databaseFilePath()
 {
-    const QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir().mkpath(dataDir);
-    return QDir(dataDir).filePath(QString::fromUtf8(TestableSQLiteConnection::databasePath()));
+    return TestableSQLiteConnection::filePath();
 }
 
-// SQLiteConnection always opens the same fixed path
-// (QStandardPaths::AppLocalDataLocation + databasePath()), so every instance
-// in the process shares one file on disk. Removing it before each test keeps
-// tests independent despite that shared, fixed location.
 class SQLiteConnectionTest : public ::testing::Test
 {
 protected:
@@ -177,4 +169,10 @@ TEST_F(SQLiteConnectionTest, EmptyFocusedWindowTitleIsPreserved)
     const auto row = connection.takeOldestEntryFromSentTable();
     ASSERT_TRUE(row.has_value());
     EXPECT_EQ(row->focusedWindowTitle, QString());
+}
+
+TEST_F(SQLiteConnectionTest, FilePathMethodReturnsAbsoluteFilePath)
+{
+    const QString path{TestableSQLiteConnection::filePath()};
+    EXPECT_TRUE(QDir::isAbsolutePath(path));
 }

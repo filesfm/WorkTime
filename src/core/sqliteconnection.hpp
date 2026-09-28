@@ -75,7 +75,7 @@ protected:
 #else
 private:
 #endif
-    static constexpr const char *databasePath() { return "worktime.sqlite"; }
+    static QString filePath();
 
     void *operator new(std::size_t) = delete;
     void *operator new[](std::size_t) = delete;

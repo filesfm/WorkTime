@@ -24,10 +24,7 @@ QString nextConnectionName()
 SQLiteConnection::SQLiteConnection()
     : m_databaseConnection{QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), nextConnectionName())}
 {
-    const QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir().mkpath(dataDir);
-
-    const QString databaseFilePath = QDir(dataDir).filePath(QString::fromUtf8(databasePath()));
+    const QString databaseFilePath{filePath()};
     qCDebug(worktimeSqliteConnection) << "opening" << m_databaseConnection.connectionName() << "at" << databaseFilePath;
 
     m_databaseConnection.setDatabaseName(databaseFilePath);
@@ -220,4 +217,12 @@ std::optional<SQLiteConnection::NotSentTableRow> SQLiteConnection::takeOldestEnt
     qCDebug(worktimeSqliteConnection) << "took not_sent entry" << id;
 
     return row;
+}
+
+QString SQLiteConnection::filePath()
+{
+    const QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir().mkpath(dataDir);
+    QString databaseFilePath = QDir(dataDir).filePath(QString::fromUtf8("worktime.sqlite"));
+    return databaseFilePath;
 }
