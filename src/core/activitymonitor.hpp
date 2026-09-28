@@ -18,7 +18,11 @@ Q_DECLARE_LOGGING_CATEGORY(worktimeActivityMonitor)
  * \brief Emits activityDetected() on any global keyboard or mouse input,
  * even while no Worktime window has focus.
  */
+#if defined(BUILD_TESTING)
 class ActivityMonitor : public QObject
+#else
+class ActivityMonitor final : public QObject
+#endif
 {
     Q_OBJECT
 
@@ -47,7 +51,11 @@ signals:
     /*! \brief Emitted on any global key press/release or mouse click/move/scroll. */
     void activityDetected();
 
+#if defined(BUILD_TESTING)
+protected:
+#else
 private:
+#endif
 #if defined(Q_OS_LINUX)
     // GNOME/Mutter session: no /dev/input access needed, so no "input" group
     // membership is required. Preferred whenever available.
@@ -83,7 +91,11 @@ private:
     bool m_running = false;
 
 #if defined(Q_OS_LINUX)
+#    if defined(BUILD_TESTING)
+protected slots:
+#    else
 private slots:
+#    endif
     void handleGnomeIdleWatchFired(uint watchId);
 #endif
 };

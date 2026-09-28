@@ -19,6 +19,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/utilities.cpp
     ${CMAKE_SOURCE_DIR}/src/core/kdefocusedwindowtitle.cpp
     ${CMAKE_SOURCE_DIR}/src/core/oneinstanceguarantor.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/activitymonitor.cpp
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/sendingservice_test.cpp
@@ -26,12 +27,15 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/core/utilities_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/oneinstanceguarantor_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/kdefocusedwindowtitle_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/activitymonitor_test.cpp
 )
 
 target_compile_definitions(worktime_tests PRIVATE BUILD_TESTING)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
 elseif(APPLE)
     target_sources(worktime_tests PRIVATE ${CMAKE_SOURCE_DIR}/src/core/utilities_mac.mm)
 endif()
@@ -57,6 +61,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(worktime_tests
         PRIVATE
             X11::X11
+            PkgConfig::UDEV
     )
 elseif(APPLE)
     target_link_libraries(worktime_tests
