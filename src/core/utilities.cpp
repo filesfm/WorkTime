@@ -20,8 +20,11 @@
 
 #    include "kdefocusedwindowtitle.hpp"
 #elif defined(Q_OS_WINDOWS)
-#    include <shellapi.h>
+// clang-format off
+// windows.h must be included before shellapi.h, which depends on it.
 #    include <windows.h>
+#    include <shellapi.h>
+// clang-format on
 #endif
 
 Q_LOGGING_CATEGORY(worktimeUtilities, "worktime.utilities")
