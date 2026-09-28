@@ -73,4 +73,3 @@ WorkTime is a desktop app for tracking how you spend your work time.
 | Fedora           | `sudo dnf remove -y worktime && sudo dnf copr disable -y filesfm/WorkTime`                          |
 | Ubuntu           | `sudo apt remove -y worktime && sudo add-apt-repository -y --remove ppa:filesfm/worktime`           |
 | Arch             | `sudo pacman -Rs --noconfirm filesfm-worktime; sudo sed -i '/^\[worktime\]$/,+2d' /etc/pacman.conf` |
-
