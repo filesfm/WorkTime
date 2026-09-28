@@ -16,7 +16,11 @@ Q_DECLARE_LOGGING_CATEGORY(worktimeSqliteConnection)
  * it must not be shared with, or its queries constructed from, any other
  * thread.
  */
+#if defined(BUILD_TESTING)
+class SQLiteConnection
+#else
 class SQLiteConnection final
+#endif
 {
 public:
     struct SentTableRow
@@ -66,7 +70,11 @@ public:
      */
     std::optional<NotSentTableRow> takeOldestEntryFromNotSentTable();
 
+#if defined(BUILD_TESTING)
+protected:
+#else
 private:
+#endif
     static constexpr const char *databasePath() { return "worktime.sqlite"; }
 
     void *operator new(std::size_t) = delete;
@@ -74,6 +82,10 @@ private:
     void *operator new(std::size_t, void *) = delete;
     void *operator new[](std::size_t, void *) = delete;
 
+#if defined(BUILD_TESTING)
+protected:
+#else
 private:
+#endif
     QSqlDatabase m_databaseConnection;
 };
