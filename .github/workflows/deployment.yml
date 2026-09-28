@@ -182,3 +182,71 @@ jobs:
 
       - name: Submit build to Copr
         run: copr-cli build filesfm/WorkTime rpmbuild/SRPMS/*.src.rpm
+
+  publish-arch:
+    name: Publish Arch repo
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install packaging tools
+        run: pacman -Sy --noconfirm --needed git github-cli pacman-contrib
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download package from GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p dist
+          gh release download "${{ inputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern '*-x86_64.pkg.
+            --dir dist
+
+          count=$(find dist -maxdepth 1 -name '*.pkg.tar.zst' | wc -l)
+          if [ "$count" -ne 1 ]; the
+            echo "::error::Expected exactly one Arch package asset on release ${{ inputs.tag }}, found $count"
+            exit 1
+          fi
+
+      - name: Update repo database
+        run: |
+          mkdir -p gh-pages/arch/x86
+          cd gh-pages/arch/x86_64
+
+          rm -f ./*.pkg.tar.zst worktime.db worktime.db.tar.gz worktime.files worktime.files.tar.gz
+          cp "$GITHUB_WORKSPACE"/dis
+
+          repo-add worktime.db.tar.g
+
+          # GitHub Pages serves a giet-path text
+          # instead of following it, so replace repo-add's db/files symlinks
+          # with real file copies.
+          cp worktime.db.tar.gz worktime.db
+          cp worktime.files.tar.gz w
+
+      - name: Publish to GitHub Page
+        env:
+          VERSION_TAG: ${{ inputs.ta
+        run: |
+          cd gh-pages
+          git config user.name "filesfm"
+          git config user.email "fil"
+          git add arch
+
+          if git diff --cached --quiet; then
+            echo "No changes to publ
+            exit 0
+          fi
+
+          git commit -m "chore(arch-"
+          git pull --rebase origin gh-pages
+          git push origin gh-pages
+
