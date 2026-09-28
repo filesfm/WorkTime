@@ -104,20 +104,22 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classUtilities.html#a7bd5e103f7410901355a95fc70f9649a">   59</a></span>    <span class="keyword">static</span> QString <a class="code hl_function" href="classUtilities.html#a7bd5e103f7410901355a95fc70f9649a">truncateUtf8Safe</a>(<span class="keyword">const</span> QString &amp;value, qsizetype maxCodePoints);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">   62</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">autostart</a>(<span class="keywordtype">bool</span> autostart = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#if defined(Q_OS_LINUX)</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> isGNOMEFocusedWindowDBusInstalled();</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> isGNOMEFocusedWindowDBusEnabled();</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> installGNOMEFocusedWindowDBus();</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> enableGNOMEFocusedWindowDBus();</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classUtilities.html#a81bd8a89b7e558339bddac8c0965d493">   83</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classUtilities.html#a81bd8a89b7e558339bddac8c0965d493">showNotification</a>(<span class="keyword">const</span> QString &amp;title, <span class="keyword">const</span> QString &amp;message);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>};</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#if !defined(BUILD_WITHOUT_AUTOSTART)</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">   63</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classUtilities.html#a7693b4dd83127e42bc92ecd929762db6">autostart</a>(<span class="keywordtype">bool</span> autostart = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#if defined(Q_OS_LINUX)</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> isGNOMEFocusedWindowDBusInstalled();</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> isGNOMEFocusedWindowDBusEnabled();</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> installGNOMEFocusedWindowDBus();</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> enableGNOMEFocusedWindowDBus();</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classUtilities.html#a81bd8a89b7e558339bddac8c0965d493">   85</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classUtilities.html#a81bd8a89b7e558339bddac8c0965d493">showNotification</a>(<span class="keyword">const</span> QString &amp;title, <span class="keyword">const</span> QString &amp;message);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
 </div>
 <div class="ttc" id="aclassUtilities_html"><div class="ttname"><a href="classUtilities.html">Utilities</a></div><div class="ttdoc">Stateless OS-interaction helpers.</div><div class="ttdef"><b>Definition</b> utilities.hpp:15</div></div>
 <div class="ttc" id="aclassUtilities_html_a6fcc6c62410cba290dc2f372bb1416d5"><div class="ttname"><a href="classUtilities.html#a6fcc6c62410cba290dc2f372bb1416d5">Utilities::focusedWindowTitle</a></div><div class="ttdeci">static QString focusedWindowTitle()</div><div class="ttdoc">Title of the currently focused window.</div></div>
