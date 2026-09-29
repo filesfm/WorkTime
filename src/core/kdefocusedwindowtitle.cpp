@@ -106,11 +106,13 @@ void KDEFocusedWindowTitle::stop()
 
 QString KDEFocusedWindowTitle::activeWindowTitle() const
 {
+    QMutexLocker locker(&m_activeWindowTitleMutex);
     return m_activeWindowTitle;
 }
 
 void KDEFocusedWindowTitle::setActiveWindowTitle(const QString &title)
 {
     qCDebug(worktimeKdeFocusedWindowTitle) << "active window title changed to" << title;
+    QMutexLocker locker(&m_activeWindowTitleMutex);
     m_activeWindowTitle = title;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QLoggingCategory>
+#include <QMutex>
 #include <QObject>
 #include <QString>
 #include <QtClassHelperMacros>
@@ -49,6 +50,7 @@ public:
      * \brief Title of the window that was last reported focused, or an
      * empty string if none has been reported yet (e.g. start() was never
      * called, or no window currently has focus).
+     * \note Thread safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     QString activeWindowTitle() const;
@@ -57,6 +59,7 @@ public slots:
     /*!
      * \brief D-Bus-callable: records \a title as the focused window's title.
      * Called by the KWin script on every window activation.
+     * \note Thread safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     Q_SCRIPTABLE void setActiveWindowTitle(const QString &title);
@@ -69,5 +72,7 @@ private:
     explicit KDEFocusedWindowTitle(QObject *parent = nullptr);
 
     QString m_activeWindowTitle;
+    /*! \brief Guards m_activeWindowTitle. */
+    mutable QMutex m_activeWindowTitleMutex;
     bool m_started = false;
 };
