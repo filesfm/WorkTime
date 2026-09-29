@@ -36,7 +36,7 @@ void MainController::activityChecker()
 
 void MainController::setUserStatus(UserStatus status)
 {
-    if (userStatus.exchange(status) == status)
+    if (m_userStatus.exchange(status) == status)
         return;
 
     emit userStatusChanged();
@@ -62,7 +62,7 @@ MainController::MainController(QObject *parent)
     connect(Settings::instance(), &Settings::autoStartupChanged, this, &MainController::startButtonChanged);
 #endif
 
-    if (startButtonPushed() && userStatus == UserStatus::ACTIVE) {
+    if (startButtonPushed() && m_userStatus == UserStatus::ACTIVE) {
         m_sendingService.start();
     } else {
         m_sendingService.stop();
@@ -76,7 +76,7 @@ void MainController::setRunning(bool running)
     if (startButtonPushed() == running)
         return;
     setStartButtonPushed(running);
-    if (running && userStatus == UserStatus::ACTIVE)
+    if (running && m_userStatus == UserStatus::ACTIVE)
         m_sendingService.start();
     else
         m_sendingService.stop();

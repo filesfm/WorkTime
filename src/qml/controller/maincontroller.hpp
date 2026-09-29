@@ -120,7 +120,7 @@ private:
     void activityChecker();
 
     /*!
-     * \brief Sets userStatus, starting/stopping the sending service to match
+     * \brief Sets m_userStatus, starting/stopping the sending service to match
      * whenever tracking is running (see startButtonPushed()).
      * \par Cyclomatic complexity: 3
      */
@@ -133,7 +133,7 @@ private slots:
 private:
     void setRunning(bool running);
 
-    std::atomic<UserStatus> userStatus;
+    std::atomic<UserStatus> m_userStatus;
     SendingService m_sendingService;
     ActivityMonitor m_activityMonitor;
     QTimer m_inactivityTimer;
