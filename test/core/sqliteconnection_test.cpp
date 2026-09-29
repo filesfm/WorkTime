@@ -56,6 +56,50 @@ TEST_F(SQLiteConnectionTest, AddAndTakeOldestFromSentTable)
     EXPECT_EQ(row->httpSize, 100);
 }
 
+TEST_F(SQLiteConnectionTest, CountEntriesInLast24HoursFromSentTableCountsOnlyRecentEntries)
+{
+    SQLiteConnection connection;
+
+    const qint64 now = QDateTime::currentSecsSinceEpoch();
+    const qint64 oldTimestamp = now - 25 * 60 * 60;
+    const qint64 recentTimestamp = now - 60;
+
+    connection.addEntryToSentTable("old-window", oldTimestamp, oldTimestamp, 100);
+    connection.addEntryToSentTable("recent-window1", recentTimestamp, recentTimestamp, 200);
+    connection.addEntryToSentTable("recent-window2", recentTimestamp, recentTimestamp, 300);
+
+    EXPECT_EQ(connection.countEntriesInLast24HoursFromSentTable(), 2);
+}
+
+TEST_F(SQLiteConnectionTest, CountEntriesInLast24HoursFromEmptySentTableReturnsZero)
+{
+    SQLiteConnection connection;
+
+    EXPECT_EQ(connection.countEntriesInLast24HoursFromSentTable(), 0);
+}
+
+TEST_F(SQLiteConnectionTest, SumHttpSizeInLast24HoursFromSentTableSumsOnlyRecentEntries)
+{
+    SQLiteConnection connection;
+
+    const qint64 now = QDateTime::currentSecsSinceEpoch();
+    const qint64 oldTimestamp = now - 25 * 60 * 60;
+    const qint64 recentTimestamp = now - 60;
+
+    connection.addEntryToSentTable("old-window", oldTimestamp, oldTimestamp, 1000);
+    connection.addEntryToSentTable("recent-window1", recentTimestamp, recentTimestamp, 200);
+    connection.addEntryToSentTable("recent-window2", recentTimestamp, recentTimestamp, 300);
+
+    EXPECT_EQ(connection.sumHttpSizeInLast24HoursFromSentTable(), 500);
+}
+
+TEST_F(SQLiteConnectionTest, SumHttpSizeInLast24HoursFromEmptySentTableReturnsZero)
+{
+    SQLiteConnection connection;
+
+    EXPECT_EQ(connection.sumHttpSizeInLast24HoursFromSentTable(), 0);
+}
+
 TEST_F(SQLiteConnectionTest, DeleteEntriesOlderThan24HoursFromSentTableRemovesOnlyOldEntries)
 {
     SQLiteConnection connection;
