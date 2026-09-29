@@ -3,6 +3,7 @@
 #include "core/sqliteconnection.hpp"
 
 #include <QLoggingCategory>
+#include <QMutex>
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QTimer>
@@ -30,11 +31,13 @@ public:
 
     /*!
      * \brief Endpoint requests are POSTed to. Invalid/empty until set.
+     * \note Thread safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     QUrl serverUrl() const;
     /*!
      * \brief Sets serverUrl().
+     * \note Thread safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     void setServerUrl(const QUrl &url);
@@ -89,6 +92,8 @@ private:
     QTimer m_timer;
     /*! \brief Stores serverUrl */
     QUrl m_serverUrl;
+    /*! \brief Guards m_serverUrl. */
+    mutable QMutex m_serverUrlMutex;
     /*! \brief Records each send attempt's outcome in the `sent`/`not_sent` tables. */
     SQLiteConnection m_sqliteConnection;
 };

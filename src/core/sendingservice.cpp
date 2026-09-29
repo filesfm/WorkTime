@@ -35,13 +35,17 @@ SendingService::SendingService(QObject *parent)
 
 QUrl SendingService::serverUrl() const
 {
+    QMutexLocker locker(&m_serverUrlMutex);
     return m_serverUrl;
 }
 
 void SendingService::setServerUrl(const QUrl &url)
 {
     qCDebug(worktimeSendingService) << "setServerUrl called with" << url;
-    m_serverUrl = url;
+    {
+        QMutexLocker locker(&m_serverUrlMutex);
+        m_serverUrl = url;
+    }
     emit serverUrlChanged();
 }
 
