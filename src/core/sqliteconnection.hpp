@@ -65,6 +65,20 @@ public:
     void deleteEntriesOlderThan24HoursFromSentTable();
 
     /*!
+     * \return The number of entries in the `sent` table whose
+     * `utc_timestamp` is within the last 24 hours.
+     * \throws std::runtime_error if the operation fails.
+     */
+    qint64 countEntriesInLast24HoursFromSentTable();
+
+    /*!
+     * \return The sum of `http_size` for entries in the `sent` table whose
+     * `utc_timestamp` is within the last 24 hours.
+     * \throws std::runtime_error if the operation fails.
+     */
+    qint64 sumHttpSizeInLast24HoursFromSentTable();
+
+    /*!
      * \throws std::runtime_error if the entry can't be inserted.
      */
     void addEntryToNotSentTable(const QString &focusedWindowTitle,
