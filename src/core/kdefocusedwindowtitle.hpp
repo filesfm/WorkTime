@@ -6,6 +6,8 @@
 #include <QString>
 #include <QtClassHelperMacros>
 
+#include <atomic>
+
 Q_DECLARE_LOGGING_CATEGORY(worktimeKdeFocusedWindowTitle)
 
 /*!
@@ -74,5 +76,5 @@ private:
     QString m_activeWindowTitle;
     /*! \brief Guards m_activeWindowTitle. */
     mutable QMutex m_activeWindowTitleMutex;
-    bool m_started = false;
+    std::atomic<bool> m_started = false;
 };
