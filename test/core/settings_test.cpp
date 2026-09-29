@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <QLoggingCategory>
 #include <QSettings>
 #include <QSignalSpy>
 #include <QStandardPaths>
@@ -15,6 +16,8 @@ class SettingsEnvironment : public ::testing::Environment
 public:
     void SetUp() override
     {
+        QLoggingCategory::setFilterRules(QStringLiteral("worktime.settings.debug=true"));
+
         QStandardPaths::setTestModeEnabled(true);
         QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
         raw.clear();
@@ -177,4 +180,177 @@ TEST(SettingsTest, SanitizeResetsInvalidValueToDefault)
     TestableSettings settings;
 
     EXPECT_FALSE(settings.autoStartup());
+}
+
+TEST(SettingsTest, ConstructorLogsSettingsFilePath)
+{
+    static QString captured;
+    captured.clear();
+
+    QtMessageHandler previous = qInstallMessageHandler(
+        [](QtMsgType, const QMessageLogContext &context, const QString &msg) {
+            if (qstrcmp(context.category, "worktime.settings") == 0)
+                captured += msg + "\n";
+        });
+
+    TestableSettings settings;
+
+    qInstallMessageHandler(previous);
+
+    EXPECT_TRUE(captured.contains("loading settings from"));
+}
+
+TEST(SettingsTest, SetUsernameLogsDebugAlwaysAndInfoOnlyWhenChanged)
+{
+    Settings *settings = Settings::instance();
+    settings->setUsername("initial");
+
+    static QString captured;
+    captured.clear();
+
+    QtMessageHandler previous = qInstallMessageHandler(
+        [](QtMsgType, const QMessageLogContext &context, const QString &msg) {
+            if (qstrcmp(context.category, "worktime.settings") == 0)
+                captured += msg + "\n";
+        });
+
+    settings->setUsername("initial");
+    EXPECT_TRUE(captured.contains("setUsername called with"));
+    EXPECT_FALSE(captured.contains("username changed to"));
+
+    captured.clear();
+    settings->setUsername("changed");
+    EXPECT_TRUE(captured.contains("setUsername called with"));
+    EXPECT_TRUE(captured.contains("username changed to"));
+
+    qInstallMessageHandler(previous);
+}
+
+TEST(SettingsTest, SetPasswordLogsDebugAlwaysAndInfoOnlyWhenChanged)
+{
+    Settings *settings = Settings::instance();
+    settings->setPassword("initial");
+
+    static QString captured;
+    captured.clear();
+
+    QtMessageHandler previous = qInstallMessageHandler(
+        [](QtMsgType, const QMessageLogContext &context, const QString &msg) {
+            if (qstrcmp(context.category, "worktime.settings") == 0)
+                captured += msg + "\n";
+        });
+
+    settings->setPassword("initial");
+    EXPECT_TRUE(captured.contains("setPassword called"));
+    EXPECT_FALSE(captured.contains("password changed"));
+
+    captured.clear();
+    settings->setPassword("changed");
+    EXPECT_TRUE(captured.contains("setPassword called"));
+    EXPECT_TRUE(captured.contains("password changed"));
+
+    qInstallMessageHandler(previous);
+}
+
+TEST(SettingsTest, SetAutoStartupLogsDebugAlwaysAndInfoOnlyWhenChanged)
+{
+    Settings *settings = Settings::instance();
+    settings->setAutoStartup(true);
+
+    static QString captured;
+    captured.clear();
+
+    QtMessageHandler previous = qInstallMessageHandler(
+        [](QtMsgType, const QMessageLogContext &context, const QString &msg) {
+            if (qstrcmp(context.category, "worktime.settings") == 0)
+                captured += msg + "\n";
+        });
+
+    settings->setAutoStartup(true);
+    EXPECT_TRUE(captured.contains("setAutoStartup called with"));
+    EXPECT_FALSE(captured.contains("autoStartup changed to"));
+
+    captured.clear();
+    settings->setAutoStartup(false);
+    EXPECT_TRUE(captured.contains("setAutoStartup called with"));
+    EXPECT_TRUE(captured.contains("autoStartup changed to"));
+
+    qInstallMessageHandler(previous);
+}
+
+TEST(SettingsTest, SetStartButtonPushedLogsDebugAlwaysAndInfoOnlyWhenChanged)
+{
+    Settings *settings = Settings::instance();
+    settings->setStartButtonPushed(true);
+
+    static QString captured;
+    captured.clear();
+
+    QtMessageHandler previous = qInstallMessageHandler(
+        [](QtMsgType, const QMessageLogContext &context, const QString &msg) {
+            if (qstrcmp(context.category, "worktime.settings") == 0)
+                captured += msg + "\n";
+        });
+
+    settings->setStartButtonPushed(true);
+    EXPECT_TRUE(captured.contains("setStartButtonPushed called with"));
+    EXPECT_FALSE(captured.contains("startButtonPushed changed to"));
+
+    captured.clear();
+    settings->setStartButtonPushed(false);
+    EXPECT_TRUE(captured.contains("setStartButtonPushed called with"));
+    EXPECT_TRUE(captured.contains("startButtonPushed changed to"));
+
+    qInstallMessageHandler(previous);
+}
+
+TEST(SettingsTest, SanitizeLogsUnknownOptionRemoval)
+{
+    {
+        QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
+        raw.setValue("unknownOption", "leftover");
+        raw.sync();
+    }
+
+    static QString captured;
+    captured.clear();
+
+    QtMessageHandler previous = qInstallMessageHandler(
+        [](QtMsgType, const QMessageLogContext &context, const QString &msg) {
+            if (qstrcmp(context.category, "worktime.settings") == 0)
+                captured += msg + "\n";
+        });
+
+    TestableSettings settings;
+
+    EXPECT_TRUE(captured.contains("deleting unknown option"));
+    EXPECT_TRUE(captured.contains("unknownOption"));
+
+    qInstallMessageHandler(previous);
+}
+
+TEST(SettingsTest, SanitizeLogsResetToDefaultForMissingKey)
+{
+    {
+        QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
+        raw.remove("username");
+        raw.sync();
+    }
+
+    static QString captured;
+    captured.clear();
+
+    QtMessageHandler previous = qInstallMessageHandler(
+        [](QtMsgType, const QMessageLogContext &context, const QString &msg) {
+            if (qstrcmp(context.category, "worktime.settings") == 0)
+                captured += msg + "\n";
+        });
+
+    TestableSettings settings;
+
+    EXPECT_TRUE(captured.contains("resetting"));
+    EXPECT_TRUE(captured.contains("username"));
+    EXPECT_TRUE(captured.contains("to its default value"));
+
+    qInstallMessageHandler(previous);
 }
