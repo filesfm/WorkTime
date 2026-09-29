@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileDevice>
@@ -53,6 +54,44 @@ TEST_F(SQLiteConnectionTest, AddAndTakeOldestFromSentTable)
     EXPECT_EQ(row->utcTimestamp, 1000);
     EXPECT_EQ(row->shootTime, 2000);
     EXPECT_EQ(row->httpSize, 100);
+}
+
+TEST_F(SQLiteConnectionTest, DeleteEntriesOlderThan24HoursFromSentTableRemovesOnlyOldEntries)
+{
+    SQLiteConnection connection;
+
+    const qint64 now = QDateTime::currentSecsSinceEpoch();
+    const qint64 oldTimestamp = now - 25 * 60 * 60;
+    const qint64 recentTimestamp = now - 60;
+
+    connection.addEntryToSentTable("old-window", oldTimestamp, oldTimestamp, 100);
+    connection.addEntryToSentTable("recent-window", recentTimestamp, recentTimestamp, 200);
+
+    connection.deleteEntriesOlderThan24HoursFromSentTable();
+
+    const auto row = connection.takeOldestEntryFromSentTable();
+    ASSERT_TRUE(row.has_value());
+    EXPECT_EQ(row->focusedWindowTitle, QStringLiteral("recent-window"));
+    EXPECT_EQ(connection.takeOldestEntryFromSentTable(), std::nullopt);
+}
+
+TEST_F(SQLiteConnectionTest, DeleteEntriesOlderThan24HoursFromSentTableLeavesNotSentTableAlone)
+{
+    SQLiteConnection connection;
+
+    const qint64 oldTimestamp = QDateTime::currentSecsSinceEpoch() - 25 * 60 * 60;
+    connection.addEntryToNotSentTable("old-not-sent", oldTimestamp, oldTimestamp, 100);
+
+    connection.deleteEntriesOlderThan24HoursFromSentTable();
+
+    EXPECT_TRUE(connection.takeOldestEntryFromNotSentTable().has_value());
+}
+
+TEST_F(SQLiteConnectionTest, DeleteEntriesOlderThan24HoursFromEmptySentTableDoesNotThrow)
+{
+    SQLiteConnection connection;
+
+    EXPECT_NO_THROW(connection.deleteEntriesOlderThan24HoursFromSentTable());
 }
 
 TEST_F(SQLiteConnectionTest, AddAndTakeOldestFromNotSentTable)
