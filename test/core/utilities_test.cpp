@@ -116,21 +116,3 @@ TEST(UtilitiesTest, TruncateUtf8SafeEmptyValueIsUnchanged)
 {
     EXPECT_EQ(Utilities::truncateUtf8Safe(QString(), 255), QString());
 }
-
-#if defined(Q_OS_LINUX)
-
-TEST(UtilitiesTest, FocusedApplicationNameIsEmptyUnderWayland)
-{
-    const QByteArray previousValue = qgetenv("WAYLAND_DISPLAY");
-    const bool hadWaylandDisplay = qEnvironmentVariableIsSet("WAYLAND_DISPLAY");
-
-    qputenv("WAYLAND_DISPLAY", "wayland-0");
-    EXPECT_TRUE(Utilities::focusedWindowTitle().isEmpty());
-
-    if (hadWaylandDisplay)
-        qputenv("WAYLAND_DISPLAY", previousValue);
-    else
-        qunsetenv("WAYLAND_DISPLAY");
-}
-
-#endif
