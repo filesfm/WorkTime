@@ -144,6 +144,22 @@ std::optional<SQLiteConnection::SentTableRow> SQLiteConnection::takeOldestEntryF
     return row;
 }
 
+void SQLiteConnection::deleteEntriesOlderThan24HoursFromSentTable()
+{
+    const qint64 cutoffTimestamp = QDateTime::currentSecsSinceEpoch() - 24 * 60 * 60;
+
+    QSqlQuery query(m_databaseConnection);
+    query.prepare(QStringLiteral("DELETE FROM sent WHERE utc_timestamp < :cutoff_timestamp"));
+    query.bindValue(":cutoff_timestamp", cutoffTimestamp);
+
+    if (!query.exec()) {
+        qCWarning(worktimeSqliteConnection) << "failed to delete old sent entries:" << query.lastError().text();
+        throw std::runtime_error("Cannot delete old sent entries: " + query.lastError().text().toStdString());
+    }
+
+    qCDebug(worktimeSqliteConnection) << "deleted" << query.numRowsAffected() << "old sent entries";
+}
+
 void SQLiteConnection::addEntryToNotSentTable(const QString &focusedWindowTitle,
                                               qint64 utcTimestamp,
                                               qint64 shootTime,

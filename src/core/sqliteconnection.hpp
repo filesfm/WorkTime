@@ -57,6 +57,14 @@ public:
     std::optional<SentTableRow> takeOldestEntryFromSentTable();
 
     /*!
+     * Deletes all entries from the `sent` table whose `utc_timestamp` is
+     * more than 24 hours older than the current time.
+     *
+     * \throws std::runtime_error if the operation fails.
+     */
+    void deleteEntriesOlderThan24HoursFromSentTable();
+
+    /*!
      * \throws std::runtime_error if the entry can't be inserted.
      */
     void addEntryToNotSentTable(const QString &focusedWindowTitle,
