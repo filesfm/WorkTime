@@ -135,7 +135,7 @@ jobs:
 
       - name: Generate coverage report
         run: >
-          gcovr --root . --filter 'src/core/' --exclude-unreachable-branches
+          gcovr --root . --filter 'src/' --exclude-unreachable-branches
           --sonarqube --output build/Sonar/coverage-sonarqube.xml build/Sonar
 
       - name: SonarQube Scan
