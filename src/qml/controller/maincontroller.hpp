@@ -46,22 +46,26 @@ public:
 
     /*!
      * \brief Forwards to Settings::username().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     QString username() const;
     /*!
      * \brief Forwards to Settings::setUsername().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     void setUsername(const QString &username) const;
 
     /*!
      * \brief Forwards to Settings::password().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     QString password() const;
     /*!
      * \brief Forwards to Settings::setPassword().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     void setPassword(const QString &password) const;
@@ -69,11 +73,13 @@ public:
 #if !defined(BUILD_WITHOUT_AUTOSTART)
     /*!
      * \brief Forwards to Settings::autoStartup().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     bool autoStartup() const;
     /*!
      * \brief Forwards to Settings::setAutoStartup().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     void setAutoStartup(bool enabled) const;
@@ -81,11 +87,13 @@ public:
 
     /*!
      * \brief Forwards to Settings::startButtonPushed().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     bool startButtonPushed() const;
     /*!
      * \brief Forwards to Settings::setStartButtonPushed().
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 1
      */
     void setStartButtonPushed(bool pushed) const;
