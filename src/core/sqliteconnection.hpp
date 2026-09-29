@@ -11,6 +11,7 @@ Q_DECLARE_LOGGING_CATEGORY(worktimeSqliteConnection)
 
 /*!
  * \brief Wraps a single SQLite connection.
+ * \note Thread-safety: -
  *
  * The underlying connection is only usable from the thread that created it -
  * it must not be shared with, or its queries constructed from, any other
