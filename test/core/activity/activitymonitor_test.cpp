@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "core/activitymonitor.hpp"
+#include "core/activity/activitymonitor.hpp"
 
 #if defined(Q_OS_LINUX)
 #    include <QByteArray>

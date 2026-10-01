@@ -6,7 +6,7 @@
 
 #include <atomic>
 
-#include "core/activitymonitor.hpp"
+#include "core/activity/activitymonitor.hpp"
 #include "core/sendingservice.hpp"
 
 /*!

@@ -25,8 +25,8 @@ qt_add_qml_module(worktime
         core/settings/settings.hpp
         core/sendingservice.cpp
         core/sendingservice.hpp
-        core/activitymonitor.cpp
-        core/activitymonitor.hpp
+        core/activity/activitymonitor.cpp
+        core/activity/activitymonitor.hpp
         core/utilities.cpp
         core/utilities.hpp
         core/oneinstanceguarantor.cpp
@@ -48,7 +48,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif(WIN32)
     target_sources(worktime PRIVATE ${CMAKE_SOURCE_DIR}/resource/windows/icon.rc)
 elseif(APPLE)
-    target_sources(worktime PRIVATE core/utilities_mac.mm core/activitymonitor_mac.mm)
+    target_sources(worktime PRIVATE core/utilities_mac.mm core/activity/activitymonitor_mac.mm)
 
     set(ICON_FILE ${CMAKE_SOURCE_DIR}/resource/macos/icon.icns)
     set_source_files_properties(${ICON_FILE} PROPERTIES
