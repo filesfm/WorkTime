@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['focusedwindowtitle_0',['focusedWindowTitle',['../classUtilities.html#a6fcc6c62410cba290dc2f372bb1416d5',1,'Utilities']]]
+  ['deleteentriesolderthan24hoursfromsenttable_0',['deleteEntriesOlderThan24HoursFromSentTable',['../classSQLiteConnection.html#ac0045c6d40394ff28871a884f909735f',1,'SQLiteConnection']]]
 ];

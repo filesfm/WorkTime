@@ -1,5 +1,5 @@
-<map id="src/core/settings.hpp" name="src/core/settings.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="183,5,341,31"/>
+<map id="core/settings/settings.hpp" name="core/settings/settings.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="167,5,357,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,148,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,33,120,76,119,71,231,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="173,79,247,104"/>

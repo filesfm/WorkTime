@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['maincontroller_0',['MainController',['../classMainController.html#af27009e759a9de45b9a6bf533c762684',1,'MainController']]]
+  ['focusedwindowtitle_0',['focusedWindowTitle',['../classUtilities.html#a6fcc6c62410cba290dc2f372bb1416d5',1,'Utilities']]]
 ];

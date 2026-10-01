@@ -1,0 +1,13 @@
+<map id="core/activity/activitymonitor.cpp" name="core/activity/activitymonitor.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="129,5,363,31"/>
+<area shape="rect" id="Node000002" href="$activitymonitor_8hpp.html" title=" " alt="" coords="91,79,241,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,33,191,72,187,68,231,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="265,79,387,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="261,29,305,68,301,72,257,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,71,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="147,106,72,147,70,143,144,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="95,152,237,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="169,104,169,138,163,138,163,104"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="262,152,337,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="189,102,267,143,264,148,186,106"/>
+</map>

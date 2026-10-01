@@ -1,0 +1,5 @@
+<map id="AppQuitter" name="AppQuitter">
+<area shape="rect" id="Node000001" title="Exposes an app&#45;quit action to QML, for the tray menu&#39;s Quit item." alt="" coords="5,79,97,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="14,5,89,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="54,44,54,79,49,79,49,44"/>
+</map>

@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['username_0',['username',['../classMainController.html#a131593c59b76d3039c8de6f678a0cad9',1,'MainController::username'],['../classSettings.html#a2dd990f24f454a583b13fe20ca74953a',1,'Settings::username()'],['../classMainController.html#aa72ee6f59e3032bb273f3038bb01d381',1,'MainController::username()']]],
-  ['usernamechanged_1',['usernamechanged',['../classSettings.html#a2ed184026b41135288447db16a2002fe',1,'Settings::usernameChanged()'],['../classMainController.html#a049c2801ed98c7c753f4a7026eeef068',1,'MainController::usernameChanged()']]],
-  ['userstatuschanged_2',['userStatusChanged',['../classMainController.html#aab0670f98eb4be86e85645efe95a3ee1',1,'MainController']]],
-  ['utilities_3',['utilities',['../classUtilities.html',1,'Utilities'],['../classUtilities.html#add2daec2ff80b02ca600da10f53ef1f0',1,'Utilities::Utilities()']]],
-  ['utilities_2ehpp_4',['utilities.hpp',['../utilities_8hpp.html',1,'']]]
+  ['maincontroller_0',['maincontroller',['../classMainController.html',1,'MainController'],['../classMainController.html#af27009e759a9de45b9a6bf533c762684',1,'MainController::MainController()']]],
+  ['maincontroller_2ecpp_1',['maincontroller.cpp',['../maincontroller_8cpp.html',1,'']]],
+  ['maincontroller_2ehpp_2',['maincontroller.hpp',['../maincontroller_8hpp.html',1,'']]]
 ];

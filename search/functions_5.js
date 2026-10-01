@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['password_0',['password',['../classSettings.html#ad7a5bf897ebf81b3d0dc0c105ab0a081',1,'Settings::password()'],['../classMainController.html#a466d249e8ebb132b294238f0c48357ae',1,'MainController::password()']]],
-  ['passwordchanged_1',['passwordchanged',['../classSettings.html#a4462c1bc2bf3b3eddf50873dd05ce34f',1,'Settings::passwordChanged()'],['../classMainController.html#a9d6080be20596a8121e364ac0a915907',1,'MainController::passwordChanged()']]]
+  ['instance_0',['instance',['../classSettings.html#ae160acd2fb41ec90b706c4d4e84dec4a',1,'Settings::instance()'],['../classKDEFocusedWindowTitle.html#a00cc7967aa01bf4aa215bfa83a6187b2',1,'KDEFocusedWindowTitle::instance()']]],
+  ['isactive_1',['isActive',['../classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9',1,'SendingService']]]
 ];

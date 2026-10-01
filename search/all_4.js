@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['maincontroller_0',['maincontroller',['../classMainController.html',1,'MainController'],['../classMainController.html#af27009e759a9de45b9a6bf533c762684',1,'MainController::MainController()']]],
-  ['maincontroller_2ehpp_1',['maincontroller.hpp',['../maincontroller_8hpp.html',1,'']]]
+  ['focusedwindowtitle_0',['focusedwindowtitle',['../structSQLiteConnection_1_1SentTableRow.html#a14918566e52d6659931e460ab814436d',1,'SQLiteConnection::SentTableRow::focusedWindowTitle'],['../structSQLiteConnection_1_1NotSentTableRow.html#a8ed4d207e968993b747c748aa3a5651c',1,'SQLiteConnection::NotSentTableRow::focusedWindowTitle'],['../classUtilities.html#a6fcc6c62410cba290dc2f372bb1416d5',1,'Utilities::focusedWindowTitle()']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>worktime: src/qml/controller/maincontroller.hpp File Reference</title>
+<title>worktime: qml/controller/maincontroller.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,7 +69,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1d81f7f4362e4398c0a695c4e466fcb0.html">qml</a></li><li class="navelem"><a class="el" href="dir_5a083138f31f529960db3e4f63e8739a.html">controller</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_fcf7993eee5bbc2ed690871c2369bd6f.html">qml</a></li><li class="navelem"><a class="el" href="dir_f0b51a5ba69d6af31fd4a036260705a8.html">controller</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -82,38 +82,59 @@ $(function() {
 <code>#include &lt;QQmlEngine&gt;</code><br />
 <code>#include &lt;QTimer&gt;</code><br />
 <code>#include &lt;atomic&gt;</code><br />
-<code>#include &quot;core/activitymonitor.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="sendingservice_8hpp_source.html">core/sendingservice.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="activitymonitor_8hpp_source.html">core/activity/activitymonitor.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="sendingservice_8hpp_source.html">core/network/sendingservice.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for maincontroller.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="maincontroller_8hpp__incl.png" border="0" usemap="#asrc_2qml_2controller_2maincontroller_8hpp" alt=""/></div>
-<map name="asrc_2qml_2controller_2maincontroller_8hpp" id="asrc_2qml_2controller_2maincontroller_8hpp">
-<area shape="rect" title=" " alt="" coords="279,5,427,45"/>
-<area shape="rect" title=" " alt="" coords="5,167,80,192"/>
-<area shape="poly" title=" " alt="" coords="280,46,215,67,149,96,103,127,66,159,62,155,100,122,147,91,213,62,278,41"/>
-<area shape="rect" title=" " alt="" coords="385,93,487,119"/>
-<area shape="poly" title=" " alt="" coords="375,44,416,82,412,86,372,47"/>
-<area shape="rect" title=" " alt="" coords="105,167,175,192"/>
-<area shape="poly" title=" " alt="" coords="280,40,221,60,194,75,170,95,153,123,145,154,140,153,148,121,166,92,191,71,219,55,278,35"/>
-<area shape="rect" title=" " alt="" coords="512,93,579,119"/>
-<area shape="poly" title=" " alt="" coords="400,43,506,86,504,91,398,48"/>
-<area shape="rect" title=" " alt="" coords="603,93,784,119"/>
-<area shape="poly" title=" " alt="" coords="428,41,631,88,630,93,427,46"/>
-<area shape="rect" href="sendingservice_8hpp.html" title=" " alt="" coords="181,93,361,119"/>
-<area shape="poly" title=" " alt="" coords="335,47,295,86,291,82,331,44"/>
-<area shape="poly" title=" " alt="" coords="235,121,94,165,92,160,233,116"/>
-<area shape="poly" title=" " alt="" coords="251,121,174,162,172,158,248,116"/>
-<area shape="rect" title=" " alt="" coords="752,167,941,192"/>
-<area shape="poly" title=" " alt="" coords="362,116,741,162,740,168,361,121"/>
-<area shape="rect" title=" " alt="" coords="199,167,342,192"/>
-<area shape="poly" title=" " alt="" coords="273,119,273,153,268,153,268,119"/>
-<area shape="rect" title=" " alt="" coords="366,167,439,192"/>
-<area shape="poly" title=" " alt="" coords="293,116,370,158,368,162,291,121"/>
-<area shape="rect" title=" " alt="" coords="464,167,653,192"/>
-<area shape="poly" title=" " alt="" coords="318,116,499,161,498,166,316,121"/>
-<area shape="rect" title=" " alt="" coords="677,167,728,192"/>
-<area shape="poly" title=" " alt="" coords="357,116,517,139,664,164,663,169,516,144,356,121"/>
+<div class="center"><img src="maincontroller_8hpp__incl.png" border="0" usemap="#aqml_2controller_2maincontroller_8hpp" alt=""/></div>
+<map name="aqml_2controller_2maincontroller_8hpp" id="aqml_2controller_2maincontroller_8hpp">
+<area shape="rect" title=" " alt="" coords="440,5,679,31"/>
+<area shape="rect" title=" " alt="" coords="146,152,221,177"/>
+<area shape="poly" title=" " alt="" coords="510,33,435,53,352,81,278,115,216,148,213,143,276,110,350,76,434,48,509,28"/>
+<area shape="rect" title=" " alt="" coords="676,79,779,104"/>
+<area shape="poly" title=" " alt="" coords="587,28,688,71,686,76,585,33"/>
+<area shape="rect" title=" " alt="" coords="949,152,1020,177"/>
+<area shape="poly" title=" " alt="" coords="572,29,611,66,637,85,666,102,736,126,795,135,857,139,936,149,935,155,857,144,795,140,735,132,664,106,634,90,607,70,568,33"/>
+<area shape="rect" title=" " alt="" coords="803,79,870,104"/>
+<area shape="poly" title=" " alt="" coords="605,28,791,76,789,81,603,33"/>
+<area shape="rect" href="activitymonitor_8hpp.html" title=" " alt="" coords="27,79,262,104"/>
+<area shape="poly" title=" " alt="" coords="493,33,226,79,225,74,492,28"/>
+<area shape="rect" href="sendingservice_8hpp.html" title=" " alt="" coords="363,79,601,104"/>
+<area shape="poly" title=" " alt="" coords="549,33,507,71,503,67,545,29"/>
+<area shape="poly" title=" " alt="" coords="153,103,173,139,168,141,149,106"/>
+<area shape="rect" title=" " alt="" coords="5,152,71,177"/>
+<area shape="poly" title=" " alt="" coords="129,106,68,147,65,142,126,102"/>
+<area shape="rect" title=" " alt="" coords="187,225,329,251"/>
+<area shape="poly" title=" " alt="" coords="141,105,131,139,130,158,136,176,161,201,193,218,190,223,158,205,132,179,125,159,125,138,136,103"/>
+<area shape="poly" title=" " alt="" coords="435,107,235,154,233,149,433,101"/>
+<area shape="poly" title=" " alt="" coords="594,101,752,121,936,149,935,155,751,126,593,107"/>
+<area shape="poly" title=" " alt="" coords="378,107,328,124,305,137,285,154,276,167,269,182,262,212,257,211,264,180,271,164,281,150,302,133,326,119,376,102"/>
+<area shape="rect" href="sqliteconnection_8hpp.html" title=" " alt="" coords="370,152,613,177"/>
+<area shape="poly" title=" " alt="" coords="486,104,491,138,485,139,481,105"/>
+<area shape="rect" title=" " alt="" coords="637,152,711,177"/>
+<area shape="poly" title=" " alt="" coords="514,102,631,144,629,149,512,107"/>
+<area shape="rect" title=" " alt="" coords="735,152,925,177"/>
+<area shape="poly" title=" " alt="" coords="538,101,761,147,760,152,537,107"/>
+<area shape="rect" title=" " alt="" coords="295,152,346,177"/>
+<area shape="poly" title=" " alt="" coords="457,106,360,149,358,144,455,102"/>
+<area shape="poly" title=" " alt="" coords="455,180,309,224,308,219,453,175"/>
+<area shape="rect" title=" " alt="" coords="551,225,666,251"/>
+<area shape="poly" title=" " alt="" coords="512,175,579,216,576,220,509,180"/>
+<area shape="rect" title=" " alt="" coords="357,225,431,251"/>
+<area shape="poly" title=" " alt="" coords="477,180,423,219,420,215,474,175"/>
+<area shape="rect" title=" " alt="" coords="456,225,527,251"/>
+<area shape="poly" title=" " alt="" coords="494,178,494,212,489,212,489,178"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="maincontroller_8hpp__dep__incl.png" border="0" usemap="#aqml_2controller_2maincontroller_8hppdep" alt=""/></div>
+<map name="aqml_2controller_2maincontroller_8hppdep" id="aqml_2controller_2maincontroller_8hppdep">
+<area shape="rect" title=" " alt="" coords="5,5,244,31"/>
+<area shape="rect" href="maincontroller_8cpp.html" title=" " alt="" coords="5,79,244,104"/>
+<area shape="poly" title=" " alt="" coords="127,44,127,79,122,79,122,44"/>
 </map>
 </div>
 </div>

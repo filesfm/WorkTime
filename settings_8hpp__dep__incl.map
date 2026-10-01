@@ -1,0 +1,9 @@
+<map id="core/settings/settings.hpp" name="core/settings/settings.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="265,5,456,31"/>
+<area shape="rect" id="Node000002" href="$sendingservice_8cpp.html" title=" " alt="" coords="5,79,241,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="310,37,163,81,161,76,309,32"/>
+<area shape="rect" id="Node000003" href="$settings_8cpp.html" title=" " alt="" coords="266,79,455,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="363,44,363,79,358,79,358,44"/>
+<area shape="rect" id="Node000004" href="$maincontroller_8cpp.html" title=" " alt="" coords="480,79,719,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="413,32,561,76,560,81,411,37"/>
+</map>

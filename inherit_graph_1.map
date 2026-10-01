@@ -1,3 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classUtilities.html" title="Stateless OS&#45;interaction helpers." alt="" coords="5,5,79,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,129,80,155"/>
+<area shape="rect" id="Node000001" href="$classActivityMonitor.html" title="Emits activityDetected() on any global keyboard or mouse input, even while no Worktime window has foc..." alt="" coords="158,5,281,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="56,116,85,77,105,57,127,40,157,26,159,31,129,44,108,61,89,80,60,119"/>
+<area shape="rect" id="Node000002" href="$classAppQuitter.html" title="Exposes an app&#45;quit action to QML, for the tray menu&#39;s Quit item." alt="" coords="173,55,265,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="72,119,127,89,172,74,174,79,129,94,75,124"/>
+<area shape="rect" id="Node000003" href="$classKDEFocusedWindowTitle.html" title="Tracks the focused window&#39;s title under KDE Plasma." alt="" coords="128,104,311,129"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="93,132,130,127,131,132,94,137"/>
+<area shape="rect" id="Node000004" href="$classMainController.html" title="QML&#45;facing controller behind Main.qml." alt="" coords="160,153,279,179"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="94,146,160,155,159,161,93,151"/>
+<area shape="rect" id="Node000005" href="$classSendingService.html" title="Periodically submits one activity sample to the Worktime remote endpoint." alt="" coords="158,203,281,228"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="76,160,129,188,165,200,164,205,127,192,74,164"/>
+<area shape="rect" id="Node000006" href="$classSettings.html" title="Persisted application configuration, backed by QSettings." alt="" coords="182,252,257,277"/>
+<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="61,165,90,203,109,221,129,237,155,249,183,257,181,262,154,254,127,242,105,225,86,206,57,168"/>
 </map>
