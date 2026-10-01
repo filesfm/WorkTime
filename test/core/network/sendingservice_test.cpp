@@ -14,7 +14,7 @@
 #include <QTest>
 #include <QUrl>
 
-#include "core/sendingservice.hpp"
+#include "core/network/sendingservice.hpp"
 #include "core/settings/settings.hpp"
 
 TEST(SendingServiceTest, DefaultServerUrlIsInvalid)

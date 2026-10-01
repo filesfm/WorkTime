@@ -23,8 +23,8 @@ qt_add_qml_module(worktime
         qml/controller/appquitter.hpp
         core/settings/settings.cpp
         core/settings/settings.hpp
-        core/sendingservice.cpp
-        core/sendingservice.hpp
+        core/network/sendingservice.cpp
+        core/network/sendingservice.hpp
         core/activity/activitymonitor.cpp
         core/activity/activitymonitor.hpp
         core/utilities.cpp

@@ -7,7 +7,7 @@
 #include <atomic>
 
 #include "core/activity/activitymonitor.hpp"
-#include "core/sendingservice.hpp"
+#include "core/network/sendingservice.hpp"
 
 /*!
  * \brief QML-facing controller behind Main.qml.
