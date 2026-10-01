@@ -1,6 +1,6 @@
 #include "maincontroller.hpp"
 
-#include "core/settings.hpp"
+#include "core/settings/settings.hpp"
 #include "core/utilities.hpp"
 
 namespace {

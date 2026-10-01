@@ -7,7 +7,7 @@
 #include <QString>
 #include <QVariant>
 
-#include "core/settings.hpp"
+#include "core/settings/settings.hpp"
 
 namespace {
 
