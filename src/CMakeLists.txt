@@ -124,3 +124,37 @@ install(TARGETS worktime
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     BUNDLE DESTINATION .
 )
+
+find_package(Doxygen)
+if(BUILD_DOCS)
+    if(Doxygen_FOUND)
+        set(DOXYGEN_EXTRACT_ALL YES)
+        set(DOXYGEN_GENERATE_HTML YES)
+        set(DOXYGEN_GENERATE_LATEX NO)
+        set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/docs)
+
+        doxygen_add_docs(docs ALL USE_STAMP_FILE
+            qml/controller/maincontroller.cpp
+            qml/controller/maincontroller.hpp
+            qml/controller/appquitter.cpp
+            qml/controller/appquitter.hpp
+            core/settings/settings.cpp
+            core/settings/settings.hpp
+            core/network/sendingservice.cpp
+            core/network/sendingservice.hpp
+            core/activity/activitymonitor.cpp
+            core/activity/activitymonitor.hpp
+            core/utilities.cpp
+            core/utilities.hpp
+            core/oneinstanceguarantor.cpp
+            core/oneinstanceguarantor.hpp
+            core/kdefocusedwindowtitle.cpp
+            core/kdefocusedwindowtitle.hpp
+            core/storage/sqliteconnection.hpp
+            core/storage/sqliteconnection.cpp
+            COMMENT "Generating API documentation with Doxygen"
+        )
+    else()
+        message(STATUS "Doxygen not found - 'docs' target will not be available")
+    endif()
+endif()

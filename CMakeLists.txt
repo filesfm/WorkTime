@@ -23,26 +23,6 @@ if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
-find_package(Doxygen)
-if(BUILD_DOCS)
-    if(Doxygen_FOUND)
-        set(DOXYGEN_EXTRACT_ALL YES)
-        set(DOXYGEN_GENERATE_HTML YES)
-        set(DOXYGEN_GENERATE_LATEX NO)
-        set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/docs)
-
-        doxygen_add_docs(docs ALL USE_STAMP_FILE
-            ${CMAKE_SOURCE_DIR}/src/core/settings.hpp
-            ${CMAKE_SOURCE_DIR}/src/core/sendingservice.hpp
-            ${CMAKE_SOURCE_DIR}/src/core/utilities.hpp
-            ${CMAKE_SOURCE_DIR}/src/qml/controller/maincontroller.hpp
-            COMMENT "Generating API documentation with Doxygen"
-        )
-    else()
-        message(STATUS "Doxygen not found - 'docs' target will not be available")
-    endif()
-endif()
-
 if(EXISTS ${CMAKE_SOURCE_DIR}/.git)
     execute_process(
         COMMAND git config core.hooksPath hooks
