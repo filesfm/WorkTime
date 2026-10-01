@@ -7,7 +7,7 @@
 #include <QStandardPaths>
 #include <QString>
 
-#include "core/sqliteconnection.hpp"
+#include "core/storage/sqliteconnection.hpp"
 
 namespace {
 

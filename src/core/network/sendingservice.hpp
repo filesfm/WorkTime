@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/sqliteconnection.hpp"
+#include "core/storage/sqliteconnection.hpp"
 
 #include <QLoggingCategory>
 #include <QMutex>

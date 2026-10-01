@@ -33,8 +33,8 @@ qt_add_qml_module(worktime
         core/oneinstanceguarantor.hpp
         core/kdefocusedwindowtitle.cpp
         core/kdefocusedwindowtitle.hpp
-        core/sqliteconnection.hpp
-        core/sqliteconnection.cpp
+        core/storage/sqliteconnection.hpp
+        core/storage/sqliteconnection.cpp
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
         ${CMAKE_SOURCE_DIR}/resource/icon.png

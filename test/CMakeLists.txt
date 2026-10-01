@@ -15,7 +15,7 @@ find_package(Qt6 REQUIRED COMPONENTS Gui Network Test DBus)
 add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/settings/settings.cpp
     ${CMAKE_SOURCE_DIR}/src/core/network/sendingservice.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/sqliteconnection.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/storage/sqliteconnection.cpp
     ${CMAKE_SOURCE_DIR}/src/core/utilities.cpp
     ${CMAKE_SOURCE_DIR}/src/core/kdefocusedwindowtitle.cpp
     ${CMAKE_SOURCE_DIR}/src/core/oneinstanceguarantor.cpp
@@ -23,7 +23,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings/settings_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/network/sendingservice_test.cpp
-    ${CMAKE_SOURCE_DIR}/test/core/sqliteconnection_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/storage/sqliteconnection_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/utilities_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/oneinstanceguarantor_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/kdefocusedwindowtitle_test.cpp
@@ -40,7 +40,7 @@ elseif(APPLE)
     target_sources(worktime_tests
         PRIVATE
 	    ${CMAKE_SOURCE_DIR}/src/core/utilities_mac.mm
-	    ${CMAKE_SOURCE_DIR}/src/core/activitymonitor_mac.mm
+            ${CMAKE_SOURCE_DIR}/src/core/activity/activitymonitor_mac.mm
     )
 endif()
 
