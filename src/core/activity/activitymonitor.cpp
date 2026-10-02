@@ -48,7 +48,7 @@ constexpr QLatin1StringView kGnomeIdleMonitorInterface{"org.gnome.Mutter.IdleMon
 
 bool ActivityMonitor::startGnomeIdleMonitor()
 {
-    if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("gnome", Qt::CaseInsensitive))
+    if (!qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("gnome", Qt::CaseInsensitive))
         return false;
 
     m_gnomeIdleMonitor = new QDBusInterface(QString(kGnomeIdleMonitorService),
