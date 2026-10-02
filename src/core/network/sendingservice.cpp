@@ -95,6 +95,7 @@ void SendingService::sendNow()
     QNetworkRequest request(m_serverUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
+    request.setTransferTimeout(30000);
 
     qCDebug(worktimeSendingService) << "posting activity sample to" << m_serverUrl;
 
