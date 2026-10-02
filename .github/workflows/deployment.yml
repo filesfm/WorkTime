@@ -228,7 +228,9 @@ jobs:
 
           # GitHub Pages serves a symlink's target path as text
           # instead of following it, so replace repo-add's db/files symlinks
-          # with real file copies.
+          # with real file copies. Remove the symlinks first: cp would
+          # otherwise follow them and refuse to copy a file onto itself.
+          rm -f worktime.db worktime.files
           cp worktime.db.tar.gz worktime.db
           cp worktime.files.tar.gz worktime.files
 
