@@ -15,6 +15,7 @@ pkgbase = filesfm-worktime
 	depends = qt6-declarative
 	depends = libx11
 	depends = systemd-libs
+	depends = kidletime
 	depends = hicolor-icon-theme
 	provides = worktime
 	conflicts = worktime

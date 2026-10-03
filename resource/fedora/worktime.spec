@@ -17,6 +17,7 @@ BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qtdeclarative-devel
 BuildRequires:  libX11-devel
 BuildRequires:  systemd-devel
+BuildRequires:  kf6-kidletime-devel
 Requires:       hicolor-icon-theme
 
 %description

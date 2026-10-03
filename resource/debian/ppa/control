@@ -2,7 +2,7 @@ Source: worktime
 Section: utils
 Priority: optional
 Maintainer: Artyom Fedosov <artjomsfedosovs2@gmail.com>
-Build-Depends: debhelper-compat (= 13), cmake, ninja-build, g++, pkg-config, qt6-base-dev, qt6-declarative-dev, libx11-dev, libudev-dev
+Build-Depends: debhelper-compat (= 13), cmake, ninja-build, g++, pkg-config, qt6-base-dev, qt6-declarative-dev, libx11-dev, libudev-dev, libkf6idletime-dev
 Standards-Version: 4.6.2
 Homepage: https://github.com/filesfm/WorkTime
 Rules-Requires-Root: no

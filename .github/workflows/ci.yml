@@ -54,6 +54,20 @@ jobs:
           modules: 'qtshadertools'
           cache: true
 
+      - name: Install KF6 IdleTime from Ubuntu archive
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          prefix="$RUNNER_TEMP/kf6-idletime"
+          base=http://archive.ubuntu.com/ubuntu/pool/universe/k/kf6-kidletime
+          version=6.12.0-0ubuntu1
+          mkdir -p "$prefix"
+          for pkg in libkf6idletime-dev libkf6idletime6; do
+            curl -fsSL -o "$RUNNER_TEMP/$pkg.deb" "$base/${pkg}_${version}_amd64.deb"
+            dpkg-deb -x "$RUNNER_TEMP/$pkg.deb" "$prefix"
+          done
+          echo "CMAKE_PREFIX_PATH=$prefix/usr${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$prefix/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
+
       - name: ccache
         if: matrix.os != 'windows-latest'
         uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
@@ -113,6 +127,19 @@ jobs:
           arch: linux_gcc_64
           modules: 'qtshadertools'
           cache: true
+
+      - name: Install KF6 IdleTime from Ubuntu archive
+        run: |
+          prefix="$RUNNER_TEMP/kf6-idletime"
+          base=http://archive.ubuntu.com/ubuntu/pool/universe/k/kf6-kidletime
+          version=6.12.0-0ubuntu1
+          mkdir -p "$prefix"
+          for pkg in libkf6idletime-dev libkf6idletime6; do
+            curl -fsSL -o "$RUNNER_TEMP/$pkg.deb" "$base/${pkg}_${version}_amd64.deb"
+            dpkg-deb -x "$RUNNER_TEMP/$pkg.deb" "$prefix"
+          done
+          echo "CMAKE_PREFIX_PATH=$prefix/usr${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$prefix/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
