@@ -10,6 +10,7 @@
 #include "core/oneinstanceguarantor.hpp"
 #include "core/utilities.hpp"
 #include "qml/controller/appquitter.hpp"
+#include "qml/controller/screengeometry.hpp"
 
 #if defined(Q_OS_LINUX)
 #    include "core/kdefocusedwindowtitle.hpp"
@@ -55,6 +56,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     AppQuitter appQuitter;
     engine.rootContext()->setContextProperty("appQuitter", &appQuitter);
+    ScreenGeometry screenGeometry;
+    engine.rootContext()->setContextProperty("screenGeometry", &screenGeometry);
     engine.setInitialProperties({
         {"trayAvailable", QSystemTrayIcon::isSystemTrayAvailable()},
         {"trayIconSource",

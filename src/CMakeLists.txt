@@ -21,6 +21,8 @@ qt_add_qml_module(worktime
         qml/controller/maincontroller.hpp
         qml/controller/appquitter.cpp
         qml/controller/appquitter.hpp
+        qml/controller/screengeometry.cpp
+        qml/controller/screengeometry.hpp
         core/settings/settings.cpp
         core/settings/settings.hpp
         core/network/sendingservice.cpp
@@ -140,6 +142,8 @@ if(BUILD_DOCS)
             qml/controller/maincontroller.hpp
             qml/controller/appquitter.cpp
             qml/controller/appquitter.hpp
+            qml/controller/screengeometry.cpp
+            qml/controller/screengeometry.hpp
             core/settings/settings.cpp
             core/settings/settings.hpp
             core/network/sendingservice.cpp

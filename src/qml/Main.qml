@@ -9,6 +9,10 @@ ApplicationWindow {
     id: window
     visible: !trayAvailable
 
+    flags: trayAvailable
+        ? Qt.Tool | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
+        : Qt.Window
+
     Material.theme: Material.System
     Material.accent: Material.Blue
 
@@ -20,6 +24,10 @@ ApplicationWindow {
     property bool trayAvailable: false
     property url trayIconSource: ""
     property bool autoStartupAvailable: true
+
+    // Time of the last hide caused by losing focus. The tray click that took
+    // focus away would otherwise immediately reopen the popup.
+    property double lastFocusHideMs: 0
 
     // Size to fit whatever content is actually in mainColumn, rather than a
     // guessed fixed size that can clip content as fields are added.
@@ -34,6 +42,62 @@ ApplicationWindow {
         }
     }
 
+    onActiveChanged: {
+        if (!active && trayAvailable && visible) {
+            lastFocusHideMs = Date.now()
+            hide()
+        }
+    }
+
+    function showPopup() {
+        if (trayAvailable)
+            positionPopup()
+        show()
+        raise()
+        requestActivate()
+    }
+
+    // Places the popup next to the tray icon, inside the screen's work area
+    // (so it stays clear of the taskbar or menu bar). Some tray backends
+    // report no icon geometry, and Wayland ignores client-set positions, so
+    // without a tray rectangle the popup goes to the work area's corner.
+    function positionPopup() {
+        const margin = 8
+        const g = trayIcon.geometry
+        const hasTrayRect = g.width > 0 && g.height > 0
+
+        let area
+        let px
+        let py
+        if (hasTrayRect) {
+            const cx = g.x + g.width / 2
+            const cy = g.y + g.height / 2
+            area = screenGeometry.availableGeometryAt(Qt.point(cx, cy))
+            px = cx - window.width / 2
+            // Open towards the middle of the screen: above a bottom tray, below a top one.
+            const screenMidY = area.y + area.height / 2
+            py = cy > screenMidY ? g.y - window.height - margin
+                                 : g.y + g.height + margin
+        } else {
+            area = screenGeometry.primaryAvailableGeometry()
+            px = area.x + area.width - window.width - margin
+            // The macOS menu bar is at the top, elsewhere the tray is at the bottom.
+            py = Qt.platform.os === "osx" ? area.y + margin
+                                          : area.y + area.height - window.height - margin
+        }
+
+        const right = area.x + area.width
+        const bottom = area.y + area.height
+        x = Math.max(area.x + margin, Math.min(px, right - window.width - margin))
+        y = Math.max(area.y + margin, Math.min(py, bottom - window.height - margin))
+    }
+
+    Shortcut {
+        sequence: "Esc"
+        enabled: window.trayAvailable && window.visible
+        onActivated: window.hide()
+    }
+
     Platform.SystemTrayIcon {
         id: trayIcon
         visible: window.trayAvailable
@@ -44,29 +108,43 @@ ApplicationWindow {
         icon.source: window.trayIconSource
         tooltip: "WorkTime"
 
-        onActivated: function (reason) {
-            if (reason === Platform.SystemTrayIcon.Trigger) {
-                window.visible = !window.visible
-                if (window.visible) {
-                    window.raise()
-                    window.requestActivate()
-                }
-            }
-        }
+        // On macOS a menu attached to the status item opens on every click,
+        // left or right, so there it stays detached and is opened only for
+        // right-clicks. Elsewhere the attached menu already opens only on
+        // right-click.
+        menu: Qt.platform.os === "osx" ? null : trayMenu
 
-        menu: Platform.Menu {
-            Platform.MenuItem {
-                text: window.visible ? "Hide" : "Show"
-                onTriggered: window.visible = !window.visible
+        onActivated: function (reason) {
+            if (reason === Platform.SystemTrayIcon.Context) {
+                if (Qt.platform.os === "osx")
+                    trayMenu.open()
+                return
             }
-            Platform.MenuItem {
-                text: "My overview"
-                onTriggered: Qt.openUrlExternally("https://worktime.lv/user/read")
-            }
-            Platform.MenuItem {
-                text: "Quit"
-                onTriggered: appQuitter.quit()
-            }
+            if (reason !== Platform.SystemTrayIcon.Trigger)
+                return
+            if (window.visible)
+                window.hide()
+            else if (Date.now() - window.lastFocusHideMs > 300)
+                window.showPopup()
+        }
+    }
+
+    Platform.Menu {
+        id: trayMenu
+
+        // On Linux the left-click opens this menu, so Show is the way to reach the window.
+        Platform.MenuItem {
+            text: "Show"
+            visible: Qt.platform.os === "linux"
+            onTriggered: window.showPopup()
+        }
+        Platform.MenuItem {
+            text: "My overview"
+            onTriggered: Qt.openUrlExternally("https://worktime.lv/user/read")
+        }
+        Platform.MenuItem {
+            text: "Quit"
+            onTriggered: appQuitter.quit()
         }
     }
 
@@ -161,5 +239,14 @@ ApplicationWindow {
                 }
             }
         }
+    }
+
+    // Outline for the frameless popup, so its edge shows on any background.
+    Rectangle {
+        anchors.fill: parent
+        visible: window.trayAvailable
+        color: "transparent"
+        border.width: 1
+        border.color: palette.mid
     }
 }
