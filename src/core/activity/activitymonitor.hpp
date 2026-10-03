@@ -63,7 +63,14 @@ private:
     void stopGnomeIdleMonitor();
     void armGnomeUserActiveWatch();
 
-    // Fallback for desktops without org.gnome.Mutter.IdleMonitor: reads
+    // KDE Plasma session: KIdleTime (KF6::IdleTime) catches the next input
+    // event via the compositor's idle protocol, so no "input" group membership
+    // is required. Only available when built with KF6IdleTime.
+    bool startKdeIdleMonitor();
+    void stopKdeIdleMonitor();
+    void armKdeResumeWatch();
+
+    // Fallback for desktops without an idle monitor above: reads
     // /dev/input/event* directly, which requires "input" group membership
     // (or an equivalent udev ACL) on most distros.
     void scanInputDevices();
@@ -75,6 +82,7 @@ private:
     QDBusInterface *m_gnomeIdleMonitor = nullptr;
     uint m_gnomeWatchId = 0;
     bool m_usingGnomeIdleMonitor = false;
+    bool m_usingKdeIdleMonitor = false;
 
     udev *m_udev = nullptr;
     udev_monitor *m_udevMonitor = nullptr;
@@ -97,5 +105,6 @@ protected slots:
 private slots:
 #    endif
     void handleGnomeIdleWatchFired(uint watchId);
+    void handleKdeResumingFromIdle();
 #endif
 };

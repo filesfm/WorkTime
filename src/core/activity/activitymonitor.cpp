@@ -13,6 +13,8 @@
 #    include <QDBusInterface>
 #    include <QDBusReply>
 
+#    include <KIdleTime>
+
 extern "C" {
 #    include <libudev.h>
 }
@@ -112,6 +114,41 @@ void ActivityMonitor::handleGnomeIdleWatchFired(uint watchId)
     armGnomeUserActiveWatch();
 }
 
+bool ActivityMonitor::startKdeIdleMonitor()
+{
+    if (!qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("kde", Qt::CaseInsensitive))
+        return false;
+
+    connect(KIdleTime::instance(), &KIdleTime::resumingFromIdle, this, &ActivityMonitor::handleKdeResumingFromIdle);
+
+    qCInfo(worktimeActivityMonitor) << "using KIdleTime for activity detection";
+    armKdeResumeWatch();
+    return true;
+}
+
+void ActivityMonitor::stopKdeIdleMonitor()
+{
+    KIdleTime::instance()->stopCatchingResumeEvent();
+    disconnect(KIdleTime::instance(), &KIdleTime::resumingFromIdle, this, &ActivityMonitor::handleKdeResumingFromIdle);
+}
+
+void ActivityMonitor::armKdeResumeWatch()
+{
+    KIdleTime::instance()->catchNextResumeEvent();
+}
+
+void ActivityMonitor::handleKdeResumingFromIdle()
+{
+    emit activityDetected();
+    QMetaObject::invokeMethod(
+        this,
+        [this] {
+            if (m_usingKdeIdleMonitor)
+                armKdeResumeWatch();
+        },
+        Qt::QueuedConnection);
+}
+
 void ActivityMonitor::start()
 {
     if (m_running)
@@ -121,6 +158,12 @@ void ActivityMonitor::start()
 
     if (startGnomeIdleMonitor()) {
         m_usingGnomeIdleMonitor = true;
+        m_running = true;
+        return;
+    }
+
+    if (startKdeIdleMonitor()) {
+        m_usingKdeIdleMonitor = true;
         m_running = true;
         return;
     }
@@ -159,6 +202,13 @@ void ActivityMonitor::stop()
     if (m_usingGnomeIdleMonitor) {
         stopGnomeIdleMonitor();
         m_usingGnomeIdleMonitor = false;
+        m_running = false;
+        return;
+    }
+
+    if (m_usingKdeIdleMonitor) {
+        stopKdeIdleMonitor();
+        m_usingKdeIdleMonitor = false;
         m_running = false;
         return;
     }

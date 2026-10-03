@@ -45,6 +45,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
+    find_package(KF6IdleTime REQUIRED)
 elseif(WIN32)
     target_sources(worktime PRIVATE ${CMAKE_SOURCE_DIR}/resource/windows/icon.rc)
 elseif(APPLE)
@@ -101,6 +102,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PRIVATE
             X11::X11
             PkgConfig::UDEV
+            KF6::IdleTime
     )
 elseif(APPLE)
     target_link_libraries(worktime

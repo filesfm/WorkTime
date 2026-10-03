@@ -36,6 +36,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
+    find_package(KF6IdleTime REQUIRED)
 elseif(APPLE)
     target_sources(worktime_tests
         PRIVATE
@@ -66,6 +67,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PRIVATE
             X11::X11
             PkgConfig::UDEV
+            KF6::IdleTime
     )
 elseif(APPLE)
     target_link_libraries(worktime_tests
