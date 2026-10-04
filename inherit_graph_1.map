@@ -1,15 +1,19 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,129,80,155"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,179,80,204"/>
 <area shape="rect" id="Node000001" href="$classActivityMonitor.html" title="Emits activityDetected() on any global keyboard or mouse input, even while no Worktime window has foc..." alt="" coords="158,5,281,31"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="56,116,85,77,105,57,127,40,157,26,159,31,129,44,108,61,89,80,60,119"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="49,164,76,102,98,68,126,40,157,25,159,29,130,44,102,72,81,104,54,167"/>
 <area shape="rect" id="Node000002" href="$classAppQuitter.html" title="Exposes an app&#45;quit action to QML, for the tray menu&#39;s Quit item." alt="" coords="173,55,265,80"/>
-<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="72,119,127,89,172,74,174,79,129,94,75,124"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="56,165,85,126,105,106,127,89,149,78,172,71,174,76,151,83,129,94,108,110,89,129,60,169"/>
 <area shape="rect" id="Node000003" href="$classKDEFocusedWindowTitle.html" title="Tracks the focused window&#39;s title under KDE Plasma." alt="" coords="128,104,311,129"/>
-<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="93,132,130,127,131,132,94,137"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="72,168,127,138,160,127,161,132,129,143,75,173"/>
 <area shape="rect" id="Node000004" href="$classMainController.html" title="QML&#45;facing controller behind Main.qml." alt="" coords="160,153,279,179"/>
-<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="94,146,160,155,159,161,93,151"/>
-<area shape="rect" id="Node000005" href="$classSendingService.html" title="Periodically submits one activity sample to the Worktime remote endpoint." alt="" coords="158,203,281,228"/>
-<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="76,160,129,188,165,200,164,205,127,192,74,164"/>
-<area shape="rect" id="Node000006" href="$classSettings.html" title="Persisted application configuration, backed by QSettings." alt="" coords="182,252,257,277"/>
-<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="61,165,90,203,109,221,129,237,155,249,183,257,181,262,154,254,127,242,105,225,86,206,57,168"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="93,181,159,172,160,177,94,187"/>
+<area shape="rect" id="Node000005" href="$classPopupPlacement.html" title="Lets the compositor place the tray popup next to the tray icon." alt="" coords="154,203,285,228"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="94,196,154,204,153,209,93,201"/>
+<area shape="rect" id="Node000006" href="$classScreenGeometry.html" title="Exposes screen work&#45;area geometry to QML, for placing the tray popup." alt="" coords="154,252,285,277"/>
+<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="76,209,129,237,165,249,164,254,127,242,74,214"/>
+<area shape="rect" id="Node000007" href="$classSendingService.html" title="Periodically submits one activity sample to the Worktime remote endpoint, and drives a NotSentSender ..." alt="" coords="158,301,281,327"/>
+<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="61,214,90,252,109,271,129,286,159,300,157,305,127,291,105,275,86,255,57,218"/>
+<area shape="rect" id="Node000008" href="$classSettings.html" title="Persisted application configuration, backed by QSettings." alt="" coords="182,351,257,376"/>
+<area shape="poly" id="edge8_Node000000_Node000008" title=" " alt="" coords="54,216,81,277,103,309,130,336,155,350,182,357,181,362,153,355,126,340,99,312,77,279,49,218"/>
 </map>

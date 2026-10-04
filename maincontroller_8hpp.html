@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">worktime<span id="projectnumber">&#160;0.5.21</span>
+   <div id="projectname">worktime<span id="projectnumber">&#160;0.5.22</span>
    </div>
   </td>
  </tr>
@@ -81,50 +81,56 @@ $(function() {
 <div class="textblock"><code>#include &lt;QObject&gt;</code><br />
 <code>#include &lt;QQmlEngine&gt;</code><br />
 <code>#include &lt;QTimer&gt;</code><br />
+<code>#include &lt;QUrl&gt;</code><br />
 <code>#include &lt;atomic&gt;</code><br />
 <code>#include &quot;<a class="el" href="activitymonitor_8hpp_source.html">core/activity/activitymonitor.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="sendingservice_8hpp_source.html">core/network/sendingservice.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="sqliteconnection_8hpp_source.html">core/storage/sqliteconnection.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for maincontroller.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="maincontroller_8hpp__incl.png" border="0" usemap="#aqml_2controller_2maincontroller_8hpp" alt=""/></div>
 <map name="aqml_2controller_2maincontroller_8hpp" id="aqml_2controller_2maincontroller_8hpp">
-<area shape="rect" title=" " alt="" coords="440,5,679,31"/>
-<area shape="rect" title=" " alt="" coords="146,152,221,177"/>
-<area shape="poly" title=" " alt="" coords="510,33,435,53,352,81,278,115,216,148,213,143,276,110,350,76,434,48,509,28"/>
-<area shape="rect" title=" " alt="" coords="676,79,779,104"/>
-<area shape="poly" title=" " alt="" coords="587,28,688,71,686,76,585,33"/>
-<area shape="rect" title=" " alt="" coords="949,152,1020,177"/>
-<area shape="poly" title=" " alt="" coords="572,29,611,66,637,85,666,102,736,126,795,135,857,139,936,149,935,155,857,144,795,140,735,132,664,106,634,90,607,70,568,33"/>
-<area shape="rect" title=" " alt="" coords="803,79,870,104"/>
-<area shape="poly" title=" " alt="" coords="605,28,791,76,789,81,603,33"/>
-<area shape="rect" href="activitymonitor_8hpp.html" title=" " alt="" coords="27,79,262,104"/>
-<area shape="poly" title=" " alt="" coords="493,33,226,79,225,74,492,28"/>
-<area shape="rect" href="sendingservice_8hpp.html" title=" " alt="" coords="363,79,601,104"/>
-<area shape="poly" title=" " alt="" coords="549,33,507,71,503,67,545,29"/>
-<area shape="poly" title=" " alt="" coords="153,103,173,139,168,141,149,106"/>
-<area shape="rect" title=" " alt="" coords="5,152,71,177"/>
-<area shape="poly" title=" " alt="" coords="129,106,68,147,65,142,126,102"/>
-<area shape="rect" title=" " alt="" coords="187,225,329,251"/>
-<area shape="poly" title=" " alt="" coords="141,105,131,139,130,158,136,176,161,201,193,218,190,223,158,205,132,179,125,159,125,138,136,103"/>
-<area shape="poly" title=" " alt="" coords="435,107,235,154,233,149,433,101"/>
-<area shape="poly" title=" " alt="" coords="594,101,752,121,936,149,935,155,751,126,593,107"/>
-<area shape="poly" title=" " alt="" coords="378,107,328,124,305,137,285,154,276,167,269,182,262,212,257,211,264,180,271,164,281,150,302,133,326,119,376,102"/>
-<area shape="rect" href="sqliteconnection_8hpp.html" title=" " alt="" coords="370,152,613,177"/>
-<area shape="poly" title=" " alt="" coords="486,104,491,138,485,139,481,105"/>
-<area shape="rect" title=" " alt="" coords="637,152,711,177"/>
-<area shape="poly" title=" " alt="" coords="514,102,631,144,629,149,512,107"/>
-<area shape="rect" title=" " alt="" coords="735,152,925,177"/>
-<area shape="poly" title=" " alt="" coords="538,101,761,147,760,152,537,107"/>
-<area shape="rect" title=" " alt="" coords="295,152,346,177"/>
-<area shape="poly" title=" " alt="" coords="457,106,360,149,358,144,455,102"/>
-<area shape="poly" title=" " alt="" coords="455,180,309,224,308,219,453,175"/>
-<area shape="rect" title=" " alt="" coords="551,225,666,251"/>
-<area shape="poly" title=" " alt="" coords="512,175,579,216,576,220,509,180"/>
-<area shape="rect" title=" " alt="" coords="357,225,431,251"/>
-<area shape="poly" title=" " alt="" coords="477,180,423,219,420,215,474,175"/>
-<area shape="rect" title=" " alt="" coords="456,225,527,251"/>
-<area shape="poly" title=" " alt="" coords="494,178,494,212,489,212,489,178"/>
+<area shape="rect" title=" " alt="" coords="442,5,681,31"/>
+<area shape="rect" title=" " alt="" coords="160,152,235,177"/>
+<area shape="poly" title=" " alt="" coords="490,33,409,52,325,81,269,112,223,146,220,141,266,108,323,76,408,47,489,28"/>
+<area shape="rect" title=" " alt="" coords="729,79,831,104"/>
+<area shape="poly" title=" " alt="" coords="597,28,732,72,731,77,596,33"/>
+<area shape="rect" title=" " alt="" coords="259,152,330,177"/>
+<area shape="poly" title=" " alt="" coords="474,33,412,51,382,64,355,81,327,109,308,140,303,138,323,106,352,77,380,59,411,46,472,28"/>
+<area shape="rect" title=" " alt="" coords="1240,152,1291,177"/>
+<area shape="poly" title=" " alt="" coords="583,28,718,102,792,120,856,130,913,134,968,134,1082,134,1149,138,1227,150,1226,155,1149,143,1082,139,968,139,913,139,855,136,791,126,716,106,581,33"/>
+<area shape="rect" title=" " alt="" coords="856,79,923,104"/>
+<area shape="poly" title=" " alt="" coords="619,28,843,76,842,81,618,33"/>
+<area shape="rect" href="activitymonitor_8hpp.html" title=" " alt="" coords="5,79,240,104"/>
+<area shape="poly" title=" " alt="" coords="491,33,207,79,206,74,490,28"/>
+<area shape="rect" href="sendingservice_8hpp.html" title=" " alt="" coords="365,79,603,104"/>
+<area shape="poly" title=" " alt="" coords="551,33,509,71,505,67,547,29"/>
+<area shape="rect" href="sqliteconnection_8hpp.html" title=" " alt="" coords="973,152,1216,177"/>
+<area shape="poly" title=" " alt="" coords="574,29,615,66,643,86,673,102,716,112,794,124,981,148,981,153,793,129,715,117,671,106,640,90,612,70,571,33"/>
+<area shape="poly" title=" " alt="" coords="136,102,177,141,173,144,133,106"/>
+<area shape="rect" title=" " alt="" coords="19,152,85,177"/>
+<area shape="poly" title=" " alt="" coords="113,106,75,144,71,140,109,102"/>
+<area shape="rect" title=" " alt="" coords="297,225,439,251"/>
+<area shape="poly" title=" " alt="" coords="125,104,131,140,138,159,150,175,179,198,213,213,248,224,283,231,282,236,247,229,211,218,176,202,146,179,133,161,126,141,120,105"/>
+<area shape="poly" title=" " alt="" coords="439,107,249,153,247,148,437,101"/>
+<area shape="poly" title=" " alt="" coords="455,107,339,149,338,144,453,102"/>
+<area shape="poly" title=" " alt="" coords="603,98,948,123,1226,150,1226,155,947,129,603,103"/>
+<area shape="poly" title=" " alt="" coords="459,106,426,126,397,154,382,183,374,212,369,211,377,181,393,150,423,121,456,102"/>
+<area shape="rect" title=" " alt="" coords="718,152,949,177"/>
+<area shape="poly" title=" " alt="" coords="541,101,764,147,763,152,540,107"/>
+<area shape="poly" title=" " alt="" coords="582,101,983,148,983,153,582,107"/>
+<area shape="rect" title=" " alt="" coords="406,152,479,177"/>
+<area shape="poly" title=" " alt="" coords="479,106,459,141,454,139,475,103"/>
+<area shape="rect" title=" " alt="" coords="504,152,693,177"/>
+<area shape="poly" title=" " alt="" coords="504,102,570,142,567,147,501,106"/>
+<area shape="poly" title=" " alt="" coords="978,180,453,231,453,226,978,175"/>
+<area shape="rect" title=" " alt="" coords="1037,225,1152,251"/>
+<area shape="poly" title=" " alt="" coords="1097,178,1097,212,1092,212,1092,178"/>
+<area shape="rect" title=" " alt="" coords="1176,225,1251,251"/>
+<area shape="poly" title=" " alt="" coords="1115,175,1183,216,1181,220,1112,180"/>
+<area shape="rect" title=" " alt="" coords="942,225,1013,251"/>
+<area shape="poly" title=" " alt="" coords="1077,180,1010,220,1007,216,1074,175"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['_7eactivitymonitor_0',['~ActivityMonitor',['../classActivityMonitor.html#a38f1ec5e16e36eae62bec532e8be9cf5',1,'ActivityMonitor']]],
-  ['_7eoneinstanceguarantor_1',['~OneInstanceGuarantor',['../classOneInstanceGuarantor.html#aed7b82b0c352c72c10075cbf39b2d56c',1,'OneInstanceGuarantor']]],
-  ['_7esqliteconnection_2',['~SQLiteConnection',['../classSQLiteConnection.html#a34a6929c3e6d0b28d90525ef3b8c3bd7',1,'SQLiteConnection']]]
+  ['takeoldestentryfromnotsenttable_0',['takeOldestEntryFromNotSentTable',['../classSQLiteConnection.html#a733b00a3723589a639a0b6a1d6c29e21',1,'SQLiteConnection']]],
+  ['takeoldestentryfromsenttable_1',['takeOldestEntryFromSentTable',['../classSQLiteConnection.html#a406d67c587a3567ac8a5ef88a697d644',1,'SQLiteConnection']]],
+  ['toggletracking_2',['toggleTracking',['../classMainController.html#a8bfd7c7b0c0b510dbbec79cf5ba1894b',1,'MainController']]],
+  ['truncateutf8safe_3',['truncateUtf8Safe',['../classUtilities.html#a2eb264806f76291f0e34196a21429e3a',1,'Utilities']]]
 ];

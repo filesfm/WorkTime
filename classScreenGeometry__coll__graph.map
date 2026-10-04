@@ -1,0 +1,5 @@
+<map id="ScreenGeometry" name="ScreenGeometry">
+<area shape="rect" id="Node000001" title="Exposes screen work&#45;area geometry to QML, for placing the tray popup." alt="" coords="5,79,136,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="33,5,108,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,44,73,79,68,79,68,44"/>
+</map>

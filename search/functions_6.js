@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['maincontroller_0',['MainController',['../classMainController.html#af27009e759a9de45b9a6bf533c762684',1,'MainController']]]
+  ['load_0',['load',['../namespaceKWinScript.html#ae90954f2c9219fc064acb0891fd13842',1,'KWinScript']]]
 ];
