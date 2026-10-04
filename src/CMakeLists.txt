@@ -8,6 +8,12 @@ set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.svg PROPERTIES
 set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.png PROPERTIES
     QT_RESOURCE_ALIAS "icon.png"
 )
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon-green.png PROPERTIES
+    QT_RESOURCE_ALIAS "icon-green.png"
+)
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon-red.png PROPERTIES
+    QT_RESOURCE_ALIAS "icon-red.png"
+)
 set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/kwin/focused-window-title.js PROPERTIES
     QT_RESOURCE_ALIAS "focused-window-title.js"
 )
@@ -53,6 +59,8 @@ qt_add_qml_module(worktime
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
         ${CMAKE_SOURCE_DIR}/resource/icon.png
+        ${CMAKE_SOURCE_DIR}/resource/icon-green.png
+        ${CMAKE_SOURCE_DIR}/resource/icon-red.png
         ${CMAKE_SOURCE_DIR}/resource/kwin/focused-window-title.js
         ${CMAKE_SOURCE_DIR}/resource/kwin/popup-placement.js
         ${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/metadata.json

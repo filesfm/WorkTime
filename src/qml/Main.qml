@@ -22,7 +22,6 @@ ApplicationWindow {
 
     // Set from C++
     property bool trayAvailable: false
-    property url trayIconSource: ""
     property bool autoStartupAvailable: true
 
     // Time of the last hide caused by losing focus. The tray click that took
@@ -104,10 +103,12 @@ ApplicationWindow {
         id: trayIcon
         visible: window.trayAvailable
         // A file:// path on disk (extracted from the qrc resource by
-        // main.cpp), not a qrc:/... resource path: Qt.labs.platform's Linux
-        // tray backend silently produces no icon at all when icon.source
-        // points into the Qt resource system, regardless of image format.
-        icon.source: window.trayIconSource
+        // MainController), not a qrc:/... resource path: Qt.labs.platform's
+        // Linux tray backend silently produces no icon at all when
+        // icon.source points into the Qt resource system, regardless of
+        // image format. The icon itself tracks controller.userStatus -
+        // green while active, red on error, the default icon otherwise.
+        icon.source: controller.statusIconSource
         tooltip: "WorkTime"
 
         // On macOS a menu attached to the status item opens on every click,

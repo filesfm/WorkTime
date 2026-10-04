@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QTimer>
+#include <QUrl>
 
 #include <atomic>
 
@@ -29,10 +30,19 @@ class MainController : public QObject
     Q_PROPERTY(bool autoStartup READ autoStartup WRITE setAutoStartup NOTIFY autoStartupChanged)
 #endif
     Q_PROPERTY(bool startButtonPushed READ startButtonPushed WRITE setStartButtonPushed NOTIFY startButtonChanged)
+    Q_PROPERTY(UserStatus userStatus READ userStatus NOTIFY userStatusChanged)
+    Q_PROPERTY(QUrl statusIconSource READ statusIconSource NOTIFY userStatusChanged)
 
 public:
+    //! \brief User's current activity/connectivity state; see setUserStatus().
+    enum class UserStatus : std::int8_t { ACTIVE, INACTIVE, ERROR };
+    Q_ENUM(UserStatus)
+
     /*!
      * \brief Relays every Settings property-change signal to this controller's own.
+     * Also extracts the status tray icons (resource/icon{,-green,-red}.png) to disk
+     * once, since Qt.labs.platform's SystemTrayIcon can't load them straight out of
+     * the Qt resource system (see Utilities::extractResourceToDisk()).
      * \par Cyclomatic complexity: 1
      */
     explicit MainController(QObject *parent = nullptr);
@@ -98,6 +108,22 @@ public:
      */
     void setStartButtonPushed(bool pushed) const;
 
+    /*!
+     * \brief ACTIVE while startButtonPushed() is true, INACTIVE while it's
+     * false, or ERROR while the last send attempt failed (see
+     * SendingService::sendFailed()). Independent of the activity-based
+     * m_userStatus setUserStatus() maintains, which only governs pausing
+     * SendingService while the user is idle.
+     * \par Cyclomatic complexity: 1
+     */
+    UserStatus userStatus() const;
+    /*!
+     * \brief The tray icon matching userStatus(): green for ACTIVE, red for
+     * ERROR, the default icon for INACTIVE.
+     * \par Cyclomatic complexity: 1
+     */
+    QUrl statusIconSource() const;
+
 signals:
     void usernameChanged();
     void passwordChanged();
@@ -108,8 +134,6 @@ signals:
     void userStatusChanged();
 
 private:
-    enum class UserStatus : std::int8_t { ACTIVE, INACTIVE, ERROR };
-
     /*!
      * \brief Wires up the inactivity timer and the global activity monitor, then
      * starts both: activityMonitor's activityDetected() marks the user ACTIVE and
@@ -138,4 +162,14 @@ private:
     ActivityMonitor m_activityMonitor;
     QTimer m_inactivityTimer;
     QTimer m_startButtonNotPushedTimer;
+
+    /*! \brief Backs the ERROR branch of userStatus(); set/cleared by SendingService::sendFailed()/sendSucceeded(). */
+    bool m_hasSendError = false;
+
+    /*! \brief statusIconSource() for UserStatus::ACTIVE; extracted from resource/icon-green.png. */
+    QUrl m_activeIconUrl;
+    /*! \brief statusIconSource() for UserStatus::INACTIVE; extracted from resource/icon.png. */
+    QUrl m_inactiveIconUrl;
+    /*! \brief statusIconSource() for UserStatus::ERROR; extracted from resource/icon-red.png. */
+    QUrl m_errorIconUrl;
 };

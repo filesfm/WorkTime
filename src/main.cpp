@@ -68,9 +68,6 @@ int main(int argc, char *argv[])
     }
     engine.setInitialProperties({
         {"trayAvailable", trayAvailable},
-        {"trayIconSource",
-         Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon.png"),
-                                          QStringLiteral("worktime-tray-icon.png"))},
 #if defined(BUILD_WITHOUT_AUTOSTART)
         {"autoStartupAvailable", false},
 #else

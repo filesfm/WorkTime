@@ -53,6 +53,13 @@ void MainController::setUserStatus(UserStatus status)
 MainController::MainController(QObject *parent)
     : QObject(parent)
 {
+    m_activeIconUrl = Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon-green.png"),
+                                                       QStringLiteral("worktime-tray-icon-active.png"));
+    m_inactiveIconUrl = Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon.png"),
+                                                         QStringLiteral("worktime-tray-icon-inactive.png"));
+    m_errorIconUrl = Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon-red.png"),
+                                                      QStringLiteral("worktime-tray-icon-error.png"));
+
     m_sendingService.setServerUrl(QUrl(QStringLiteral("https://worktime.lv/remote")));
 
     connect(Settings::instance(), &Settings::usernameChanged, this, &MainController::usernameChanged);
@@ -69,6 +76,40 @@ MainController::MainController(QObject *parent)
     }
 
     activityChecker();
+
+    connect(this, &MainController::startButtonChanged, this, &MainController::userStatusChanged);
+    connect(&m_sendingService, &SendingService::sendFailed, this, [this](const QString &) {
+        if (m_hasSendError)
+            return;
+        m_hasSendError = true;
+        emit userStatusChanged();
+    });
+    connect(&m_sendingService, &SendingService::sendSucceeded, this, [this]() {
+        if (!m_hasSendError)
+            return;
+        m_hasSendError = false;
+        emit userStatusChanged();
+    });
+}
+
+MainController::UserStatus MainController::userStatus() const
+{
+    if (m_hasSendError)
+        return UserStatus::ERROR;
+    return startButtonPushed() ? UserStatus::ACTIVE : UserStatus::INACTIVE;
+}
+
+QUrl MainController::statusIconSource() const
+{
+    switch (userStatus()) {
+    case UserStatus::ACTIVE:
+        return m_activeIconUrl;
+    case UserStatus::ERROR:
+        return m_errorIconUrl;
+    case UserStatus::INACTIVE:
+        return m_inactiveIconUrl;
+    }
+    return m_inactiveIconUrl;
 }
 
 void MainController::setRunning(bool running)
