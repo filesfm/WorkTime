@@ -6,6 +6,7 @@
 
 #include <functional>
 
+#include "core/settings/credentialstore.hpp"
 #include "core/utilities.hpp"
 
 Q_LOGGING_CATEGORY(worktimeSettings, "worktime.settings")
@@ -20,11 +21,12 @@ struct SettingSpec
 };
 
 // Invariants:
-//   username, password  - no constraint, any string (including empty)
+//   username            - no constraint, any string (including empty)
 //   autoStartup         - true or false
 //   startButtonPushed   - true or false
+// password isn't listed here: it lives in the OS credential store (see
+// CredentialStore/loadPassword()), not among these QSettings-backed keys.
 const QList<SettingSpec> kSpecs{{"username", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
-                                {"password", QString(), [](const QVariant &v) { return v.canConvert<QString>(); }},
 #if !defined(BUILD_WITHOUT_AUTOSTART)
                                 {"autoStartup", false, [](const QVariant &v) { return v.canConvert<bool>(); }},
 #endif
@@ -38,6 +40,7 @@ Settings::Settings(QObject *parent)
     qCInfo(worktimeSettings) << "loading settings from" << m_settings.fileName();
 
     sanitize();
+    loadPassword();
 }
 
 Settings *Settings::instance()
@@ -63,16 +66,18 @@ void Settings::setUsername(const QString &username)
 
 QString Settings::password() const
 {
-    return m_settings.value("password").toString();
+    return m_cachedPassword;
 }
 
 void Settings::setPassword(const QString &password)
 {
     qCDebug(worktimeSettings) << "setPassword called";
-    if (this->password() == password)
+    if (m_cachedPassword == password)
         return;
     qCInfo(worktimeSettings) << "password changed";
-    m_settings.setValue("password", password);
+    if (!CredentialStore::writePassword(password))
+        qCWarning(worktimeSettings) << "failed to write password to the OS credential store";
+    m_cachedPassword = password;
     emit passwordChanged();
 }
 
@@ -129,6 +134,10 @@ void Settings::sanitize()
         defaults.insert(spec.key, spec.defaultValue);
 
     for (const QString &key : m_settings.allKeys()) {
+        // A legacy plaintext password left over from before CredentialStore
+        // existed; loadPassword() migrates and removes it, not this loop.
+        if (key == QLatin1String("password"))
+            continue;
         if (!defaults.contains(key)) {
             qCInfo(worktimeSettings) << "deleting unknown option" << key;
             m_settings.remove(key);
@@ -140,5 +149,31 @@ void Settings::sanitize()
             qCInfo(worktimeSettings) << "resetting" << spec.key << "to its default value";
             m_settings.setValue(spec.key, spec.defaultValue);
         }
+    }
+}
+
+void Settings::loadPassword()
+{
+    m_cachedPassword = CredentialStore::readPassword();
+
+    const QString legacyPassword = m_settings.value("password").toString();
+    if (legacyPassword.isEmpty())
+        return;
+
+    if (!m_cachedPassword.isEmpty()) {
+        // The credential store already has a password (e.g. a prior launch
+        // migrated it successfully); just drop the now-redundant plaintext copy.
+        m_settings.remove("password");
+        return;
+    }
+
+    qCInfo(worktimeSettings) << "migrating password from plaintext settings to the OS credential store";
+    if (CredentialStore::writePassword(legacyPassword)) {
+        m_cachedPassword = legacyPassword;
+        m_settings.remove("password");
+    } else {
+        qCWarning(worktimeSettings)
+            << "failed to migrate password to the OS credential store; keeping it in Settings for now";
+        m_cachedPassword = legacyPassword;
     }
 }

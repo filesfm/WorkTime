@@ -50,13 +50,17 @@ public:
     void setUsername(const QString &username);
 
     /*!
-     * \brief Server account password. No constraint; may be empty.
+     * \brief Server account password. No constraint; may be empty. Held in
+     * the OS credential store (see CredentialStore), not in this class's
+     * plaintext QSettings backing file; this getter returns an in-memory
+     * copy cached by loadPassword(), so it stays cheap to call.
      * \note Thread-safety: Thread-safe and reentrant.
      * \par Cyclomatic complexity: 1
      */
     QString password() const;
     /*!
-     * \brief Sets password(). Emits passwordChanged() if the value changes.
+     * \brief Sets password(), writing it through to the OS credential store.
+     * Emits passwordChanged() if the value changes.
      * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: 2
      */
@@ -117,10 +121,23 @@ private:
      */
     void sanitize();
 
+    /*!
+     * \brief Loads m_cachedPassword from CredentialStore::readPassword(). If
+     * the credential store is empty but a legacy plaintext password is
+     * still present in m_settings (from before CredentialStore existed),
+     * migrates it: writes it to the credential store and removes it from
+     * m_settings, or - if the write fails - keeps it in m_settings and
+     * retries the migration on the next launch.
+     * \par Cyclomatic complexity: 4
+     */
+    void loadPassword();
+
 #if defined(BUILD_TESTING)
 protected:
 #else
 private:
 #endif
     QSettings m_settings{QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime"};
+    /*! \brief In-memory copy of the password held in the OS credential store; see password()/loadPassword(). */
+    QString m_cachedPassword;
 };

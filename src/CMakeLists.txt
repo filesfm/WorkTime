@@ -42,6 +42,8 @@ qt_add_qml_module(worktime
         qml/controller/popupplacement.hpp
         core/settings/settings.cpp
         core/settings/settings.hpp
+        core/settings/credentialstore.cpp
+        core/settings/credentialstore.hpp
         core/network/sendingservice.cpp
         core/network/sendingservice.hpp
         core/network/notsentsender.cpp
@@ -143,11 +145,13 @@ elseif(APPLE)
             "-framework CoreFoundation"
             "-framework AppKit"
             "-framework UserNotifications"
+            "-framework Security"
     )
 elseif(WIN32)
     target_link_libraries(worktime
         PRIVATE
             User32
+            Advapi32
     )
 endif()
 

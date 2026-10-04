@@ -14,6 +14,7 @@ find_package(Qt6 REQUIRED COMPONENTS Gui Network Test DBus)
 
 add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/settings/settings.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/settings/credentialstore.cpp
     ${CMAKE_SOURCE_DIR}/src/core/network/sendingservice.cpp
     ${CMAKE_SOURCE_DIR}/src/core/network/notsentsender.cpp
     ${CMAKE_SOURCE_DIR}/src/core/network/shootrequestbuilder.cpp
@@ -81,6 +82,7 @@ elseif(APPLE)
             "-framework CoreFoundation"
             "-framework AppKit"
             "-framework UserNotifications"
+            "-framework Security"
     )
 endif()
 
