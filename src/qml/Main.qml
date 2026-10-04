@@ -187,6 +187,23 @@ ApplicationWindow {
         Frame {
             Layout.fillWidth: true
 
+            GridLayout {
+                columns: 2
+                columnSpacing: 10
+                rowSpacing: 8
+                anchors.fill: parent
+
+                Label { text: "Sent messages (last 24h)" }
+                Label { text: controller.sentCountLast24Hours.toLocaleString(Qt.locale(), 'f', 0) }
+
+                Label { text: "Sent data (last 24h)" }
+                Label { text: controller.sentBytesLast24Hours.toLocaleString(Qt.locale(), 'f', 0) + " bytes" }
+            }
+        }
+
+        Frame {
+            Layout.fillWidth: true
+
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 14

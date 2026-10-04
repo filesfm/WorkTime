@@ -6,6 +6,7 @@
 namespace {
 constexpr int kInactivityTimeoutMs = 60000;
 constexpr int kStartButtonNotPushedTimeoutMs = 1800000;
+constexpr int kSentStatsRefreshIntervalMs = 60000;
 } // namespace
 
 void MainController::activityChecker()
@@ -77,6 +78,13 @@ MainController::MainController(QObject *parent)
 
     activityChecker();
 
+    connect(&m_sendingService, &SendingService::sendSucceeded, this, &MainController::refreshSentStats);
+    connect(&m_sendingService, &SendingService::sendFailed, this, &MainController::refreshSentStats);
+    connect(&m_sentStatsRefreshTimer, &QTimer::timeout, this, &MainController::refreshSentStats);
+    m_sentStatsRefreshTimer.setInterval(kSentStatsRefreshIntervalMs);
+    m_sentStatsRefreshTimer.start();
+    refreshSentStats();
+
     connect(this, &MainController::startButtonChanged, this, &MainController::userStatusChanged);
     connect(&m_sendingService, &SendingService::sendFailed, this, [this](const QString &) {
         if (m_hasSendError)
@@ -90,6 +98,16 @@ MainController::MainController(QObject *parent)
         m_hasSendError = false;
         emit userStatusChanged();
     });
+}
+
+qint64 MainController::sentCountLast24Hours() const
+{
+    return m_sentCountLast24Hours;
+}
+
+qint64 MainController::sentBytesLast24Hours() const
+{
+    return m_sentBytesLast24Hours;
 }
 
 MainController::UserStatus MainController::userStatus() const
@@ -110,6 +128,19 @@ QUrl MainController::statusIconSource() const
         return m_inactiveIconUrl;
     }
     return m_inactiveIconUrl;
+}
+
+void MainController::refreshSentStats()
+{
+    const qint64 count = m_sqliteConnection.countEntriesInLast24HoursFromSentTable();
+    const qint64 bytes = m_sqliteConnection.sumHttpSizeInLast24HoursFromSentTable();
+
+    if (count == m_sentCountLast24Hours && bytes == m_sentBytesLast24Hours)
+        return;
+
+    m_sentCountLast24Hours = count;
+    m_sentBytesLast24Hours = bytes;
+    emit sentStatsChanged();
 }
 
 void MainController::setRunning(bool running)

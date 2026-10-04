@@ -9,6 +9,7 @@
 
 #include "core/activity/activitymonitor.hpp"
 #include "core/network/sendingservice.hpp"
+#include "core/storage/sqliteconnection.hpp"
 
 /*!
  * \brief QML-facing controller behind Main.qml.
@@ -30,6 +31,8 @@ class MainController : public QObject
     Q_PROPERTY(bool autoStartup READ autoStartup WRITE setAutoStartup NOTIFY autoStartupChanged)
 #endif
     Q_PROPERTY(bool startButtonPushed READ startButtonPushed WRITE setStartButtonPushed NOTIFY startButtonChanged)
+    Q_PROPERTY(qint64 sentCountLast24Hours READ sentCountLast24Hours NOTIFY sentStatsChanged)
+    Q_PROPERTY(qint64 sentBytesLast24Hours READ sentBytesLast24Hours NOTIFY sentStatsChanged)
     Q_PROPERTY(UserStatus userStatus READ userStatus NOTIFY userStatusChanged)
     Q_PROPERTY(QUrl statusIconSource READ statusIconSource NOTIFY userStatusChanged)
 
@@ -109,6 +112,19 @@ public:
     void setStartButtonPushed(bool pushed) const;
 
     /*!
+     * \brief Number of `sent` table entries from the last 24 hours, cached
+     * and refreshed by refreshSentStats().
+     * \par Cyclomatic complexity: 1
+     */
+    qint64 sentCountLast24Hours() const;
+    /*!
+     * \brief Sum of `http_size` for `sent` table entries from the last 24
+     * hours, cached and refreshed by refreshSentStats().
+     * \par Cyclomatic complexity: 1
+     */
+    qint64 sentBytesLast24Hours() const;
+
+    /*!
      * \brief ACTIVE while startButtonPushed() is true, INACTIVE while it's
      * false, or ERROR while the last send attempt failed (see
      * SendingService::sendFailed()). Independent of the activity-based
@@ -132,6 +148,8 @@ signals:
 #endif
     void startButtonChanged() const;
     void userStatusChanged();
+    /*! \brief Emitted after sentCountLast24Hours() or sentBytesLast24Hours() changes. */
+    void sentStatsChanged();
 
 private:
     /*!
@@ -150,6 +168,13 @@ private:
      */
     void setUserStatus(UserStatus status);
 
+    /*!
+     * \brief Re-reads the last-24-hours sent count/bytes from m_sqliteConnection
+     * and emits sentStatsChanged() if either changed.
+     * \par Cyclomatic complexity: 2
+     */
+    void refreshSentStats();
+
 private slots:
     void showStartButtonNotPushedNotification();
     void toggleStartButtonNotPushedTimer();
@@ -162,6 +187,13 @@ private:
     ActivityMonitor m_activityMonitor;
     QTimer m_inactivityTimer;
     QTimer m_startButtonNotPushedTimer;
+
+    /*! \brief Backs sentCountLast24Hours()/sentBytesLast24Hours(); see refreshSentStats(). */
+    SQLiteConnection m_sqliteConnection;
+    qint64 m_sentCountLast24Hours = 0;
+    qint64 m_sentBytesLast24Hours = 0;
+    /*! \brief Periodically calls refreshSentStats() so the 24h window keeps moving even without new sends. */
+    QTimer m_sentStatsRefreshTimer;
 
     /*! \brief Backs the ERROR branch of userStatus(); set/cleared by SendingService::sendFailed()/sendSucceeded(). */
     bool m_hasSendError = false;
