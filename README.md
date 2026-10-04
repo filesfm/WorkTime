@@ -49,6 +49,7 @@ WorkTime is a desktop app for tracking how you spend your work time.
 | Fedora           | `sudo dnf copr enable -y filesfm/WorkTime && sudo dnf install -y worktime`                           |
 | Ubuntu           | `sudo add-apt-repository -y ppa:filesfm/worktime && sudo apt update && sudo apt install -y worktime` |
 | Arch             | `sudo sh -c 'grep -q "^\[worktime\]" /etc/pacman.conf \|\| printf "\n[worktime]\nSigLevel = Optional TrustAll\nServer = https://filesfm.github.io/WorkTime/arch/\$arch\n" >> /etc/pacman.conf' && sudo pacman -Sy --noconfirm filesfm-worktime` |
+| Linux (General)  | `curl -sL https://api.github.com/repos/filesfm/WorkTime/releases/latest \| grep -o '"browser_download_url": *"[^"]*\.AppImage"' \| head -n1 \| cut -d'"' -f4 \| xargs -r curl -fL -O` |
 
 ---
 
@@ -61,6 +62,7 @@ WorkTime is a desktop app for tracking how you spend your work time.
 | Fedora           | `sudo dnf upgrade -y worktime`                    |
 | Ubuntu           | `sudo apt update && sudo apt upgrade -y worktime` |
 | Arch             | `sudo pacman -Sy --noconfirm filesfm-worktime`    |
+| Linux (General)  | `curl -sL https://api.github.com/repos/filesfm/WorkTime/releases/latest \| grep -o '"browser_download_url": *"[^"]*\.AppImage"' \| head -n1 \| cut -d'"' -f4 \| xargs -r curl -fL -O` |
 
 ---
 
