@@ -37,6 +37,21 @@ parts:
     override-pull: |
       craftctl default
       craftctl set version="$(git describe --tags --always)"
+    # Ubuntu 24.04 has no libkf6idletime-dev package, so fetch the same
+    # archive debs the other CI jobs use and bundle the runtime library.
+    override-build: |
+      prefix="$CRAFT_PART_BUILD/kf6-idletime"
+      base=http://archive.ubuntu.com/ubuntu/pool/universe/k/kf6-kidletime
+      version=6.12.0-0ubuntu1
+      mkdir -p "$prefix"
+      for pkg in libkf6idletime-dev libkf6idletime6; do
+        curl -fsSL -o "$CRAFT_PART_BUILD/$pkg.deb" "$base/${pkg}_${version}_amd64.deb"
+        dpkg-deb -x "$CRAFT_PART_BUILD/$pkg.deb" "$prefix"
+      done
+      export CMAKE_PREFIX_PATH="$prefix/usr${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
+      craftctl default
+      mkdir -p "$CRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu"
+      cp -a "$prefix"/usr/lib/x86_64-linux-gnu/libKF6IdleTime.so* "$CRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/"
     cmake-parameters:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_TESTING=OFF
@@ -44,7 +59,7 @@ parts:
     build-packages:
       - libx11-dev
       - libudev-dev
-      - libkf6idletime-dev
+      - curl
 
   desktop-assets:
     plugin: dump
