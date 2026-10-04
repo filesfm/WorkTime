@@ -44,6 +44,7 @@ parts:
     build-packages:
       - libx11-dev
       - libudev-dev
+      - libkf6idletime-dev
 
   desktop-assets:
     plugin: dump

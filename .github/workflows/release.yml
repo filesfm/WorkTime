@@ -33,6 +33,19 @@ jobs:
           modules: 'qtshadertools'
           cache: true
 
+      - name: Install KF6 IdleTime from Ubuntu archive
+        run: |
+          prefix="$RUNNER_TEMP/kf6-idletime"
+          base=http://archive.ubuntu.com/ubuntu/pool/universe/k/kf6-kidletime
+          version=6.12.0-0ubuntu1
+          mkdir -p "$prefix"
+          for pkg in libkf6idletime-dev libkf6idletime6; do
+            curl -fsSL -o "$RUNNER_TEMP/$pkg.deb" "$base/${pkg}_${version}_amd64.deb"
+            dpkg-deb -x "$RUNNER_TEMP/$pkg.deb" "$prefix"
+          done
+          echo "CMAKE_PREFIX_PATH=$prefix/usr${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$prefix/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
+
       - name: Configure
         run: cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DBUILD_WITHOUT_AUTOSTART=ON
 
@@ -429,6 +442,7 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False \
             cmake ninja-build gcc-c++ pkgconf-pkg-config \
             qt6-qtbase-devel qt6-qtdeclarative-devel libX11-devel systemd-devel \
+            kf6-kidletime-devel \
             rpm-build
 
       - name: Update spec version
