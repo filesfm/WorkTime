@@ -15,6 +15,8 @@ find_package(Qt6 REQUIRED COMPONENTS Gui Network Test DBus)
 add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/settings/settings.cpp
     ${CMAKE_SOURCE_DIR}/src/core/network/sendingservice.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/network/notsentsender.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/network/shootrequestbuilder.cpp
     ${CMAKE_SOURCE_DIR}/src/core/storage/sqliteconnection.cpp
     ${CMAKE_SOURCE_DIR}/src/core/utilities.cpp
     ${CMAKE_SOURCE_DIR}/src/core/kdefocusedwindowtitle.cpp

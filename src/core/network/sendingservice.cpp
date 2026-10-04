@@ -1,5 +1,6 @@
 #include "sendingservice.hpp"
 
+#include "core/network/shootrequestbuilder.hpp"
 #include "core/settings/settings.hpp"
 #include "core/utilities.hpp"
 
@@ -15,22 +16,18 @@
 
 Q_LOGGING_CATEGORY(worktimeSendingService, "worktime.sending.service")
 
-namespace {
-
-constexpr qsizetype kMaxMetadataLength = 255;
-
-QByteArray encodeField(const QString &key, const QString &value)
-{
-    return QUrl::toPercentEncoding(key) + '=' + QUrl::toPercentEncoding(value);
-}
-
-} // namespace
-
 SendingService::SendingService(QObject *parent)
     : QObject(parent)
 {
     connect(&m_timer, &QTimer::timeout, this, &SendingService::sendNow);
     connect(&m_networkManager, &QNetworkAccessManager::finished, this, &SendingService::handleReplyFinished);
+    connect(&m_notSentSender, &NotSentSender::sendSucceeded, this, &SendingService::sendSucceeded);
+    connect(&m_notSentSender, &NotSentSender::sendFailed, this, &SendingService::sendFailed);
+}
+
+SendingService::~SendingService()
+{
+    m_notSentSender.stop();
 }
 
 QUrl SendingService::serverUrl() const
@@ -46,6 +43,9 @@ void SendingService::setServerUrl(const QUrl &url)
         QMutexLocker locker(&m_serverUrlMutex);
         m_serverUrl = url;
     }
+    m_notSentSender.setServerUrl(url);
+    if (url.isValid())
+        m_notSentSender.wake();
     emit serverUrlChanged();
 }
 
@@ -54,6 +54,8 @@ void SendingService::start()
     qCInfo(worktimeSendingService) << "starting sending service";
     m_timer.setInterval(60000);
     m_timer.start();
+    if (!m_notSentSender.isRunning())
+        m_notSentSender.start();
     sendNow();
 }
 
@@ -61,6 +63,7 @@ void SendingService::stop()
 {
     qCInfo(worktimeSendingService) << "stopping sending service";
     m_timer.stop();
+    m_notSentSender.stop();
 }
 
 bool SendingService::isActive() const
@@ -68,20 +71,20 @@ bool SendingService::isActive() const
     return m_timer.isActive();
 }
 
-QByteArray SendingService::buildRequestBody(const QString &title, qint64 utcTimestamp, qint64 shootTime) const
+void SendingService::postSample(const QString &title, qint64 utcTimestamp, qint64 shootTime)
 {
-    QByteArray body = encodeField(QStringLiteral("Shoot[user_name]"), Settings::instance()->username()) + '&'
-                      + encodeField(QStringLiteral("Shoot[password]"), Settings::instance()->password()) + '&'
-                      + encodeField(QStringLiteral("Shoot[project_name]"), QString()) + '&'
-                      + encodeField(QStringLiteral("Shoot[app_name]"),
-                                    Utilities::truncateUtf8Safe(title, kMaxMetadataLength))
-                      + '&' + encodeField(QStringLiteral("Shoot[document_name]"), QString()) + '&'
-                      + encodeField(QStringLiteral("Shoot[document_path]"), QString()) + '&'
-                      + encodeField(QStringLiteral("Shoot[shoot_time]"), QString::number(shootTime)) + '&'
-                      + encodeField(QStringLiteral("Shoot[utc_timestamp]"), QString::number(utcTimestamp)) + '&'
-                      + encodeField(QStringLiteral("Shoot[image_resized]"), QStringLiteral("1"));
+    QNetworkRequest request(m_serverUrl);
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
+    request.setTransferTimeout(30000);
 
-    return body;
+    const QByteArray body = buildShootRequestBody(title, utcTimestamp, shootTime);
+
+    QNetworkReply *reply = m_networkManager.post(request, body);
+    reply->setProperty("focusedWindowTitle", title);
+    reply->setProperty("utcTimestamp", utcTimestamp);
+    reply->setProperty("shootTime", shootTime);
+    reply->setProperty("httpSize", qint64(body.size()));
 }
 
 void SendingService::sendNow()
@@ -92,23 +95,12 @@ void SendingService::sendNow()
         return;
     }
 
-    QNetworkRequest request(m_serverUrl);
-    request.setHeader(QNetworkRequest::ContentTypeHeader,
-                      QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
-    request.setTransferTimeout(30000);
-
     qCDebug(worktimeSendingService) << "posting activity sample to" << m_serverUrl;
 
     const QString title = Utilities::focusedWindowTitle();
     const qint64 utcTimestamp = QDateTime::currentSecsSinceEpoch();
     const qint64 shootTime = utcTimestamp + QDateTime::currentDateTime().offsetFromUtc();
-    const QByteArray body = buildRequestBody(title, utcTimestamp, shootTime);
-
-    QNetworkReply *reply = m_networkManager.post(request, body);
-    reply->setProperty("focusedWindowTitle", title);
-    reply->setProperty("utcTimestamp", utcTimestamp);
-    reply->setProperty("shootTime", shootTime);
-    reply->setProperty("httpSize", qint64(body.size()));
+    postSample(title, utcTimestamp, shootTime);
 }
 
 void SendingService::handleReplyFinished(QNetworkReply *reply)
@@ -125,6 +117,7 @@ void SendingService::handleReplyFinished(QNetworkReply *reply)
         qCWarning(worktimeSendingService) << "submission failed (HTTP" << status << "):" << reply->errorString();
 
         m_sqliteConnection.addEntryToNotSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
+        m_notSentSender.wake();
 
         emit sendFailed(reply->errorString());
         return;

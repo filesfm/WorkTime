@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/network/notsentsender.hpp"
 #include "core/storage/sqliteconnection.hpp"
 
 #include <QLoggingCategory>
@@ -15,7 +16,8 @@ class QNetworkReply;
 
 /*!
  * \brief Periodically submits one activity sample to the Worktime remote
- * endpoint.
+ * endpoint, and drives a NotSentSender to drain any samples a past attempt
+ * failed to deliver.
  */
 class SendingService : public QObject
 {
@@ -23,11 +25,11 @@ class SendingService : public QObject
 
 public:
     /*!
-     * \brief Wires the send timer and network manager, and rebinds the timer interval
-     * whenever Settings::postInterval() changes.
+     * \brief Wires the send timer, network manager and NotSentSender worker.
      * \par Cyclomatic complexity: 1
      */
     explicit SendingService(QObject *parent = nullptr);
+    ~SendingService() override;
 
     /*!
      * \brief Endpoint requests are POSTed to. Invalid/empty until set.
@@ -68,25 +70,28 @@ signals:
 
 private:
     /*!
-     * \brief Builds the request body for one activity sample.
+     * \brief POSTs one activity sample built from \a title, \a utcTimestamp
+     * and \a shootTime to serverUrl(), tagging the reply with them so
+     * handleReplyFinished() can record the outcome.
      * \par Cyclomatic complexity: 1
      */
-    QByteArray buildRequestBody(const QString &title, qint64 utcTimestamp, qint64 shootTime) const;
+    void postSample(const QString &title, qint64 utcTimestamp, qint64 shootTime);
 
     /*!
-     * \brief Sends buildRequestBody() to serverUrl(), or emits sendFailed()
-     * if no valid URL is set.
+     * \brief Captures the currently focused window and posts it via
+     * postSample(), or emits sendFailed() if no valid URL is set.
      * \par Cyclomatic complexity: 2
      */
     void sendNow();
     /*!
      * \brief Deletes \a reply and emits sendSucceeded() or sendFailed()
-     * depending on whether the request succeeded.
+     * depending on whether the request succeeded. On failure, also wakes
+     * m_notSentSender so it picks up the newly queued entry without delay.
      * \par Cyclomatic complexity: 2
      */
     void handleReplyFinished(QNetworkReply *reply);
 
-    /*! \brief Issues the POST requests built by buildRequestBody(). */
+    /*! \brief Issues the POST requests built by buildShootRequestBody(). */
     QNetworkAccessManager m_networkManager;
     /*! \brief Drives the periodic sendNow() calls while active. */
     QTimer m_timer;
@@ -96,4 +101,6 @@ private:
     mutable QMutex m_serverUrlMutex;
     /*! \brief Records each send attempt's outcome in the `sent`/`not_sent` tables. */
     SQLiteConnection m_sqliteConnection;
+    /*! \brief Drains `not_sent` in the background while active; see NotSentSender. */
+    NotSentSender m_notSentSender;
 };

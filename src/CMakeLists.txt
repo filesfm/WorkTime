@@ -44,6 +44,10 @@ qt_add_qml_module(worktime
         core/settings/settings.hpp
         core/network/sendingservice.cpp
         core/network/sendingservice.hpp
+        core/network/notsentsender.cpp
+        core/network/notsentsender.hpp
+        core/network/shootrequestbuilder.cpp
+        core/network/shootrequestbuilder.hpp
         core/activity/activitymonitor.cpp
         core/activity/activitymonitor.hpp
         core/utilities.cpp
