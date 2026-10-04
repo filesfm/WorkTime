@@ -1,10 +1,8 @@
 #include "kdefocusedwindowtitle.hpp"
 
-#include "utilities.hpp"
+#include "kwinscript.hpp"
 
 #include <QDBusConnection>
-#include <QDBusInterface>
-#include <QDBusReply>
 
 Q_LOGGING_CATEGORY(worktimeKdeFocusedWindowTitle, "worktime.kde.focused.window.title")
 
@@ -14,14 +12,6 @@ constexpr QLatin1StringView kServiceName{"io.github.filesfm.worktime"};
 constexpr QLatin1StringView kObjectPath{"/io/github/filesfm/worktime/FocusedWindow"};
 
 constexpr QLatin1StringView kKWinPluginName{"io.github.filesfm.worktime.focusedwindow"};
-
-QDBusInterface kwinScriptingInterface()
-{
-    return QDBusInterface(QStringLiteral("org.kde.KWin"),
-                          QStringLiteral("/Scripting"),
-                          QStringLiteral("org.kde.kwin.Scripting"),
-                          QDBusConnection::sessionBus());
-}
 
 } // namespace
 
@@ -51,36 +41,11 @@ void KDEFocusedWindowTitle::start()
     }
     bus.registerObject(kObjectPath, this, QDBusConnection::ExportScriptableSlots);
 
-    QDBusInterface scripting = kwinScriptingInterface();
-    if (!scripting.isValid()) {
-        qCWarning(worktimeKdeFocusedWindowTitle) << "org.kde.KWin Scripting interface unavailable";
+    if (!KWinScript::load(QString(kKWinPluginName),
+                          QStringLiteral(":/qt/qml/Worktime/focused-window-title.js"),
+                          QStringLiteral("worktime-focused-window-title.js"))) {
         return;
     }
-
-    const QString pluginName(kKWinPluginName);
-    if (const QDBusReply<bool> alreadyLoaded = scripting.call(QStringLiteral("isScriptLoaded"), pluginName);
-        alreadyLoaded.isValid() && alreadyLoaded.value()) {
-        qCDebug(worktimeKdeFocusedWindowTitle) << "unloading already-loaded KWin script" << pluginName;
-        scripting.call(QStringLiteral("unloadScript"), pluginName);
-    }
-
-    const QString scriptPath = Utilities::extractResourceToDisk(QStringLiteral(
-                                                                    ":/qt/qml/Worktime/focused-window-title.js"),
-                                                                QStringLiteral("worktime-focused-window-title.js"))
-                                   .toLocalFile();
-
-    const QDBusReply<int> scriptId = scripting.call(QStringLiteral("loadScript"), scriptPath, pluginName);
-    if (!scriptId.isValid() || scriptId.value() < 0) {
-        qCWarning(worktimeKdeFocusedWindowTitle)
-            << "failed to load KWin script" << scriptPath << ":" << scriptId.error().message();
-        return;
-    }
-
-    QDBusInterface(QStringLiteral("org.kde.KWin"),
-                   QStringLiteral("/Scripting/Script%1").arg(scriptId.value()),
-                   QStringLiteral("org.kde.kwin.Script"),
-                   bus)
-        .call(QStringLiteral("run"));
 
     m_started = true;
 }
@@ -94,8 +59,7 @@ void KDEFocusedWindowTitle::stop()
 
     qCInfo(worktimeKdeFocusedWindowTitle) << "stopping";
 
-    if (QDBusInterface scripting = kwinScriptingInterface(); scripting.isValid())
-        scripting.call(QStringLiteral("unloadScript"), QString(kKWinPluginName));
+    KWinScript::unload(QString(kKWinPluginName));
 
     QDBusConnection bus = QDBusConnection::sessionBus();
     bus.unregisterObject(kObjectPath);

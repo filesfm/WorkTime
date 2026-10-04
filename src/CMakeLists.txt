@@ -11,6 +11,15 @@ set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.png PROPERTIES
 set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/kwin/focused-window-title.js PROPERTIES
     QT_RESOURCE_ALIAS "focused-window-title.js"
 )
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/kwin/popup-placement.js PROPERTIES
+    QT_RESOURCE_ALIAS "popup-placement.js"
+)
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/metadata.json PROPERTIES
+    QT_RESOURCE_ALIAS "worktime-placement-metadata.json"
+)
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/extension.js PROPERTIES
+    QT_RESOURCE_ALIAS "worktime-placement-extension.js"
+)
 
 qt_add_qml_module(worktime
     URI Worktime
@@ -23,6 +32,8 @@ qt_add_qml_module(worktime
         qml/controller/appquitter.hpp
         qml/controller/screengeometry.cpp
         qml/controller/screengeometry.hpp
+        qml/controller/popupplacement.cpp
+        qml/controller/popupplacement.hpp
         core/settings/settings.cpp
         core/settings/settings.hpp
         core/network/sendingservice.cpp
@@ -35,12 +46,17 @@ qt_add_qml_module(worktime
         core/oneinstanceguarantor.hpp
         core/kdefocusedwindowtitle.cpp
         core/kdefocusedwindowtitle.hpp
+        core/kwinscript.cpp
+        core/kwinscript.hpp
         core/storage/sqliteconnection.hpp
         core/storage/sqliteconnection.cpp
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
         ${CMAKE_SOURCE_DIR}/resource/icon.png
         ${CMAKE_SOURCE_DIR}/resource/kwin/focused-window-title.js
+        ${CMAKE_SOURCE_DIR}/resource/kwin/popup-placement.js
+        ${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/metadata.json
+        ${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/extension.js
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -144,6 +160,8 @@ if(BUILD_DOCS)
             qml/controller/appquitter.hpp
             qml/controller/screengeometry.cpp
             qml/controller/screengeometry.hpp
+            qml/controller/popupplacement.cpp
+            qml/controller/popupplacement.hpp
             core/settings/settings.cpp
             core/settings/settings.hpp
             core/network/sendingservice.cpp
@@ -156,6 +174,8 @@ if(BUILD_DOCS)
             core/oneinstanceguarantor.hpp
             core/kdefocusedwindowtitle.cpp
             core/kdefocusedwindowtitle.hpp
+            core/kwinscript.cpp
+            core/kwinscript.hpp
             core/storage/sqliteconnection.hpp
             core/storage/sqliteconnection.cpp
             COMMENT "Generating API documentation with Doxygen"

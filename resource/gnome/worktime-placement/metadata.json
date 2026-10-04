@@ -1,0 +1,15 @@
+{
+  "uuid": "worktime-placement@filesfm.github.io",
+  "name": "WorkTime Placement",
+  "description": "Places the WorkTime tray popup next to the tray icon, since Wayland does not let applications position their own windows.",
+  "url": "https://github.com/filesfm/WorkTime",
+  "shell-version": [
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50"
+  ],
+  "version": 1
+}

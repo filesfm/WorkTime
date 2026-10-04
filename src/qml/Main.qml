@@ -50,8 +50,10 @@ ApplicationWindow {
     }
 
     function showPopup() {
-        if (trayAvailable)
+        if (trayAvailable) {
             positionPopup()
+            popupPlacement.requestPlacement()
+        }
         show()
         raise()
         requestActivate()

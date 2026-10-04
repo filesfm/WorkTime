@@ -18,6 +18,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/storage/sqliteconnection.cpp
     ${CMAKE_SOURCE_DIR}/src/core/utilities.cpp
     ${CMAKE_SOURCE_DIR}/src/core/kdefocusedwindowtitle.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/kwinscript.cpp
     ${CMAKE_SOURCE_DIR}/src/core/oneinstanceguarantor.cpp
     ${CMAKE_SOURCE_DIR}/src/core/activity/activitymonitor.cpp
     ${CMAKE_SOURCE_DIR}/test/main.cpp

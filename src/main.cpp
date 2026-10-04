@@ -10,6 +10,7 @@
 #include "core/oneinstanceguarantor.hpp"
 #include "core/utilities.hpp"
 #include "qml/controller/appquitter.hpp"
+#include "qml/controller/popupplacement.hpp"
 #include "qml/controller/screengeometry.hpp"
 
 #if defined(Q_OS_LINUX)
@@ -58,8 +59,15 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("appQuitter", &appQuitter);
     ScreenGeometry screenGeometry;
     engine.rootContext()->setContextProperty("screenGeometry", &screenGeometry);
+    PopupPlacement popupPlacement;
+    engine.rootContext()->setContextProperty("popupPlacement", &popupPlacement);
+    const bool trayAvailable = QSystemTrayIcon::isSystemTrayAvailable();
+    if (trayAvailable) {
+        popupPlacement.start();
+        QObject::connect(&app, &QCoreApplication::aboutToQuit, [&popupPlacement] { popupPlacement.stop(); });
+    }
     engine.setInitialProperties({
-        {"trayAvailable", QSystemTrayIcon::isSystemTrayAvailable()},
+        {"trayAvailable", trayAvailable},
         {"trayIconSource",
          Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon.png"),
                                           QStringLiteral("worktime-tray-icon.png"))},
