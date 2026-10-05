@@ -119,6 +119,9 @@ void SendingService::handleReplyFinished(QNetworkReply *reply)
         m_sqliteConnection.addEntryToNotSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
         m_notSentSender.wake();
 
+        if (status.toInt() == 401)
+            emit authenticationFailed();
+
         emit sendFailed(reply->errorString());
         return;
     }

@@ -67,6 +67,7 @@ signals:
     void sendSucceeded();
     /*! \brief Emitted after a send request fails, with a human-readable reason. */
     void sendFailed(const QString &errorString);
+    void authenticationFailed();
 
 private:
     /*!

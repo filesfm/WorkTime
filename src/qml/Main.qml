@@ -247,6 +247,15 @@ ApplicationWindow {
                         text: controller.username
                         onEditingFinished: controller.username = text
                         Layout.fillWidth: true
+
+                        Rectangle {
+                            anchors.fill: parent
+                            visible: controller.credentialsRejected
+                            color: "transparent"
+                            radius: 4
+                            border.width: 2
+                            border.color: "#e74c3c"
+                        }
                     }
 
                     Label { text: "Password" }
@@ -255,6 +264,15 @@ ApplicationWindow {
                         echoMode: TextInput.Password
                         onEditingFinished: controller.password = text
                         Layout.fillWidth: true
+
+                        Rectangle {
+                            anchors.fill: parent
+                            visible: controller.credentialsRejected
+                            color: "transparent"
+                            radius: 4
+                            border.width: 2
+                            border.color: "#e74c3c"
+                        }
                     }
                 }
             }

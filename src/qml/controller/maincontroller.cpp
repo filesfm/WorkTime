@@ -98,6 +98,24 @@ MainController::MainController(QObject *parent)
         m_hasSendError = false;
         emit userStatusChanged();
     });
+
+    connect(&m_sendingService, &SendingService::authenticationFailed, this, [this]() { setCredentialsRejected(true); });
+    connect(&m_sendingService, &SendingService::sendSucceeded, this, [this]() { setCredentialsRejected(false); });
+    connect(this, &MainController::usernameChanged, this, [this]() { setCredentialsRejected(false); });
+    connect(this, &MainController::passwordChanged, this, [this]() { setCredentialsRejected(false); });
+}
+
+bool MainController::credentialsRejected() const
+{
+    return m_credentialsRejected;
+}
+
+void MainController::setCredentialsRejected(bool rejected)
+{
+    if (m_credentialsRejected == rejected)
+        return;
+    m_credentialsRejected = rejected;
+    emit credentialsRejectedChanged();
 }
 
 qint64 MainController::sentCountLast24Hours() const

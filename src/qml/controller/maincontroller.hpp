@@ -35,6 +35,7 @@ class MainController : public QObject
     Q_PROPERTY(qint64 sentBytesLast24Hours READ sentBytesLast24Hours NOTIFY sentStatsChanged)
     Q_PROPERTY(UserStatus userStatus READ userStatus NOTIFY userStatusChanged)
     Q_PROPERTY(QUrl statusIconSource READ statusIconSource NOTIFY userStatusChanged)
+    Q_PROPERTY(bool credentialsRejected READ credentialsRejected NOTIFY credentialsRejectedChanged)
 
 public:
     //! \brief User's current activity/connectivity state; see setUserStatus().
@@ -140,6 +141,8 @@ public:
      */
     QUrl statusIconSource() const;
 
+    bool credentialsRejected() const;
+
 signals:
     void usernameChanged();
     void passwordChanged();
@@ -150,6 +153,7 @@ signals:
     void userStatusChanged();
     /*! \brief Emitted after sentCountLast24Hours() or sentBytesLast24Hours() changes. */
     void sentStatsChanged();
+    void credentialsRejectedChanged();
 
 private:
     /*!
@@ -175,6 +179,8 @@ private:
      */
     void refreshSentStats();
 
+    void setCredentialsRejected(bool rejected);
+
 private slots:
     void showStartButtonNotPushedNotification();
     void toggleStartButtonNotPushedTimer();
@@ -197,6 +203,8 @@ private:
 
     /*! \brief Backs the ERROR branch of userStatus(); set/cleared by SendingService::sendFailed()/sendSucceeded(). */
     bool m_hasSendError = false;
+
+    bool m_credentialsRejected = false;
 
     /*! \brief statusIconSource() for UserStatus::ACTIVE; extracted from resource/icon-green.png. */
     QUrl m_activeIconUrl;
