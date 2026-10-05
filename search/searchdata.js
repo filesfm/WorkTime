@@ -8,7 +8,7 @@ var indexSectionsWithContent =
   5: "fhsu",
   6: "u",
   7: "aei",
-  8: "apsu"
+  8: "acpsu"
 };
 
 var indexSectionNames =

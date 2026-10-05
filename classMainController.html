@@ -128,6 +128,8 @@ Signals</h2></td></tr>
 <tr class="memitem:a2392d8bb9f4eee34f9eedb1835104a9c" id="r_a2392d8bb9f4eee34f9eedb1835104a9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMainController.html#a2392d8bb9f4eee34f9eedb1835104a9c">sentStatsChanged</a> ()</td></tr>
 <tr class="memdesc:a2392d8bb9f4eee34f9eedb1835104a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emitted after <a class="el" href="classMainController.html#aa8b38fbc0b1ff52be7269d04d4ba82a2">sentCountLast24Hours()</a> or <a class="el" href="classMainController.html#a7f6914a358cbe3cc80e7116d21498e4c">sentBytesLast24Hours()</a> changes.  <br /></td></tr>
 <tr class="separator:a2392d8bb9f4eee34f9eedb1835104a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75737c0328e3c7e869af55052fa9fb84" id="r_a75737c0328e3c7e869af55052fa9fb84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMainController.html#a75737c0328e3c7e869af55052fa9fb84">credentialsRejectedChanged</a> ()</td></tr>
+<tr class="separator:a75737c0328e3c7e869af55052fa9fb84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -173,6 +175,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5461cf906fcefee2214e8058bbe59741" id="r_a5461cf906fcefee2214e8058bbe59741"><td class="memItemLeft" align="right" valign="top">QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMainController.html#a5461cf906fcefee2214e8058bbe59741">statusIconSource</a> () const</td></tr>
 <tr class="memdesc:a5461cf906fcefee2214e8058bbe59741"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tray icon matching <a class="el" href="classMainController.html#ae4f548c67ea7940e0511faa8928d34ad">userStatus()</a>: green for ACTIVE, red for ERROR, the default icon for INACTIVE.  <br /></td></tr>
 <tr class="separator:a5461cf906fcefee2214e8058bbe59741"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae1e6d1641e2e3cafa4e6dc0d1024ff8" id="r_aae1e6d1641e2e3cafa4e6dc0d1024ff8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMainController.html#aae1e6d1641e2e3cafa4e6dc0d1024ff8">credentialsRejected</a> () const</td></tr>
+<tr class="separator:aae1e6d1641e2e3cafa4e6dc0d1024ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -192,6 +196,8 @@ Properties</h2></td></tr>
 <tr class="separator:ae4f548c67ea7940e0511faa8928d34ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c7c80e35c2dd6a3af62e78ad3b3c4eb" id="r_a2c7c80e35c2dd6a3af62e78ad3b3c4eb"><td class="memItemLeft" align="right" valign="top">QUrl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMainController.html#a2c7c80e35c2dd6a3af62e78ad3b3c4eb">statusIconSource</a></td></tr>
 <tr class="separator:a2c7c80e35c2dd6a3af62e78ad3b3c4eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb14545e0957ba2ee26cec49213f7938" id="r_acb14545e0957ba2ee26cec49213f7938"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMainController.html#acb14545e0957ba2ee26cec49213f7938">credentialsRejected</a></td></tr>
+<tr class="separator:acb14545e0957ba2ee26cec49213f7938"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>QML-facing controller behind Main.qml. </p>
@@ -289,6 +295,48 @@ Properties</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">void MainController::autoStartupChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aae1e6d1641e2e3cafa4e6dc0d1024ff8" name="aae1e6d1641e2e3cafa4e6dc0d1024ff8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae1e6d1641e2e3cafa4e6dc0d1024ff8">&#9670;&#160;</a></span>credentialsRejected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MainController::credentialsRejected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75737c0328e3c7e869af55052fa9fb84" name="a75737c0328e3c7e869af55052fa9fb84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75737c0328e3c7e869af55052fa9fb84">&#9670;&#160;</a></span>credentialsRejectedChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MainController::credentialsRejectedChanged </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -698,6 +746,28 @@ Properties</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">read</span><span class="mlabel">write</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acb14545e0957ba2ee26cec49213f7938" name="acb14545e0957ba2ee26cec49213f7938"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb14545e0957ba2ee26cec49213f7938">&#9670;&#160;</a></span>credentialsRejected</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MainController::credentialsRejected</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
