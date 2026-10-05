@@ -128,6 +128,21 @@ QString Utilities::focusedWindowTitle()
 
 QString Utilities::s_autostartPortalService = QStringLiteral("org.freedesktop.portal.Desktop");
 
+namespace {
+
+QString hostAutostartDirectory()
+{
+    if (qEnvironmentVariableIsSet("SNAP_REAL_HOME"))
+        return qEnvironmentVariable("SNAP_REAL_HOME") + QStringLiteral("/.config/autostart");
+    if (qEnvironmentVariableIsSet("FLATPAK_ID"))
+        return QDir::homePath() + QStringLiteral("/.config/autostart");
+    return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QStringLiteral("/autostart");
+}
+
+} // namespace
+
+QString Utilities::s_autostartDirectory = hostAutostartDirectory();
+
 void Utilities::autostart(bool autostart)
 {
     qCInfo(worktimeUtilities) << (autostart ? "enabling" : "disabling") << "autostart";
@@ -172,6 +187,20 @@ void Utilities::autostart(bool autostart)
     }*/
 }
 
+bool Utilities::isAutostartEnabled()
+{
+    const QDir directory(s_autostartDirectory);
+    const QStringList entries = directory.entryList({QStringLiteral("*worktime*.desktop")}, QDir::Files);
+
+    for (const QString &entry : entries) {
+        QSettings desktopFile(directory.filePath(entry), QSettings::IniFormat);
+        if (!desktopFile.value(QStringLiteral("Desktop Entry/Hidden")).toBool())
+            return true;
+    }
+
+    return false;
+}
+
 #    elif defined(Q_OS_MACOS)
 
 #    elif defined(Q_OS_WINDOWS)
@@ -189,6 +218,15 @@ void Utilities::autostart(bool autostart)
         registry.setValue(QStringLiteral("WorkTime"), QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
     else
         registry.remove(QStringLiteral("WorkTime"));
+}
+
+bool Utilities::isAutostartEnabled()
+{
+    QSettings registry(s_autostartRegistryKey, QSettings::NativeFormat);
+    const QString registeredPath = registry.value(QStringLiteral("WorkTime")).toString();
+    const QString currentPath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+
+    return registeredPath.compare(currentPath, Qt::CaseInsensitive) == 0;
 }
 
 #    endif

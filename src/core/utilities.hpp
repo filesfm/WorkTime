@@ -61,6 +61,15 @@ public:
 #if !defined(BUILD_WITHOUT_AUTOSTART)
     //! \brief Registers or unregisters the application to launch at login.
     static void autostart(bool autostart = true);
+
+    /*!
+     * \brief Whether the OS is actually set up to launch the application at login.
+     *
+     * Reads the real OS state rather than the stored setting: the Run registry
+     * entry on Windows, the SMAppService status on macOS and the autostart
+     * desktop entry written by the Background portal on Linux.
+     */
+    static bool isAutostartEnabled();
 #endif
 
 #if defined(Q_OS_LINUX)
@@ -93,6 +102,8 @@ private:
 #    if defined(Q_OS_LINUX)
     //! \brief D-Bus service autostart() sends the Background portal request to.
     static QString s_autostartPortalService;
+    //! \brief Directory isAutostartEnabled() looks for the autostart desktop entry in.
+    static QString s_autostartDirectory;
 #    elif defined(Q_OS_WINDOWS)
     //! \brief Registry key autostart() writes the launch-at-login entry to.
     static QString s_autostartRegistryKey;
@@ -100,7 +111,7 @@ private:
     /*!
      * \brief Object autostart() registers/unregisters instead of
      * `[SMAppService mainAppService]`, or null to use the latter. Must respond
-     * to `registerAndReturnError:` and `unregisterAndReturnError:`. Typed
+     * to `registerAndReturnError:`, `unregisterAndReturnError:` and `status`. Typed
      * `void *` so this header stays includable from plain C++.
      */
     static void *s_autostartAppService;

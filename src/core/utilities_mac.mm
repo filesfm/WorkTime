@@ -72,6 +72,15 @@ void Utilities::autostart(bool autostart)
     }
 }
 
+bool Utilities::isAutostartEnabled()
+{
+    SMAppService *service = s_autostartAppService ? static_cast<SMAppService *>(s_autostartAppService)
+                                                  : [SMAppService mainAppService];
+    const SMAppServiceStatus status = service.status;
+
+    return status == SMAppServiceStatusEnabled || status == SMAppServiceStatusRequiresApproval;
+}
+
 #endif // !defined(BUILD_WITHOUT_AUTOSTART)
 
 void Utilities::showNotification(const QString &title, const QString &message)

@@ -138,6 +138,7 @@ namespace {
 class TestableUtilities : public Utilities
 {
 public:
+    using Utilities::s_autostartDirectory;
     using Utilities::s_autostartPortalService;
 };
 
@@ -225,6 +226,60 @@ TEST_F(UtilitiesAutostartTest, DisablingRevokesAutostartFromTheBackgroundPortal)
     EXPECT_FALSE(options.value("autostart").toBool());
 }
 
+namespace {
+
+class UtilitiesAutostartStateTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        ASSERT_TRUE(m_directory.isValid());
+        m_previousDirectory = TestableUtilities::s_autostartDirectory;
+        TestableUtilities::s_autostartDirectory = m_directory.path();
+    }
+
+    void TearDown() override { TestableUtilities::s_autostartDirectory = m_previousDirectory; }
+
+    void writeDesktopEntry(const QString &fileName, const QByteArray &content)
+    {
+        QFile file(m_directory.filePath(fileName));
+        ASSERT_TRUE(file.open(QIODevice::WriteOnly));
+        file.write(content);
+    }
+
+    QTemporaryDir m_directory;
+    QString m_previousDirectory;
+};
+
+} // namespace
+
+TEST_F(UtilitiesAutostartStateTest, NoDesktopEntryMeansDisabled)
+{
+    EXPECT_FALSE(Utilities::isAutostartEnabled());
+}
+
+TEST_F(UtilitiesAutostartStateTest, DesktopEntryMeansEnabled)
+{
+    writeDesktopEntry("io.github.filesfm.worktime.desktop", "[Desktop Entry]\nType=Application\nExec=worktime\n");
+
+    EXPECT_TRUE(Utilities::isAutostartEnabled());
+}
+
+TEST_F(UtilitiesAutostartStateTest, HiddenDesktopEntryMeansDisabled)
+{
+    writeDesktopEntry("io.github.filesfm.worktime.desktop",
+                      "[Desktop Entry]\nType=Application\nExec=worktime\nHidden=true\n");
+
+    EXPECT_FALSE(Utilities::isAutostartEnabled());
+}
+
+TEST_F(UtilitiesAutostartStateTest, OtherApplicationsDesktopEntryIsIgnored)
+{
+    writeDesktopEntry("org.example.other.desktop", "[Desktop Entry]\nType=Application\nExec=other\n");
+
+    EXPECT_FALSE(Utilities::isAutostartEnabled());
+}
+
 #endif // !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_LINUX)
 
 #if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
@@ -280,6 +335,30 @@ TEST_F(UtilitiesAutostartTest, DisablingRemovesTheRunEntry)
 
     QSettings registry(TestableUtilities::s_autostartRegistryKey, QSettings::NativeFormat);
     EXPECT_FALSE(registry.contains("WorkTime"));
+}
+
+TEST_F(UtilitiesAutostartTest, IsEnabledAfterEnabling)
+{
+    Utilities::autostart(true);
+
+    EXPECT_TRUE(Utilities::isAutostartEnabled());
+}
+
+TEST_F(UtilitiesAutostartTest, IsDisabledAfterDisabling)
+{
+    Utilities::autostart(true);
+    Utilities::autostart(false);
+
+    EXPECT_FALSE(Utilities::isAutostartEnabled());
+}
+
+TEST_F(UtilitiesAutostartTest, EntryForAnotherExecutableMeansDisabled)
+{
+    QSettings registry(TestableUtilities::s_autostartRegistryKey, QSettings::NativeFormat);
+    registry.setValue("WorkTime", QStringLiteral("C:\\Elsewhere\\worktime.exe"));
+    registry.sync();
+
+    EXPECT_FALSE(Utilities::isAutostartEnabled());
 }
 
 #endif // !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)

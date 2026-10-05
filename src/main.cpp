@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "core/oneinstanceguarantor.hpp"
+#include "core/settings/settings.hpp"
 #include "core/utilities.hpp"
 #include "qml/controller/appquitter.hpp"
 #include "qml/controller/popupplacement.hpp"
@@ -47,6 +48,12 @@ int main(int argc, char *argv[])
 
     app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
     app.setQuitOnLastWindowClosed(false);
+
+#if !defined(BUILD_WITHOUT_AUTOSTART)
+    const bool autostartWanted = Settings::instance()->autoStartup();
+    if (Utilities::isAutostartEnabled() != autostartWanted)
+        Utilities::autostart(autostartWanted);
+#endif
 
 #if defined(Q_OS_LINUX)
     if (qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("kde", Qt::CaseInsensitive)) {
