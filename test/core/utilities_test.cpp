@@ -22,6 +22,11 @@
 #    include <QVariantMap>
 #endif
 
+#if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
+#    include <QCoreApplication>
+#    include <QSettings>
+#endif
+
 TEST(UtilitiesTest, FocusedApplicationNameDoesNotCrash)
 {
     // No assumption on the returned value: whether a name is available
@@ -221,3 +226,60 @@ TEST_F(UtilitiesAutostartTest, DisablingRevokesAutostartFromTheBackgroundPortal)
 }
 
 #endif // !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_LINUX)
+
+#if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
+
+namespace {
+
+class TestableUtilities : public Utilities
+{
+public:
+    using Utilities::s_autostartRegistryKey;
+};
+
+class UtilitiesAutostartTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_previousKey = TestableUtilities::s_autostartRegistryKey;
+        TestableUtilities::s_autostartRegistryKey = QStringLiteral(
+            "HKEY_CURRENT_USER\\Software\\Files.fm\\WorktimeAutostartTest");
+        removeTestKey();
+    }
+
+    void TearDown() override
+    {
+        removeTestKey();
+        TestableUtilities::s_autostartRegistryKey = m_previousKey;
+    }
+
+    static void removeTestKey()
+    {
+        QSettings parent(QStringLiteral("HKEY_CURRENT_USER\\Software\\Files.fm"), QSettings::NativeFormat);
+        parent.remove(QStringLiteral("WorktimeAutostartTest"));
+    }
+
+    QString m_previousKey;
+};
+
+} // namespace
+
+TEST_F(UtilitiesAutostartTest, EnablingAddsARunEntryForTheExecutable)
+{
+    Utilities::autostart(true);
+
+    QSettings registry(TestableUtilities::s_autostartRegistryKey, QSettings::NativeFormat);
+    EXPECT_EQ(registry.value("WorkTime").toString(), QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
+}
+
+TEST_F(UtilitiesAutostartTest, DisablingRemovesTheRunEntry)
+{
+    Utilities::autostart(true);
+    Utilities::autostart(false);
+
+    QSettings registry(TestableUtilities::s_autostartRegistryKey, QSettings::NativeFormat);
+    EXPECT_FALSE(registry.contains("WorkTime"));
+}
+
+#endif // !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
