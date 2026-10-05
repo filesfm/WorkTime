@@ -17,11 +17,9 @@ cd "$repo_root" || exit 1
 # shellcheck source=hooks/lib.sh
 source hooks/lib.sh
 
-mapfile -d '' staged < <(git diff --cached --name-only --diff-filter=ACMR -z -- src test)
-
 cpp_files=()
 format_files=()
-for f in "${staged[@]}"; do
+while IFS= read -r -d '' f; do
     case "$f" in
         *.cpp)
             format_files+=("$f")
@@ -31,7 +29,7 @@ for f in "${staged[@]}"; do
             ;;
         *.hpp | *.mm) format_files+=("$f") ;;
     esac
-done
+done < <(git diff --cached --name-only --diff-filter=ACMR -z -- src test)
 
 status=0
 
