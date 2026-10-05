@@ -1,0 +1,37 @@
+name: Import Apple signing certificate
+description: Create a temporary keychain, import a Developer ID certificate into it and expose its path as KEYCHAIN_PATH
+
+inputs:
+  certificate:
+    description: Base64-encoded .p12 certificate
+    required: true
+  certificate-password:
+    description: Password for the .p12 certificate
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Import signing certificate
+      shell: bash
+      env:
+        APPLE_CERTIFICATE: ${{ inputs.certificate }}
+        APPLE_CERTIFICATE_PASSWORD: ${{ inputs.certificate-password }}
+      run: |
+        keychain_path="$RUNNER_TEMP/app-signing.keychain-db"
+        keychain_password=$(openssl rand -base64 32)
+        certificate_path="$RUNNER_TEMP/certificate.p12"
+
+        echo -n "$APPLE_CERTIFICATE" | base64 --decode -o "$certificate_path"
+
+        security create-keychain -p "$keychain_password" "$keychain_path"
+        security set-keychain-settings -lut 21600 "$keychain_path"
+        security unlock-keychain -p "$keychain_password" "$keychain_path"
+        security import "$certificate_path" -P "$APPLE_CERTIFICATE_PASSWORD" -A \
+          -t cert -f pkcs12 -k "$keychain_path"
+        security set-key-partition-list -S apple-tool:,apple: -k "$keychain_password" "$keychain_path"
+        # shellcheck disable=SC2046 # word-splitting is intentional: add to the existing search list
+        security list-keychain -d user -s "$keychain_path" $(security list-keychains -d user | sed 's/"//g')
+        rm -f "$certificate_path"
+
+        echo "KEYCHAIN_PATH=$keychain_path" >> "$GITHUB_ENV"

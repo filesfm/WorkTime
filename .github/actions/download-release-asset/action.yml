@@ -1,0 +1,33 @@
+name: Download release asset
+description: Download a single release asset matching a pattern into dist/ and fail if the match count is not exactly one
+
+inputs:
+  tag:
+    description: Release tag to download from, e.g. v0.4.2
+    required: true
+  pattern:
+    description: Glob matching the asset file name, e.g. '*-amd64.snap'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download asset
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG: ${{ inputs.tag }}
+        PATTERN: ${{ inputs.pattern }}
+        REPOSITORY: ${{ github.repository }}
+      run: |
+        mkdir -p dist
+        gh release download "$TAG" \
+          --repo "$REPOSITORY" \
+          --pattern "$PATTERN" \
+          --dir dist
+
+        count=$(find dist -maxdepth 1 -name "$PATTERN" | wc -l)
+        if [ "$count" -ne 1 ]; then
+          echo "::error::Expected exactly one asset matching '$PATTERN' on release $TAG, found $count"
+          exit 1
+        fi

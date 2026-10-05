@@ -1,0 +1,21 @@
+name: Install Qt
+description: Install Qt 6 with the shader tools module and dependency caching
+
+inputs:
+  version:
+    description: Qt version to install, e.g. 6.8.1
+    required: true
+  arch:
+    description: Qt arch identifier, e.g. linux_gcc_64
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4
+      with:
+        version: ${{ inputs.version }}
+        arch: ${{ inputs.arch }}
+        modules: 'qtshadertools'
+        cache: true
