@@ -180,7 +180,11 @@ ApplicationWindow {
             Button {
                 text: controller.startButtonPushed ? "Stop" : "Start"
                 highlighted: true
-                onClicked: controller.toggleTracking()
+                onClicked: {
+                    controller.username = usernameField.text
+                    controller.password = passwordField.text
+                    controller.toggleTracking()
+                }
             }
         }
 
@@ -244,6 +248,7 @@ ApplicationWindow {
 
                     Label { text: "Username" }
                     TextField {
+                        id: usernameField
                         text: controller.username
                         onEditingFinished: controller.username = text
                         Layout.fillWidth: true
@@ -260,6 +265,7 @@ ApplicationWindow {
 
                     Label { text: "Password" }
                     TextField {
+                        id: passwordField
                         text: controller.password
                         echoMode: TextInput.Password
                         onEditingFinished: controller.password = text
