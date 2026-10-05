@@ -13,6 +13,15 @@
 
 #include "core/utilities.hpp"
 
+#if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_LINUX)
+#    include <QDBusArgument>
+#    include <QDBusConnection>
+#    include <QDBusMessage>
+#    include <QDBusObjectPath>
+#    include <QDBusVirtualObject>
+#    include <QVariantMap>
+#endif
+
 TEST(UtilitiesTest, FocusedApplicationNameDoesNotCrash)
 {
     // No assumption on the returned value: whether a name is available
@@ -116,3 +125,99 @@ TEST(UtilitiesTest, TruncateUtf8SafeEmptyValueIsUnchanged)
 {
     EXPECT_EQ(Utilities::truncateUtf8Safe(QString(), 255), QString());
 }
+
+#if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_LINUX)
+
+namespace {
+
+class TestableUtilities : public Utilities
+{
+public:
+    using Utilities::s_autostartPortalService;
+};
+
+/*
+ * Stands in for xdg-desktop-portal: records every message it receives and
+ * replies the way the real portal does, with a request object path.
+ */
+class FakeBackgroundPortal : public QDBusVirtualObject
+{
+public:
+    QList<QDBusMessage> calls;
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        calls.append(message);
+        connection.send(message.createReply(
+            QVariant::fromValue(QDBusObjectPath("/org/freedesktop/portal/desktop/request/1_0/worktime"))));
+        return true;
+    }
+};
+
+/*
+ * Serves FakeBackgroundPortal on this process's own session-bus connection
+ * and points autostart() at it, so tests never change the real autostart
+ * configuration. Qt delivers calls addressed to a connection's own unique
+ * name in-process, so autostart()'s blocking call reaches the fake directly.
+ */
+class UtilitiesAutostartTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::sessionBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus session bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/freedesktop/portal/desktop", &m_portal));
+        m_previousService = TestableUtilities::s_autostartPortalService;
+        TestableUtilities::s_autostartPortalService = m_bus.baseService();
+    }
+
+    void TearDown() override
+    {
+        if (!m_bus.isConnected())
+            return;
+
+        TestableUtilities::s_autostartPortalService = m_previousService;
+        m_bus.unregisterObject("/org/freedesktop/portal/desktop");
+    }
+
+    //! Options map (second argument) of the single call the fake portal received.
+    QVariantMap onlyRequestOptions()
+    {
+        EXPECT_EQ(m_portal.calls.size(), 1);
+        if (m_portal.calls.size() != 1 || m_portal.calls.constFirst().arguments().size() != 2)
+            return {};
+        return qdbus_cast<QVariantMap>(m_portal.calls.constFirst().arguments().at(1));
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeBackgroundPortal m_portal;
+    QString m_previousService;
+};
+
+} // namespace
+
+TEST_F(UtilitiesAutostartTest, EnablingRequestsAutostartFromTheBackgroundPortal)
+{
+    Utilities::autostart(true);
+
+    ASSERT_EQ(m_portal.calls.size(), 1);
+    EXPECT_EQ(m_portal.calls.constFirst().interface(), QStringLiteral("org.freedesktop.portal.Background"));
+    EXPECT_EQ(m_portal.calls.constFirst().member(), QStringLiteral("RequestBackground"));
+    EXPECT_TRUE(onlyRequestOptions().value("autostart").toBool());
+}
+
+TEST_F(UtilitiesAutostartTest, DisablingRevokesAutostartFromTheBackgroundPortal)
+{
+    Utilities::autostart(false);
+
+    const QVariantMap options = onlyRequestOptions();
+    ASSERT_TRUE(options.contains("autostart"));
+    EXPECT_FALSE(options.value("autostart").toBool());
+}
+
+#endif // !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_LINUX)

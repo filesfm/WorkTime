@@ -50,11 +50,14 @@ QString Utilities::focusedWindowTitle()
 
 #if !defined(BUILD_WITHOUT_AUTOSTART)
 
+void *Utilities::s_autostartAppService = nullptr;
+
 void Utilities::autostart(bool autostart)
 {
     qCInfo(worktimeUtilities) << (autostart ? "enabling" : "disabling") << "autostart";
 
-    SMAppService *service = [SMAppService mainAppService];
+    SMAppService *service = s_autostartAppService ? static_cast<SMAppService *>(s_autostartAppService)
+                                                  : [SMAppService mainAppService];
     NSError *error = nil;
 
     if (autostart) {

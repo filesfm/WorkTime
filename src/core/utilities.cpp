@@ -126,13 +126,15 @@ QString Utilities::focusedWindowTitle()
 
 #    if defined(Q_OS_LINUX)
 
+QString Utilities::s_autostartPortalService = QStringLiteral("org.freedesktop.portal.Desktop");
+
 void Utilities::autostart(bool autostart)
 {
     qCInfo(worktimeUtilities) << (autostart ? "enabling" : "disabling") << "autostart";
 
     QDBusConnection bus = QDBusConnection::sessionBus();
 
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.portal.Desktop",
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_autostartPortalService,
                                                       "/org/freedesktop/portal/desktop",
                                                       "org.freedesktop.portal.Background",
                                                       "RequestBackground");
@@ -174,12 +176,14 @@ void Utilities::autostart(bool autostart)
 
 #    elif defined(Q_OS_WINDOWS)
 
+QString Utilities::s_autostartRegistryKey = QStringLiteral(
+    "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run");
+
 void Utilities::autostart(bool autostart)
 {
     qCInfo(worktimeUtilities) << (autostart ? "enabling" : "disabling") << "autostart";
 
-    QSettings registry(QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"),
-                       QSettings::NativeFormat);
+    QSettings registry(s_autostartRegistryKey, QSettings::NativeFormat);
 
     if (autostart)
         registry.setValue(QStringLiteral("WorkTime"), QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));

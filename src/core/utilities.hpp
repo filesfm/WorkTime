@@ -83,4 +83,27 @@ public:
      * \par Cyclomatic complexity: 1 (Linux), 5 (macOS).
      */
     static void showNotification(const QString &title, const QString &message);
+
+#if !defined(BUILD_WITHOUT_AUTOSTART)
+#    if defined(BUILD_TESTING)
+protected:
+#    else
+private:
+#    endif
+#    if defined(Q_OS_LINUX)
+    //! \brief D-Bus service autostart() sends the Background portal request to.
+    static QString s_autostartPortalService;
+#    elif defined(Q_OS_WINDOWS)
+    //! \brief Registry key autostart() writes the launch-at-login entry to.
+    static QString s_autostartRegistryKey;
+#    elif defined(Q_OS_MACOS)
+    /*!
+     * \brief Object autostart() registers/unregisters instead of
+     * `[SMAppService mainAppService]`, or null to use the latter. Must respond
+     * to `registerAndReturnError:` and `unregisterAndReturnError:`. Typed
+     * `void *` so this header stays includable from plain C++.
+     */
+    static void *s_autostartAppService;
+#    endif
+#endif
 };
