@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-test:
     name: ${{ matrix.os }} / ${{ matrix.build_type }}
+    needs: lint
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
