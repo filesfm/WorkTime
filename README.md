@@ -18,9 +18,6 @@ WorkTime is a desktop app for tracking how you spend your work time.
 
 ## Package status
 
-Latest published version and result of the install, run, update and remove test
-for each package. The test runs every 4 hours.
-
 | Package         | Latest version                                                                                                                                                                                                                                      | Test status                                                                                                                                                                                                                                                       |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | macOS           | ![macOS version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fmacos-version.json)                                                                                  | [![macOS test](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fmacos-status.json)](https://github.com/filesfm/WorkTime/actions/workflows/package-smoke.yml)                     |
