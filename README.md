@@ -29,7 +29,6 @@ WorkTime is a desktop app for tracking how you spend your work time.
 
 ## Contents
 
-- [Package status](#package-status)
 - [Supported Operating Systems](#supported-operating-systems)
 - [Supported Desktop Environments](#supported-desktop-environments-on-linux)
 - [Installing](#installing)
