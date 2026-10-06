@@ -5,7 +5,7 @@
 
 prepare() {
   sudo apt-get update
-  sudo apt-get install -y xvfb xauth
+  sudo apt-get install -y xvfb xauth libopengl0 libegl1 libxkbcommon0 libxkbcommon-x11-0
   # AppImages need FUSE 2; the package name differs by Ubuntu release.
   sudo apt-get install -y libfuse2t64 || sudo apt-get install -y libfuse2
 }
