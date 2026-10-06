@@ -16,8 +16,23 @@
 
 WorkTime is a desktop app for tracking how you spend your work time.
 
+## Package status
+
+Latest published version and result of the install, run, update and remove test
+for each package. The test runs every 4 hours.
+
+| Package         | Latest version                                                                                                                                                                                                                                      | Test status                                                                                                                                                                                                                                                       |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| macOS           | ![macOS version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fmacos-version.json)                                                                                  | [![macOS test](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fmacos-status.json)](https://github.com/filesfm/WorkTime/actions/workflows/package-smoke.yml)                     |
+| Windows         | ![Windows version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fwindows-version.json)                                                                              | [![Windows test](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fwindows-status.json)](https://github.com/filesfm/WorkTime/actions/workflows/package-smoke.yml)                 |
+| Fedora          | ![Fedora version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Ffedora-version.json)                                                                                | [![Fedora test](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Ffedora-status.json)](https://github.com/filesfm/WorkTime/actions/workflows/package-smoke.yml)                   |
+| Ubuntu          | ![Ubuntu version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fubuntu-version.json)                                                                                | [![Ubuntu test](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Fubuntu-status.json)](https://github.com/filesfm/WorkTime/actions/workflows/package-smoke.yml)                   |
+| Arch            | ![Arch version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Farch-version.json)                                                                                      | [![Arch test](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Farch-status.json)](https://github.com/filesfm/WorkTime/actions/workflows/package-smoke.yml)                       |
+| Linux (General) | ![Linux version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Flinux-version.json)                                                                                    | [![Linux test](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffilesfm%2FWorkTime%2Fpackage-status%2Fbadges%2Flinux-status.json)](https://github.com/filesfm/WorkTime/actions/workflows/package-smoke.yml)                   |
+
 ## Contents
 
+- [Package status](#package-status)
 - [Supported Operating Systems](#supported-operating-systems)
 - [Supported Desktop Environments](#supported-desktop-environments-on-linux)
 - [Installing](#installing)

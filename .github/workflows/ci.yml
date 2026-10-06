@@ -178,7 +178,7 @@ jobs:
           sudo mv shellcheck-v0.10.0/shellcheck /usr/local/bin/shellcheck
 
       - name: Run shellcheck
-        run: shellcheck hooks/pre-commit hooks/pre-push hooks/lib.sh
+        run: shellcheck hooks/pre-commit hooks/pre-push hooks/lib.sh .github/scripts/*.sh .github/scripts/packages/*.sh
 
       - name: Install yamllint
         run: pip install --quiet yamllint==1.38.0

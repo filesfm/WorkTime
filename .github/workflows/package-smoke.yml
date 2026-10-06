@@ -1,0 +1,104 @@
+name: Package smoke test
+
+on:
+  schedule:
+    # Every 4 hours, UTC.
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: package-smoke
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    name: Discover published versions
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.discover.outputs.versions }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Find latest and pre-last versions
+        id: discover
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 .github/scripts/package_versions.py > versions.json
+          echo "versions=$(jq -c . versions.json)" >> "$GITHUB_OUTPUT"
+          jq . versions.json
+
+  smoke:
+    name: ${{ matrix.key }}
+    needs: discover
+    runs-on: ${{ matrix.runs-on }}
+    container: ${{ matrix.container }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - key: macos
+            runs-on: macos-latest
+          - key: windows
+            runs-on: windows-latest
+          - key: fedora
+            runs-on: ubuntu-latest
+            container: fedora:44
+          - key: ubuntu
+            runs-on: ubuntu-latest
+          - key: arch
+            runs-on: ubuntu-latest
+            container: archlinux:base-devel
+          - key: linux
+            runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install, run, update and remove
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KEY: ${{ matrix.key }}
+          LATEST: ${{ fromJSON(needs.discover.outputs.versions)[matrix.key].latest }}
+          PRELAST: ${{ fromJSON(needs.discover.outputs.versions)[matrix.key].prelast }}
+          PRELAST_REF: ${{ fromJSON(needs.discover.outputs.versions)[matrix.key].prelast_ref }}
+          DISCOVERY_ERROR: ${{ fromJSON(needs.discover.outputs.versions)[matrix.key].error }}
+        run: bash .github/scripts/smoke-package.sh "$KEY"
+
+      - name: Upload status
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: status-${{ matrix.key }}
+          path: ${{ runner.temp }}/status/${{ matrix.key }}.json
+          if-no-files-found: warn
+
+  publish:
+    name: Publish badges
+    needs: [discover, smoke]
+    if: always() && needs.discover.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Download statuses
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: status-*
+          path: ${{ runner.temp }}/status
+          merge-multiple: true
+
+      - name: Publish badges
+        env:
+          VERSIONS: ${{ needs.discover.outputs.versions }}
+          STATUS_DIR: ${{ runner.temp }}/status
+        run: bash .github/scripts/publish-badges.sh
