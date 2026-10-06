@@ -14,6 +14,7 @@ download_latest() {
   curl -sL https://api.github.com/repos/filesfm/WorkTime/releases/latest \
     | grep -o '"browser_download_url": *"[^"]*\.AppImage"' \
     | head -n1 | cut -d'"' -f4 | xargs -r curl -fL -O
+  chmod +x worktime-v*-x86_64.AppImage
 }
 
 install_latest() {

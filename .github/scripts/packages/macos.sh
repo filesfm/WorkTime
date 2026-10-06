@@ -9,11 +9,14 @@ install_latest() {
 }
 
 install_prelast() {
-  # Homebrew cannot pin a cask version, so install the cask file as it was at PRELAST_REF.
-  mkdir -p prelast
+  # Homebrew cannot pin a cask version and refuses casks outside a tap, so the tapped
+  # cask file is replaced with the one from PRELAST_REF for this install, then restored.
+  local tap
+  tap=$(brew --repo filesfm/macos)
   gh api -H 'Accept: application/vnd.github.raw' \
-    "repos/filesfm/homebrew-macos/contents/Casks/worktime.rb?ref=$PRELAST_REF" > prelast/worktime.rb
-  brew install --cask "$PWD/prelast/worktime.rb"
+    "repos/filesfm/homebrew-macos/contents/Casks/worktime.rb?ref=$PRELAST_REF" > "$tap/Casks/worktime.rb"
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install --cask filesfm/macos/worktime
+  git -C "$tap" checkout -- Casks/worktime.rb
 }
 
 update() {
