@@ -531,6 +531,38 @@ jobs:
     needs: [appimage, flatpak, snap, macos, windows, ubuntu, fedora, arch]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        run: |
+          previous_tag=$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          if [ -n "$previous_tag" ]; then
+            range="${previous_tag}..${GITHUB_REF_NAME}"
+          else
+            range="$GITHUB_REF_NAME"
+          fi
+
+          # Conventional Commits only: feat/fix (with optional scope and "!"
+          # breaking-change marker), everything else (ci/docs/refactor/...)
+          # is internal and left out of the user-facing release notes.
+          commits=$(git log "$range" --pretty=format:'%s' \
+            | grep -E '^(feat|fix)(\([^)]*\))?!?:' || true)
+
+          {
+            echo "## Changes"
+            echo
+            if [ -n "$commits" ]; then
+              echo "$commits" | sed -E 's/^(feat|fix)(\([^)]*\))?!?:[[:space:]]*/- /'
+            else
+              echo "_No user-facing changes._"
+            fi
+          } > "$RUNNER_TEMP/changelog.md"
+
+          cat "$RUNNER_TEMP/changelog.md"
+
       - name: Download artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -544,3 +576,4 @@ jobs:
         with:
           files: dist/*
           fail_on_unmatched_files: true
+          body_path: ${{ runner.temp }}/changelog.md
