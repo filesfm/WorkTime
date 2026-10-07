@@ -36,11 +36,17 @@ add_executable(worktime_tests
 
 target_compile_definitions(worktime_tests PRIVATE BUILD_TESTING)
 
+if(BUILD_WITHOUT_KF6IDLETIME)
+    target_compile_definitions(worktime_tests PRIVATE BUILD_WITHOUT_KF6IDLETIME)
+endif()
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
-    find_package(KF6IdleTime REQUIRED)
+    if(NOT BUILD_WITHOUT_KF6IDLETIME)
+        find_package(KF6IdleTime REQUIRED)
+    endif()
 elseif(APPLE)
     target_sources(worktime_tests
         PRIVATE
@@ -71,8 +77,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PRIVATE
             X11::X11
             PkgConfig::UDEV
-            KF6::IdleTime
     )
+    if(NOT BUILD_WITHOUT_KF6IDLETIME)
+        target_link_libraries(worktime_tests PRIVATE KF6::IdleTime)
+    endif()
 elseif(APPLE)
     target_link_libraries(worktime_tests
         PRIVATE

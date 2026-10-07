@@ -122,6 +122,16 @@ jobs:
           cp -r resource/debian/ppa debian
           chmod +x debian/rules
 
+          case "$SERIES" in
+            noble | jammy)
+              # libkf6idletime-dev isn't packaged for these Ubuntu releases,
+              # so build without the KDE Plasma KIdleTime backend instead of
+              # failing build-dependency installation.
+              sed -i 's/, libkf6idletime-dev//' debian/control
+              sed -i 's/-DBUILD_TESTING=OFF/-DBUILD_TESTING=OFF -DBUILD_WITHOUT_KF6IDLETIME=ON/' debian/rules
+              ;;
+          esac
+
           DEBEMAIL="artjomsfedosovs2@gmail.com" DEBFULLNAME="Artyom Fedosov" \
             dch --create --package worktime --newversion "$pkg_version" \
                 --distribution "$SERIES" --urgency medium "Release ${version}."

@@ -10,6 +10,7 @@ endif()
 
 option(BUILD_DOCS "Build the API documentation with Doxygen" OFF)
 option(BUILD_WITHOUT_AUTOSTART "Exclude the autostart feature, for example, for AppImage builds" OFF)
+option(BUILD_WITHOUT_KF6IDLETIME "Exclude the KDE Plasma KIdleTime backend, for example, where libkf6idletime-dev isn't packaged" OFF)
 option(ENABLE_COVERAGE "Instrument worktime_tests for coverage (GCC/Clang only)" OFF)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Network Qml Quick QuickControls2 Widgets DBus Sql)

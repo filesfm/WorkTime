@@ -77,7 +77,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(X11 REQUIRED)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
-    find_package(KF6IdleTime REQUIRED)
+    if(NOT BUILD_WITHOUT_KF6IDLETIME)
+        find_package(KF6IdleTime REQUIRED)
+    endif()
 elseif(WIN32)
     target_sources(worktime PRIVATE ${CMAKE_SOURCE_DIR}/resource/windows/icon.rc)
 elseif(APPLE)
@@ -112,6 +114,10 @@ if(BUILD_WITHOUT_AUTOSTART)
     target_compile_definitions(worktime PRIVATE BUILD_WITHOUT_AUTOSTART)
 endif()
 
+if(BUILD_WITHOUT_KF6IDLETIME)
+    target_compile_definitions(worktime PRIVATE BUILD_WITHOUT_KF6IDLETIME)
+endif()
+
 target_include_directories(worktime
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
@@ -134,8 +140,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         PRIVATE
             X11::X11
             PkgConfig::UDEV
-            KF6::IdleTime
     )
+    if(NOT BUILD_WITHOUT_KF6IDLETIME)
+        target_link_libraries(worktime PRIVATE KF6::IdleTime)
+    endif()
 elseif(APPLE)
     target_link_libraries(worktime
         PRIVATE

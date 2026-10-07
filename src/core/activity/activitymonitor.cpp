@@ -13,7 +13,9 @@
 #    include <QDBusInterface>
 #    include <QDBusReply>
 
-#    include <KIdleTime>
+#    if !defined(BUILD_WITHOUT_KF6IDLETIME)
+#        include <KIdleTime>
+#    endif
 
 extern "C" {
 #    include <libudev.h>
@@ -116,6 +118,9 @@ void ActivityMonitor::handleGnomeIdleWatchFired(uint watchId)
 
 bool ActivityMonitor::startKdeIdleMonitor()
 {
+#    if defined(BUILD_WITHOUT_KF6IDLETIME)
+    return false;
+#    else
     if (!qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("kde", Qt::CaseInsensitive))
         return false;
 
@@ -124,17 +129,22 @@ bool ActivityMonitor::startKdeIdleMonitor()
     qCInfo(worktimeActivityMonitor) << "using KIdleTime for activity detection";
     armKdeResumeWatch();
     return true;
+#    endif
 }
 
 void ActivityMonitor::stopKdeIdleMonitor()
 {
+#    if !defined(BUILD_WITHOUT_KF6IDLETIME)
     KIdleTime::instance()->stopCatchingResumeEvent();
     disconnect(KIdleTime::instance(), &KIdleTime::resumingFromIdle, this, &ActivityMonitor::handleKdeResumingFromIdle);
+#    endif
 }
 
 void ActivityMonitor::armKdeResumeWatch()
 {
+#    if !defined(BUILD_WITHOUT_KF6IDLETIME)
     KIdleTime::instance()->catchNextResumeEvent();
+#    endif
 }
 
 void ActivityMonitor::handleKdeResumingFromIdle()
