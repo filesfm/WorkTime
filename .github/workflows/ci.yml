@@ -91,6 +91,70 @@ jobs:
           path: build/${{ matrix.build_type }}/bin
           if-no-files-found: error
 
+  sanitize:
+    name: Sanitizers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@8b297075da4cd2a5f1fd21fe011b499edf06e9d2 # v4
+
+      - name: Install Linux runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libxkbcommon0 libudev-dev
+
+      - name: Install Qt
+        uses: ./.github/actions/install-qt
+        with:
+          version: '6.8.1'
+          arch: linux_gcc_64
+
+      - name: Install KF6 IdleTime
+        uses: ./.github/actions/install-kf6-idletime
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
+        with:
+          key: sanitize
+          variant: ccache
+          max-size: 300M
+
+      - name: Configure (ASan + UBSan + LSan)
+        run: >
+          cmake -S . -B build/Sanitize-asan -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer"
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined,leak"
+
+      - name: Build (ASan + UBSan + LSan)
+        run: cmake --build build/Sanitize-asan
+
+      - name: Test (ASan + UBSan + LSan)
+        env:
+          QT_QPA_PLATFORM: offscreen
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+        run: ctest --test-dir build/Sanitize-asan --output-on-failure
+
+      - name: Configure (TSan)
+        run: >
+          cmake -S . -B build/Sanitize-tsan -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          -DCMAKE_CXX_FLAGS="-fsanitize=thread -fno-omit-frame-pointer"
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
+
+      - name: Build (TSan)
+        run: cmake --build build/Sanitize-tsan
+
+      - name: Test (TSan)
+        env:
+          QT_QPA_PLATFORM: offscreen
+          TSAN_OPTIONS: halt_on_error=1
+        run: ctest --test-dir build/Sanitize-tsan --output-on-failure
+
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
