@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test:
     name: ${{ matrix.os }} / ${{ matrix.build_type }}
-    needs: lint
+    needs: sanitize
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -93,6 +93,7 @@ jobs:
 
   sanitize:
     name: Sanitizers
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
