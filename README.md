@@ -1,20 +1,12 @@
 # WorkTime
 
+WorkTime is a desktop app for tracking how you spend your work time.
+
 ## SonarQube
 
 [![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=coverage)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=bugs)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=filesfm_WorkTime&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=filesfm_WorkTime)
-
-WorkTime is a desktop app for tracking how you spend your work time.
 
 ## Package status
 
