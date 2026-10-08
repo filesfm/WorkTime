@@ -261,3 +261,66 @@ jobs:
           git commit -m "chore(arch-repo): publish ${VERSION_TAG}"
           git pull --rebase origin gh-pages
           git push origin gh-pages
+
+  publish-homebrew:
+    name: Publish Homebrew cask
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download macOS DMGs from GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p dist
+          gh release download "${{ inputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern '*.dmg' \
+            --dir dist
+
+          count=$(find dist -maxdepth 1 -name '*.dmg' | wc -l)
+          if [ "$count" -ne 2 ]; then
+            echo "::error::Expected exactly 2 .dmg assets (arm64, x86_64) on release ${{ inputs.tag }}, found $count"
+            exit 1
+          fi
+
+      - name: Checkout tap
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: filesfm/homebrew-macos
+          path: homebrew-macos
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+      - name: Update cask version and checksums
+        env:
+          VERSION_TAG: ${{ inputs.tag }}
+        run: |
+          version="${VERSION_TAG#v}"
+          arm_sha=$(sha256sum "dist/worktime-${VERSION_TAG}-arm64.dmg" | cut -d' ' -f1)
+          intel_sha=$(sha256sum "dist/worktime-${VERSION_TAG}-x86_64.dmg" | cut -d' ' -f1)
+
+          cask=homebrew-macos/Casks/worktime.rb
+          sed -i -E \
+            -e "s/^(  version )\"[^\"]*\"/\1\"${version}\"/" \
+            -e "s/^(\s*sha256\s+arm:\s*)\"[^\"]*\"/\1\"${arm_sha}\"/" \
+            -e "s/^(\s*intel:\s*)\"[^\"]*\"/\1\"${intel_sha}\"/" \
+            "$cask"
+
+          grep -qF "version \"${version}\"" "$cask"
+          grep -qF "\"${arm_sha}\"" "$cask"
+          grep -qF "\"${intel_sha}\"" "$cask"
+
+      - name: Push to tap
+        env:
+          VERSION_TAG: ${{ inputs.tag }}
+        run: |
+          cd homebrew-macos
+          git config user.name "artyom-fedosov"
+          git config user.email "artjomsfedosovs2@gmail.com"
+          git add Casks/worktime.rb
+
+          if git diff --cached --quiet; then
+            echo "No changes to publish"
+            exit 0
+          fi
+
+          git commit -m "chore: bump version to ${VERSION_TAG}"
+          git push origin HEAD
