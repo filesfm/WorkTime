@@ -131,4 +131,36 @@ TestCase {
 
         compare(appQuitter.quitCount, 1)
     }
+
+    function test_closingInTrayModeHidesInsteadOfClosing() {
+        const tray = createTemporaryObject(mainComponent, null, { trayAvailable: true })
+        verify(tray !== null)
+        tray.showPopup()
+        tryCompare(tray, "visible", true)
+
+        tray.close()
+
+        compare(tray.visible, false)
+
+        // Only hidden, not actually destroyed/closed - it can still be reopened.
+        tray.showPopup()
+        tryCompare(tray, "visible", true)
+    }
+
+    function test_losingFocusHidesWindowInTrayMode() {
+        const tray = createTemporaryObject(mainComponent, null, { trayAvailable: true })
+        verify(tray !== null)
+        tray.showPopup()
+        tryCompare(tray, "visible", true)
+        tryCompare(tray, "active", true)
+
+        win.requestActivate()
+        tryCompare(win, "active", true)
+
+        tryCompare(tray, "visible", false)
+    }
+
+    function test_passwordFieldMasksInput() {
+        compare(item("passwordField").echoMode, TextInput.Password)
+    }
 }
