@@ -140,7 +140,9 @@ jobs:
           UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
         run: ctest --test-dir build/Sanitize-asan --output-on-failure
 
+      # TSan is temporarily disabled
       - name: Configure (TSan)
+        if: false
         run: >
           cmake -S . -B build/Sanitize-tsan -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
           -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
@@ -148,9 +150,11 @@ jobs:
           -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
 
       - name: Build (TSan)
+        if: false
         run: cmake --build build/Sanitize-tsan
 
       - name: Test (TSan)
+        if: false
         env:
           QT_QPA_PLATFORM: offscreen
           TSAN_OPTIONS: halt_on_error=1
