@@ -18,6 +18,7 @@ ApplicationWindow {
 
     MainController {
         id: controller
+        objectName: "controller"
     }
 
     // Set from C++
@@ -137,15 +138,18 @@ ApplicationWindow {
 
         // On Linux the left-click opens this menu, so Show is the way to reach the window.
         Platform.MenuItem {
+            objectName: "showMenuItem"
             text: "Show"
             visible: Qt.platform.os === "linux"
             onTriggered: window.showPopup()
         }
         Platform.MenuItem {
+            objectName: "myOverviewMenuItem"
             text: "My overview"
             onTriggered: Qt.openUrlExternally("https://worktime.lv/user/read")
         }
         Platform.MenuItem {
+            objectName: "quitMenuItem"
             text: "Quit"
             onTriggered: appQuitter.quit()
         }
@@ -171,6 +175,7 @@ ApplicationWindow {
             }
 
             Label {
+                objectName: "statusLabel"
                 text: controller.startButtonPushed ? "Tracking" : "Stopped"
                 font.pixelSize: 16
                 font.bold: true
@@ -178,6 +183,7 @@ ApplicationWindow {
             }
 
             Button {
+                objectName: "startButton"
                 text: controller.startButtonPushed ? "Stop" : "Start"
                 highlighted: true
                 onClicked: {
@@ -198,10 +204,16 @@ ApplicationWindow {
                 anchors.fill: parent
 
                 Label { text: "Sent messages (last 24h)" }
-                Label { text: controller.sentCountLast24Hours.toLocaleString(Qt.locale(), 'f', 0) }
+                Label {
+                    objectName: "sentCountLabel"
+                    text: controller.sentCountLast24Hours.toLocaleString(Qt.locale(), 'f', 0)
+                }
 
                 Label { text: "Sent data (last 24h)" }
-                Label { text: controller.sentBytesLast24Hours.toLocaleString(Qt.locale(), 'f', 0) + " bytes" }
+                Label {
+                    objectName: "sentBytesLabel"
+                    text: controller.sentBytesLast24Hours.toLocaleString(Qt.locale(), 'f', 0) + " bytes"
+                }
             }
         }
 
@@ -228,6 +240,7 @@ ApplicationWindow {
 
                     Label { text: "Launch at Startup" }
                     CheckBox {
+                        objectName: "autoStartupCheckBox"
                         checked: controller.autoStartup
                         onToggled: controller.autoStartup = checked
                     }
@@ -249,11 +262,13 @@ ApplicationWindow {
                     Label { text: "Username" }
                     TextField {
                         id: usernameField
+                        objectName: "usernameField"
                         text: controller.username
                         onEditingFinished: controller.username = text
                         Layout.fillWidth: true
 
                         Rectangle {
+                            objectName: "usernameRejectedBorder"
                             anchors.fill: parent
                             visible: controller.credentialsRejected
                             color: "transparent"
@@ -266,12 +281,14 @@ ApplicationWindow {
                     Label { text: "Password" }
                     TextField {
                         id: passwordField
+                        objectName: "passwordField"
                         text: controller.password
                         echoMode: TextInput.Password
                         onEditingFinished: controller.password = text
                         Layout.fillWidth: true
 
                         Rectangle {
+                            objectName: "passwordRejectedBorder"
                             anchors.fill: parent
                             visible: controller.credentialsRejected
                             color: "transparent"

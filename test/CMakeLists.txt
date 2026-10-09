@@ -103,6 +103,8 @@ if(ENABLE_COVERAGE)
     endif()
 endif()
 
+add_subdirectory(gui)
+
 include(GoogleTest)
 # PRE_TEST (rather than the default POST_BUILD) defers running the test
 # binary for test enumeration until `ctest` itself is invoked. worktime_tests
