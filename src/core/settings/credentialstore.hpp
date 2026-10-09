@@ -14,6 +14,7 @@ Q_DECLARE_LOGGING_CATEGORY(worktimeCredentialStore)
  * There is exactly one entry, since Settings only ever holds one configured
  * account at a time; it is independent of username() so renaming the
  * account doesn't orphan or require migrating a credential-store entry.
+ * \note Thread-safety: Thread-safe.
  */
 class CredentialStore
 {
@@ -24,6 +25,7 @@ public:
     /*!
      * \return The stored password, or an empty string if none is stored or
      * the credential store could not be reached.
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: platform-dependent.
      */
     static QString readPassword();
@@ -31,6 +33,7 @@ public:
     /*!
      * \brief Stores \a password, overwriting any existing entry.
      * \return Whether the write succeeded.
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: platform-dependent.
      */
     static bool writePassword(const QString &password);
@@ -39,6 +42,7 @@ public:
      * \brief Deletes the stored password, if any.
      * \return Whether the entry is now absent (true if deleted, or if there
      * was nothing to delete).
+     * \note Thread-safety: Thread-safe.
      * \par Cyclomatic complexity: platform-dependent.
      */
     static bool deletePassword();

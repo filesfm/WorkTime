@@ -1,5 +1,9 @@
 #include "credentialstore.hpp"
 
+#include <QGlobalStatic>
+#include <QMutex>
+#include <QMutexLocker>
+
 #if defined(Q_OS_LINUX)
 #    include <QDBusArgument>
 #    include <QDBusConnection>
@@ -23,6 +27,8 @@ Q_LOGGING_CATEGORY(worktimeCredentialStore, "worktime.credential.store")
 namespace {
 constexpr auto kApplicationId = "io.github.filesfm.worktime";
 } // namespace
+
+Q_GLOBAL_STATIC(QMutex, credentialStoreMutex)
 
 #if defined(Q_OS_LINUX)
 
@@ -155,6 +161,8 @@ QDBusObjectPath findItem()
 
 QString CredentialStore::readPassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     qDBusRegisterMetaType<SecretServiceSecret>();
 
     const QDBusObjectPath itemPath = findItem();
@@ -183,6 +191,8 @@ QString CredentialStore::readPassword()
 
 bool CredentialStore::writePassword(const QString &password)
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     qDBusRegisterMetaType<SecretServiceSecret>();
 
     const QDBusObjectPath session = openSession();
@@ -215,6 +225,8 @@ bool CredentialStore::writePassword(const QString &password)
 
 bool CredentialStore::deletePassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     qDBusRegisterMetaType<SecretServiceSecret>();
 
     const QDBusObjectPath itemPath = findItem();
@@ -267,6 +279,8 @@ CFMutableDictionaryRef baseQuery()
 
 QString CredentialStore::readPassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     CFMutableDictionaryRef query = baseQuery();
     CFDictionarySetValue(query, kSecReturnData, kCFBooleanTrue);
     CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitOne);
@@ -290,6 +304,8 @@ QString CredentialStore::readPassword()
 
 bool CredentialStore::writePassword(const QString &password)
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     const QByteArray passwordUtf8 = password.toUtf8();
     CFDataRef data = CFDataCreate(kCFAllocatorDefault,
                                   reinterpret_cast<const UInt8 *>(passwordUtf8.constData()),
@@ -323,6 +339,8 @@ bool CredentialStore::writePassword(const QString &password)
 
 bool CredentialStore::deletePassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     CFMutableDictionaryRef query = baseQuery();
     const OSStatus status = SecItemDelete(query);
     CFRelease(query);
@@ -345,6 +363,8 @@ std::wstring targetName()
 
 QString CredentialStore::readPassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     PCREDENTIALW credential = nullptr;
     if (!CredReadW(targetName().c_str(), CRED_TYPE_GENERIC, 0, &credential)) {
         if (GetLastError() != ERROR_NOT_FOUND)
@@ -363,6 +383,8 @@ QString CredentialStore::readPassword()
 
 bool CredentialStore::writePassword(const QString &password)
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     const std::wstring target = targetName();
     const std::wstring secret = password.toStdWString();
 
@@ -382,6 +404,8 @@ bool CredentialStore::writePassword(const QString &password)
 
 bool CredentialStore::deletePassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     if (!CredDeleteW(targetName().c_str(), CRED_TYPE_GENERIC, 0) && GetLastError() != ERROR_NOT_FOUND) {
         qCWarning(worktimeCredentialStore) << "CredDeleteW failed with error" << GetLastError();
         return false;
@@ -393,18 +417,24 @@ bool CredentialStore::deletePassword()
 
 QString CredentialStore::readPassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     qCWarning(worktimeCredentialStore) << "no credential store implementation for this platform";
     return QString();
 }
 
 bool CredentialStore::writePassword(const QString &)
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     qCWarning(worktimeCredentialStore) << "no credential store implementation for this platform";
     return false;
 }
 
 bool CredentialStore::deletePassword()
 {
+    const QMutexLocker locker(credentialStoreMutex());
+
     return true;
 }
 
