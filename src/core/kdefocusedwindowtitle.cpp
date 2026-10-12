@@ -36,7 +36,7 @@ void KDEFocusedWindowTitle::start()
 
     QDBusConnection bus = QDBusConnection::sessionBus();
     if (!bus.registerService(kServiceName)) {
-        qCWarning(worktimeKdeFocusedWindowTitle) << "failed to register D-Bus service" << kServiceName;
+        qCCritical(worktimeKdeFocusedWindowTitle) << "failed to register D-Bus service" << kServiceName;
         return;
     }
     bus.registerObject(kObjectPath, this, QDBusConnection::ExportScriptableSlots);

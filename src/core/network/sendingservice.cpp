@@ -14,6 +14,8 @@
 #include <QNetworkRequest>
 #include <QUrl>
 
+#include <exception>
+
 Q_LOGGING_CATEGORY(worktimeSendingService, "worktime.sending.service")
 
 SendingService::SendingService(QObject *parent)
@@ -116,7 +118,11 @@ void SendingService::handleReplyFinished(QNetworkReply *reply)
         const QVariant status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
         qCWarning(worktimeSendingService) << "submission failed (HTTP" << status << "):" << reply->errorString();
 
-        m_sqliteConnection.addEntryToNotSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
+        try {
+            m_sqliteConnection.addEntryToNotSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
+        } catch (const std::exception &e) {
+            qCCritical(worktimeSendingService) << "failed to record not-sent entry, sample is lost:" << e.what();
+        }
         m_notSentSender.wake();
 
         if (status.toInt() == 401)
@@ -128,7 +134,11 @@ void SendingService::handleReplyFinished(QNetworkReply *reply)
 
     qCInfo(worktimeSendingService) << "submission succeeded";
 
-    m_sqliteConnection.addEntryToSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
+    try {
+        m_sqliteConnection.addEntryToSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
+    } catch (const std::exception &e) {
+        qCCritical(worktimeSendingService) << "failed to record sent entry:" << e.what();
+    }
 
     emit sendSucceeded();
 }

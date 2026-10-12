@@ -419,7 +419,7 @@ QString CredentialStore::readPassword()
 {
     const QMutexLocker locker(credentialStoreMutex());
 
-    qCWarning(worktimeCredentialStore) << "no credential store implementation for this platform";
+    qCCritical(worktimeCredentialStore) << "no credential store implementation for this platform";
     return QString();
 }
 
@@ -427,7 +427,7 @@ bool CredentialStore::writePassword(const QString &)
 {
     const QMutexLocker locker(credentialStoreMutex());
 
-    qCWarning(worktimeCredentialStore) << "no credential store implementation for this platform";
+    qCCritical(worktimeCredentialStore) << "no credential store implementation for this platform";
     return false;
 }
 

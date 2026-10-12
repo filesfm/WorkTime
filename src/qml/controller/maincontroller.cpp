@@ -3,6 +3,10 @@
 #include "core/settings/settings.hpp"
 #include "core/utilities.hpp"
 
+#include <exception>
+
+Q_LOGGING_CATEGORY(worktimeMainController, "worktime.main.controller")
+
 namespace {
 constexpr int kInactivityTimeoutMs = 60000;
 constexpr int kStartButtonNotPushedTimeoutMs = 1800000;
@@ -150,8 +154,15 @@ QUrl MainController::statusIconSource() const
 
 void MainController::refreshSentStats()
 {
-    const qint64 count = m_sqliteConnection.countEntriesInLast24HoursFromSentTable();
-    const qint64 bytes = m_sqliteConnection.sumHttpSizeInLast24HoursFromSentTable();
+    qint64 count;
+    qint64 bytes;
+    try {
+        count = m_sqliteConnection.countEntriesInLast24HoursFromSentTable();
+        bytes = m_sqliteConnection.sumHttpSizeInLast24HoursFromSentTable();
+    } catch (const std::exception &e) {
+        qCCritical(worktimeMainController) << "failed to refresh sent stats:" << e.what();
+        return;
+    }
 
     if (count == m_sentCountLast24Hours && bytes == m_sentBytesLast24Hours)
         return;

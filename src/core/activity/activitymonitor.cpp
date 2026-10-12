@@ -102,7 +102,14 @@ void ActivityMonitor::armGnomeUserActiveWatch()
         return;
 
     const QDBusReply<uint> reply = m_gnomeIdleMonitor->call(QStringLiteral("AddUserActiveWatch"));
-    m_gnomeWatchId = reply.isValid() ? reply.value() : 0;
+    if (!reply.isValid()) {
+        qCCritical(worktimeActivityMonitor) << "AddUserActiveWatch failed, activity detection is now dead for this "
+                                               "session:"
+                                            << reply.error().message();
+        m_gnomeWatchId = 0;
+        return;
+    }
+    m_gnomeWatchId = reply.value();
 }
 
 void ActivityMonitor::handleGnomeIdleWatchFired(uint watchId)

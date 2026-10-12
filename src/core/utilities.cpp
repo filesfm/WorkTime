@@ -35,7 +35,7 @@ QUrl Utilities::extractResourceToDisk(const QString &sourcePath, const QString &
         = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).filePath(fileName);
     QFile::remove(destinationPath);
     if (!QFile::copy(sourcePath, destinationPath))
-        qCWarning(worktimeUtilities) << "failed to copy" << sourcePath << "to" << destinationPath;
+        qCCritical(worktimeUtilities) << "failed to copy" << sourcePath << "to" << destinationPath;
     return QUrl::fromLocalFile(destinationPath);
 }
 

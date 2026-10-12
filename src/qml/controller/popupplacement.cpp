@@ -83,7 +83,7 @@ bool installGnomeExtension()
     for (const ExtensionFile &file : kGnomeExtensionFiles) {
         QFile source(QString::fromLatin1(file.resourcePath));
         if (!source.open(QIODevice::ReadOnly)) {
-            qCWarning(worktimeUtilities) << "failed to read bundled" << file.resourcePath;
+            qCCritical(worktimeUtilities) << "failed to read bundled" << file.resourcePath;
             return false;
         }
         changed |= writeIfChanged(extensionDir.filePath(QString::fromLatin1(file.fileName)), source.readAll());

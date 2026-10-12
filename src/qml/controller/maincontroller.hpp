@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QLoggingCategory>
 #include <QObject>
 #include <QQmlEngine>
 #include <QTimer>
@@ -10,6 +11,8 @@
 #include "core/activity/activitymonitor.hpp"
 #include "core/network/sendingservice.hpp"
 #include "core/storage/sqliteconnection.hpp"
+
+Q_DECLARE_LOGGING_CATEGORY(worktimeMainController)
 
 /*!
  * \brief QML-facing controller behind Main.qml.

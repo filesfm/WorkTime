@@ -39,8 +39,12 @@ void ActivityMonitor::start()
                                               mask,
                                               eventTapCallback,
                                               nullptr);
-    if (!eventTap)
-        return; // Likely missing Accessibility/Input Monitoring permission.
+    if (!eventTap) {
+        // Likely missing Accessibility/Input Monitoring permission - activity
+        // detection is now dead for this session.
+        qCCritical(worktimeActivityMonitor) << "CGEventTapCreate failed";
+        return;
+    }
 
     g_activityMonitor = this;
     g_eventTap = eventTap;

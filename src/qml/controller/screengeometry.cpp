@@ -3,6 +3,8 @@
 #include <QGuiApplication>
 #include <QScreen>
 
+Q_LOGGING_CATEGORY(worktimeScreenGeometry, "worktime.screen.geometry")
+
 QRect ScreenGeometry::availableGeometryAt(const QPoint &point) const
 {
     if (QScreen *screen = QGuiApplication::screenAt(point))
@@ -12,5 +14,10 @@ QRect ScreenGeometry::availableGeometryAt(const QPoint &point) const
 
 QRect ScreenGeometry::primaryAvailableGeometry() const
 {
-    return QGuiApplication::primaryScreen()->availableGeometry();
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (!screen) {
+        qCCritical(worktimeScreenGeometry) << "no primary screen reported by the platform";
+        return QRect();
+    }
+    return screen->availableGeometry();
 }

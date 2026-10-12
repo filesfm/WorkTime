@@ -20,6 +20,8 @@
 #    include "core/kdefocusedwindowtitle.hpp"
 #endif
 
+Q_LOGGING_CATEGORY(worktimeMain, "worktime.main")
+
 int main(int argc, char *argv[])
 {
     QLoggingCategory::setFilterRules(QStringLiteral("worktime.*=false\nworktime.*.critical=true"));
@@ -50,7 +52,6 @@ int main(int argc, char *argv[])
         }
     }
 #endif
-
 
     app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
     app.setQuitOnLastWindowClosed(false);
@@ -92,8 +93,10 @@ int main(int argc, char *argv[])
     });
     engine.loadFromModule("Worktime", "Main");
 
-    if (engine.rootObjects().isEmpty())
+    if (engine.rootObjects().isEmpty()) {
+        qCCritical(worktimeMain) << "failed to load QML root object from module Worktime/Main";
         return -1;
+    }
 
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &appQuitter, &AppQuitter::quit);
 
