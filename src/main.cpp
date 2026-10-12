@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 
+#include "core/logging/betterstacklogger.hpp"
 #include "core/oneinstanceguarantor.hpp"
 #include "core/settings/settings.hpp"
 #include "core/utilities.hpp"
@@ -21,7 +22,13 @@
 
 int main(int argc, char *argv[])
 {
-    QLoggingCategory::setFilterRules(QStringLiteral("worktime.*=false"));
+    QLoggingCategory::setFilterRules(QStringLiteral("worktime.*=false\nworktime.*.critical=true"));
+
+    // QApplication is constructed here, before OneInstanceGuarantor and the
+    // GNOME D-Bus setup below, specifically so BetterStackLogger::install()
+    // covers their qCCritical/qCFatal calls too.
+    QApplication app(argc, argv);
+    BetterStackLogger::install();
 
     std::unique_ptr<OneInstanceGuarantor> instanceGuard;
     try {
@@ -44,7 +51,6 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    QApplication app(argc, argv);
 
     app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
     app.setQuitOnLastWindowClosed(false);

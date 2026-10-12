@@ -2,6 +2,12 @@ qt_add_executable(worktime WIN32 MACOSX_BUNDLE
     main.cpp
 )
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/logging/betterstackconfig.hpp.in
+    ${CMAKE_BINARY_DIR}/generated/core/logging/betterstackconfig.hpp
+    @ONLY
+)
+
 set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/icon.svg PROPERTIES
     QT_RESOURCE_ALIAS "icon.svg"
 )
@@ -62,6 +68,10 @@ qt_add_qml_module(worktime
         core/kwinscript.hpp
         core/storage/sqliteconnection.hpp
         core/storage/sqliteconnection.cpp
+        core/logging/betterstacklogentrybuilder.cpp
+        core/logging/betterstacklogentrybuilder.hpp
+        core/logging/betterstacklogger.cpp
+        core/logging/betterstacklogger.hpp
     RESOURCES
         ${CMAKE_SOURCE_DIR}/resource/icon.svg
         ${CMAKE_SOURCE_DIR}/resource/icon.png
@@ -122,6 +132,7 @@ target_include_directories(worktime
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/qml/controller
+        ${CMAKE_BINARY_DIR}/generated
 )
 
 target_link_libraries(worktime
@@ -202,6 +213,10 @@ if(BUILD_DOCS)
             core/kwinscript.hpp
             core/storage/sqliteconnection.hpp
             core/storage/sqliteconnection.cpp
+            core/logging/betterstacklogentrybuilder.cpp
+            core/logging/betterstacklogentrybuilder.hpp
+            core/logging/betterstacklogger.cpp
+            core/logging/betterstacklogger.hpp
             COMMENT "Generating API documentation with Doxygen"
         )
     else()

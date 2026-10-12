@@ -24,6 +24,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/kwinscript.cpp
     ${CMAKE_SOURCE_DIR}/src/core/oneinstanceguarantor.cpp
     ${CMAKE_SOURCE_DIR}/src/core/activity/activitymonitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/logging/betterstacklogentrybuilder.cpp
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings/settings_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/network/sendingservice_test.cpp
@@ -32,6 +33,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/core/oneinstanceguarantor_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/kdefocusedwindowtitle_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/activity/activitymonitor_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/logging/betterstacklogentrybuilder_test.cpp
 )
 
 target_compile_definitions(worktime_tests PRIVATE BUILD_TESTING)
