@@ -107,7 +107,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a255ef326c0578b830454394e332d9a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Work area of the screen containing <em>point</em>.  <br /></td></tr>
 <tr class="separator:a255ef326c0578b830454394e332d9a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6658b9bc9bd72315067e479152da318c" id="r_a6658b9bc9bd72315067e479152da318c"><td class="memItemLeft" align="right" valign="top">Q_INVOKABLE QRect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScreenGeometry.html#a6658b9bc9bd72315067e479152da318c">primaryAvailableGeometry</a> () const</td></tr>
-<tr class="memdesc:a6658b9bc9bd72315067e479152da318c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Work area of the primary screen.  <br /></td></tr>
+<tr class="memdesc:a6658b9bc9bd72315067e479152da318c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Work area of the primary screen, or an empty QRect if the platform reports no primary screen at all (e.g. a misconfigured or headless display server).  <br /></td></tr>
 <tr class="separator:a6658b9bc9bd72315067e479152da318c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -151,8 +151,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Work area of the primary screen. </p>
-<dl class="section user"><dt>Cyclomatic complexity: 1</dt><dd></dd></dl>
+<p>Work area of the primary screen, or an empty QRect if the platform reports no primary screen at all (e.g. a misconfigured or headless display server). </p>
+<dl class="section user"><dt>Cyclomatic complexity: 2</dt><dd></dd></dl>
 
 </div>
 </div>
