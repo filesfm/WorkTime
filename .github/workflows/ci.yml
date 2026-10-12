@@ -85,7 +85,7 @@ jobs:
         run: ctest --test-dir build/${{ matrix.build_type }} --output-on-failure
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: worktime-${{ matrix.os }}-${{ matrix.build_type }}
           path: build/${{ matrix.build_type }}/bin
@@ -279,6 +279,6 @@ jobs:
           exit-code: '0'
 
       - name: Upload results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@42947a340483f03ba47bb1a039b2c519aab3df85 # v3.37.8
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
         with:
           sarif_file: trivy-results.sarif
