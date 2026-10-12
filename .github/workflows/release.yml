@@ -47,6 +47,9 @@ jobs:
           echo "LD_LIBRARY_PATH=$prefix/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
 
       - name: Configure
+        env:
+          BETTERSTACK_SOURCE_TOKEN: ${{ secrets.BETTERSTACK_SOURCE_TOKEN }}
+          BETTERSTACK_INGESTING_HOST: ${{ secrets.BETTERSTACK_INGESTING_HOST }}
         run: cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DBUILD_WITHOUT_AUTOSTART=ON
 
       - name: Build
@@ -195,6 +198,9 @@ jobs:
           cache: true
 
       - name: Configure
+        env:
+          BETTERSTACK_SOURCE_TOKEN: ${{ secrets.BETTERSTACK_SOURCE_TOKEN }}
+          BETTERSTACK_INGESTING_HOST: ${{ secrets.BETTERSTACK_INGESTING_HOST }}
         run: |
           cmake -S . -B build/Release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
             -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
@@ -311,6 +317,9 @@ jobs:
           cache: true
 
       - name: Configure
+        env:
+          BETTERSTACK_SOURCE_TOKEN: ${{ secrets.BETTERSTACK_SOURCE_TOKEN }}
+          BETTERSTACK_INGESTING_HOST: ${{ secrets.BETTERSTACK_INGESTING_HOST }}
         run: cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
 
       - name: Build
@@ -377,6 +386,9 @@ jobs:
             libkf6idletime-dev dpkg-dev
 
       - name: Configure
+        env:
+          BETTERSTACK_SOURCE_TOKEN: ${{ secrets.BETTERSTACK_SOURCE_TOKEN }}
+          BETTERSTACK_INGESTING_HOST: ${{ secrets.BETTERSTACK_INGESTING_HOST }}
         run: |
           cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
             -DCMAKE_INSTALL_PREFIX=/usr
@@ -466,6 +478,9 @@ jobs:
           cp resource/fedora/worktime.spec rpmbuild/SPECS/worktime.spec
 
       - name: Build package
+        env:
+          BETTERSTACK_SOURCE_TOKEN: ${{ secrets.BETTERSTACK_SOURCE_TOKEN }}
+          BETTERSTACK_INGESTING_HOST: ${{ secrets.BETTERSTACK_INGESTING_HOST }}
         run: rpmbuild --define "_topdir $PWD/rpmbuild" -bb rpmbuild/SPECS/worktime.spec
 
       - name: Rename package
@@ -507,6 +522,9 @@ jobs:
             resource/arch/PKGBUILD
 
       - name: Build package
+        env:
+          BETTERSTACK_SOURCE_TOKEN: ${{ secrets.BETTERSTACK_SOURCE_TOKEN }}
+          BETTERSTACK_INGESTING_HOST: ${{ secrets.BETTERSTACK_INGESTING_HOST }}
         run: |
           useradd -m builder
           chown -R builder:builder resource/arch
