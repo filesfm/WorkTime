@@ -5,16 +5,15 @@
 #include <QJsonObject>
 #include <QTimeZone>
 
-QByteArray buildBetterStackLogEntry(QtMsgType type,
-                                    const QString &message,
-                                    const QString &category,
-                                    qint64 utcTimestampMs)
+QByteArray buildBetterStackLogEntry(
+    QtMsgType type, const QString &message, const QString &category, qint64 utcTimestampMs, const QString &appVersion)
 {
     QJsonObject entry;
     entry[QStringLiteral("dt")] = QDateTime::fromMSecsSinceEpoch(utcTimestampMs, QTimeZone::UTC)
                                       .toString(QStringLiteral("yyyy-MM-dd HH:mm:ss.zzz"));
     entry[QStringLiteral("level")] = type == QtFatalMsg ? QStringLiteral("fatal") : QStringLiteral("critical");
     entry[QStringLiteral("message")] = message;
+    entry[QStringLiteral("app_version")] = appVersion;
     if (!category.isEmpty() && category != QLatin1String("default"))
         entry[QStringLiteral("source")] = category;
 

@@ -47,7 +47,11 @@ void BetterStackLogger::send(QtMsgType type, const QString &message, const QStri
         return;
     sending = true;
 
-    const QByteArray body = buildBetterStackLogEntry(type, message, category, QDateTime::currentMSecsSinceEpoch());
+    const QByteArray body = buildBetterStackLogEntry(type,
+                                                     message,
+                                                     category,
+                                                     QDateTime::currentMSecsSinceEpoch(),
+                                                     QString::fromUtf8(WORKTIME_APP_VERSION));
 
     QNetworkAccessManager manager;
     QNetworkRequest request(
