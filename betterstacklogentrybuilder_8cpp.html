@@ -110,13 +110,13 @@ Include dependency graph for betterstacklogentrybuilder.cpp:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1c1f2668a29227aff4581a3f7f767b0e" id="r_a1c1f2668a29227aff4581a3f7f767b0e"><td class="memItemLeft" align="right" valign="top">QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="betterstacklogentrybuilder_8cpp.html#a1c1f2668a29227aff4581a3f7f767b0e">buildBetterStackLogEntry</a> (QtMsgType type, const QString &amp;message, const QString &amp;category, qint64 utcTimestampMs)</td></tr>
-<tr class="memdesc:a1c1f2668a29227aff4581a3f7f767b0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds one Better Stack Logs HTTP-source event body for a single critical/fatal Qt log message.  <br /></td></tr>
-<tr class="separator:a1c1f2668a29227aff4581a3f7f767b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2e093381977db52e805520e1f677793" id="r_aa2e093381977db52e805520e1f677793"><td class="memItemLeft" align="right" valign="top">QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="betterstacklogentrybuilder_8cpp.html#aa2e093381977db52e805520e1f677793">buildBetterStackLogEntry</a> (QtMsgType type, const QString &amp;message, const QString &amp;category, qint64 utcTimestampMs, const QString &amp;appVersion)</td></tr>
+<tr class="memdesc:aa2e093381977db52e805520e1f677793"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds one Better Stack Logs HTTP-source event body for a single critical/fatal Qt log message.  <br /></td></tr>
+<tr class="separator:aa2e093381977db52e805520e1f677793"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a1c1f2668a29227aff4581a3f7f767b0e" name="a1c1f2668a29227aff4581a3f7f767b0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c1f2668a29227aff4581a3f7f767b0e">&#9670;&#160;</a></span>buildBetterStackLogEntry()</h2>
+<a id="aa2e093381977db52e805520e1f677793" name="aa2e093381977db52e805520e1f677793"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2e093381977db52e805520e1f677793">&#9670;&#160;</a></span>buildBetterStackLogEntry()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -143,7 +143,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">qint64&#160;</td>
-          <td class="paramname"><em>utcTimestampMs</em>&#160;</td>
+          <td class="paramname"><em>utcTimestampMs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>appVersion</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -154,7 +160,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Builds one Better Stack Logs HTTP-source event body for a single critical/fatal Qt log message. </p>
-<p><em>type</em> must be QtCriticalMsg or QtFatalMsg - it is encoded as the "fatal" or "critical" <code>level</code> field, nothing else. <em>category</em> is the originating QMessageLogContext::category (e.g. "worktime.settings"), or empty/"default" for uncategorized messages, in which case the "source" field is omitted.</p>
+<p><em>type</em> must be QtCriticalMsg or QtFatalMsg - it is encoded as the "fatal" or "critical" <code>level</code> field, nothing else. <em>category</em> is the originating QMessageLogContext::category (e.g. "worktime.settings"), or empty/"default" for uncategorized messages, in which case the "source" field is omitted. <em>appVersion</em> is the app's version string (e.g. "0.6.0"), always included as the "app_version" field.</p>
 <p>Shared by <a class="el" href="classBetterStackLogger.html" title="Forwards Qt&#39;s critical and fatal log messages to Better Stack Logs.">BetterStackLogger</a> (live messages) so the wire format stays in one place and is unit-testable independently of installing a global Qt message handler.</p>
 <dl class="section user"><dt>Cyclomatic complexity: 2</dt><dd></dd></dl>
 
