@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['focusedwindowtitle_0',['focusedWindowTitle',['../classUtilities.html#a6fcc6c62410cba290dc2f372bb1416d5',1,'Utilities']]]
+  ['extractresourcetodisk_0',['extractResourceToDisk',['../classUtilities.html#afe3c841d79c4538fa3bbd3fd06a24101',1,'Utilities']]]
 ];

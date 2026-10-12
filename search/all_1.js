@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['countentriesinlast24hoursfromsenttable_0',['countEntriesInLast24HoursFromSentTable',['../classSQLiteConnection.html#a3bceb79e4b564b4e15f75f10c3c9eac7',1,'SQLiteConnection']]],
-  ['credentialsrejected_1',['credentialsrejected',['../classMainController.html#acb14545e0957ba2ee26cec49213f7938',1,'MainController::credentialsRejected'],['../classMainController.html#aae1e6d1641e2e3cafa4e6dc0d1024ff8',1,'MainController::credentialsRejected() const']]],
-  ['credentialsrejectedchanged_2',['credentialsRejectedChanged',['../classMainController.html#a75737c0328e3c7e869af55052fa9fb84',1,'MainController']]]
+  ['betterstacklogentrybuilder_2ecpp_0',['betterstacklogentrybuilder.cpp',['../betterstacklogentrybuilder_8cpp.html',1,'']]],
+  ['betterstacklogentrybuilder_2ehpp_1',['betterstacklogentrybuilder.hpp',['../betterstacklogentrybuilder_8hpp.html',1,'']]],
+  ['betterstacklogger_2',['betterstacklogger',['../classBetterStackLogger.html',1,'BetterStackLogger'],['../classBetterStackLogger.html#ae991e9376078386ff9ac801f6a9cd471',1,'BetterStackLogger::BetterStackLogger()']]],
+  ['betterstacklogger_2ecpp_3',['betterstacklogger.cpp',['../betterstacklogger_8cpp.html',1,'']]],
+  ['betterstacklogger_2ehpp_4',['betterstacklogger.hpp',['../betterstacklogger_8hpp.html',1,'']]],
+  ['buildbetterstacklogentry_5',['buildbetterstacklogentry',['../betterstacklogentrybuilder_8cpp.html#a1c1f2668a29227aff4581a3f7f767b0e',1,'buildBetterStackLogEntry(QtMsgType type, const QString &amp;message, const QString &amp;category, qint64 utcTimestampMs):&#160;betterstacklogentrybuilder.cpp'],['../betterstacklogentrybuilder_8hpp.html#a1c1f2668a29227aff4581a3f7f767b0e',1,'buildBetterStackLogEntry(QtMsgType type, const QString &amp;message, const QString &amp;category, qint64 utcTimestampMs):&#160;betterstacklogentrybuilder.cpp']]]
 ];

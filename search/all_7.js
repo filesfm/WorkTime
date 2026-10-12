@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['kdefocusedwindowtitle_0',['KDEFocusedWindowTitle',['../classKDEFocusedWindowTitle.html',1,'']]],
-  ['kdefocusedwindowtitle_2ecpp_1',['kdefocusedwindowtitle.cpp',['../kdefocusedwindowtitle_8cpp.html',1,'']]],
-  ['kdefocusedwindowtitle_2ehpp_2',['kdefocusedwindowtitle.hpp',['../kdefocusedwindowtitle_8hpp.html',1,'']]],
-  ['kwinscript_3',['KWinScript',['../namespaceKWinScript.html',1,'']]],
-  ['kwinscript_2ecpp_4',['kwinscript.cpp',['../kwinscript_8cpp.html',1,'']]],
-  ['kwinscript_2ehpp_5',['kwinscript.hpp',['../kwinscript_8hpp.html',1,'']]]
+  ['inactive_0',['INACTIVE',['../classMainController.html#a566f6f1bb208b7ed0282fb1881e92f5ea6b273343c454f9c53dcfc9c4ccf171d2',1,'MainController']]],
+  ['install_1',['install',['../classBetterStackLogger.html#adcfa1d5b2da0cd60bebc50e5d2d183ce',1,'BetterStackLogger']]],
+  ['instance_2',['instance',['../classSettings.html#ae160acd2fb41ec90b706c4d4e84dec4a',1,'Settings::instance()'],['../classKDEFocusedWindowTitle.html#a00cc7967aa01bf4aa215bfa83a6187b2',1,'KDEFocusedWindowTitle::instance()']]],
+  ['isactive_3',['isActive',['../classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9',1,'SendingService']]],
+  ['isautostartenabled_4',['isAutostartEnabled',['../classUtilities.html#adf2d674503d459b09636d33de3e94f54',1,'Utilities']]]
 ];

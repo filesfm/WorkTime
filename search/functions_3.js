@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['extractresourcetodisk_0',['extractResourceToDisk',['../classUtilities.html#afe3c841d79c4538fa3bbd3fd06a24101',1,'Utilities']]]
+  ['deleteentriesolderthan24hoursfromsenttable_0',['deleteEntriesOlderThan24HoursFromSentTable',['../classSQLiteConnection.html#ac0045c6d40394ff28871a884f909735f',1,'SQLiteConnection']]]
 ];

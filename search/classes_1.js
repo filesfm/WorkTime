@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kdefocusedwindowtitle_0',['KDEFocusedWindowTitle',['../classKDEFocusedWindowTitle.html',1,'']]]
+  ['betterstacklogger_0',['BetterStackLogger',['../classBetterStackLogger.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['requestplacement_0',['requestPlacement',['../classPopupPlacement.html#a755b3d6f158d5bd8538640e4f2d728ca',1,'PopupPlacement']]]
+  ['quit_0',['quit',['../classAppQuitter.html#ae7442307bb3ced2b226d7d5987177364',1,'AppQuitter']]]
 ];

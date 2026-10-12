@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['maincontroller_0',['MainController',['../classMainController.html',1,'']]]
+  ['kdefocusedwindowtitle_0',['KDEFocusedWindowTitle',['../classKDEFocusedWindowTitle.html',1,'']]]
 ];

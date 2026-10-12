@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['oneinstanceguarantor_0',['OneInstanceGuarantor',['../classOneInstanceGuarantor.html',1,'']]]
+  ['notsenttablerow_0',['NotSentTableRow',['../structSQLiteConnection_1_1NotSentTableRow.html',1,'SQLiteConnection']]]
 ];
