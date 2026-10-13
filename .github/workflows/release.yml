@@ -30,7 +30,7 @@ jobs:
         with:
           version: '6.8.1'
           arch: linux_gcc_64
-          modules: 'qtshadertools'
+          modules: 'qtshadertools qtwayland'
           cache: true
 
       - name: Install KF6 IdleTime from Ubuntu archive
@@ -78,6 +78,7 @@ jobs:
           QML_SOURCES_PATHS: ${{ github.workspace }}/src/qml
           VERSION: ${{ github.ref_name }}
           APPIMAGE_EXTRACT_AND_RUN: '1'
+          EXTRA_PLATFORM_PLUGINS: 'libqwayland-egl.so;libqwayland-generic.so'
         run: |
           install -Dm644 LICENSE \
             AppDir/usr/share/licenses/io.github.filesfm.worktime/LICENSE
