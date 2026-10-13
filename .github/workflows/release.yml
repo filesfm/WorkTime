@@ -87,8 +87,12 @@ jobs:
             --desktop-file resource/io.github.filesfm.worktime.desktop \
             --icon-file resource/icon.png \
             --icon-filename io.github.filesfm.worktime \
-            --plugin qt \
-            --output appimage
+            --plugin qt
+          install -Dm755 "$QT_ROOT_DIR/plugins/wayland-shell-integration/libxdg-shell.so" \
+            AppDir/usr/plugins/wayland-shell-integration/libxdg-shell.so
+          install -Dm755 "$QT_ROOT_DIR/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so" \
+            AppDir/usr/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so
+          linuxdeploy.AppImage --appdir AppDir --output appimage
           mkdir -p dist
           appimage_file=$(ls -- *.AppImage)
           mv "$appimage_file" "dist/worktime-${VERSION}-x86_64.AppImage"
