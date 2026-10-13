@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 
+#include "core/logging/betterstackconfig.hpp"
 #include "core/logging/betterstacklogger.hpp"
 #include "core/oneinstanceguarantor.hpp"
 #include "core/settings/settings.hpp"
@@ -85,6 +86,7 @@ int main(int argc, char *argv[])
     }
     engine.setInitialProperties({
         {"trayAvailable", trayAvailable},
+        {"appVersion", QString::fromUtf8(WORKTIME_APP_VERSION)},
 #if defined(BUILD_WITHOUT_AUTOSTART)
         {"autoStartupAvailable", false},
 #else

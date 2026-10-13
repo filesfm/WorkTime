@@ -24,6 +24,7 @@ ApplicationWindow {
     // Set from C++
     property bool trayAvailable: false
     property bool autoStartupAvailable: true
+    property string appVersion: ""
 
     // Time of the last hide caused by losing focus. The tray click that took
     // focus away would otherwise immediately reopen the popup.
@@ -299,6 +300,16 @@ ApplicationWindow {
                     }
                 }
             }
+        }
+
+        Label {
+            objectName: "appVersionLabel"
+            text: "WorkTime " + window.appVersion
+            Layout.fillWidth: true
+            Layout.topMargin: 4
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 12
+            color: "#9e9e9e"
         }
     }
 
