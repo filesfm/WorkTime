@@ -1,5 +1,6 @@
 #include "oneinstanceguarantor.hpp"
 
+#include <QDir>
 #include <QStandardPaths>
 #include <QtSystemDetection>
 
@@ -24,6 +25,11 @@ QString OneInstanceGuarantor::lockFilePath(const QString &runtimeDir)
         qCCritical(worktimeOneInstanceGuarantor) << "cannot find runtime dir";
         throw std::runtime_error("Cannot find runtime dir.");
     }
+
+    // Unlike RuntimeLocation on Linux/macOS, AppLocalDataLocation's subfolder on
+    // Windows (e.g. %LOCALAPPDATA%\worktime) isn't guaranteed to exist yet, and
+    // QLockFile::tryLock() won't create missing parent directories itself.
+    QDir().mkpath(runtimeDir);
 
     return QString("%1/files-fm-worktime.lock").arg(runtimeDir);
 }
