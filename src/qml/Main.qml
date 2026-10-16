@@ -34,6 +34,10 @@ ApplicationWindow {
     // guessed fixed size that can clip content as fields are added.
     width: mainColumn.implicitWidth + mainColumn.anchors.margins * 2
     height: mainColumn.implicitHeight + mainColumn.anchors.margins * 2
+    minimumWidth: mainColumn.implicitWidth + mainColumn.anchors.margins * 2
+    maximumWidth: mainColumn.implicitWidth + mainColumn.anchors.margins * 2
+    minimumHeight: mainColumn.implicitHeight + mainColumn.anchors.margins * 2
+    maximumHeight: mainColumn.implicitHeight + mainColumn.anchors.margins * 2
     title: "WorkTime"
 
     onClosing: function (close) {
