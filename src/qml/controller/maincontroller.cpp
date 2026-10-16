@@ -136,7 +136,9 @@ MainController::UserStatus MainController::userStatus() const
 {
     if (m_hasSendError)
         return UserStatus::ERROR;
-    return startButtonPushed() ? UserStatus::ACTIVE : UserStatus::INACTIVE;
+    if (!startButtonPushed())
+        return UserStatus::INACTIVE;
+    return m_userStatus.load();
 }
 
 QUrl MainController::statusIconSource() const

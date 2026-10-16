@@ -129,11 +129,11 @@ public:
     qint64 sentBytesLast24Hours() const;
 
     /*!
-     * \brief ACTIVE while startButtonPushed() is true, INACTIVE while it's
-     * false, or ERROR while the last send attempt failed (see
-     * SendingService::sendFailed()). Independent of the activity-based
-     * m_userStatus setUserStatus() maintains, which only governs pausing
-     * SendingService while the user is idle.
+     * \brief ERROR while the last send attempt failed (see
+     * SendingService::sendFailed()); INACTIVE while startButtonPushed() is
+     * false; otherwise the activity-based status setUserStatus() maintains
+     * (ACTIVE or INACTIVE, depending on whether the user has been idle for
+     * over a minute).
      * \par Cyclomatic complexity: 1
      */
     UserStatus userStatus() const;
@@ -191,7 +191,7 @@ private slots:
 private:
     void setRunning(bool running);
 
-    std::atomic<UserStatus> m_userStatus;
+    std::atomic<UserStatus> m_userStatus{UserStatus::ACTIVE};
     SendingService m_sendingService;
     ActivityMonitor m_activityMonitor;
     QTimer m_inactivityTimer;
