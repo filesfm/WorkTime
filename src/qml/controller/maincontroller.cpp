@@ -58,12 +58,24 @@ void MainController::setUserStatus(UserStatus status)
 MainController::MainController(QObject *parent)
     : QObject(parent)
 {
+#if defined(Q_OS_LINUX)
+    // Qt.labs.platform's Linux (DBus StatusNotifierItem) tray backend can't
+    // load icons straight out of the Qt resource system, so they're copied
+    // to real files on disk once at startup. Other platforms load the qrc
+    // resource directly below - they don't have this limitation, and the
+    // disk copy would just be an extra way for the tray icon to end up
+    // broken (e.g. if TempLocation isn't writable on some machine).
     m_activeIconUrl = Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon-green.png"),
                                                        QStringLiteral("worktime-tray-icon-active.png"));
     m_inactiveIconUrl = Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon.png"),
                                                          QStringLiteral("worktime-tray-icon-inactive.png"));
     m_errorIconUrl = Utilities::extractResourceToDisk(QStringLiteral(":/qt/qml/Worktime/icon-red.png"),
                                                       QStringLiteral("worktime-tray-icon-error.png"));
+#else
+    m_activeIconUrl = QUrl(QStringLiteral("qrc:/qt/qml/Worktime/icon-green.png"));
+    m_inactiveIconUrl = QUrl(QStringLiteral("qrc:/qt/qml/Worktime/icon.png"));
+    m_errorIconUrl = QUrl(QStringLiteral("qrc:/qt/qml/Worktime/icon-red.png"));
+#endif
 
     m_sendingService.setServerUrl(QUrl(QStringLiteral("https://worktime.lv/remote")));
 

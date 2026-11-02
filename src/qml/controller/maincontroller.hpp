@@ -47,9 +47,11 @@ public:
 
     /*!
      * \brief Relays every Settings property-change signal to this controller's own.
-     * Also extracts the status tray icons (resource/icon{,-green,-red}.png) to disk
-     * once, since Qt.labs.platform's SystemTrayIcon can't load them straight out of
-     * the Qt resource system (see Utilities::extractResourceToDisk()).
+     * Also resolves the status tray icon URLs (resource/icon{,-green,-red}.png): on
+     * Linux they're extracted to disk once, since Qt.labs.platform's SystemTrayIcon
+     * can't load them straight out of the Qt resource system there (see
+     * Utilities::extractResourceToDisk()); other platforms bind directly to the qrc
+     * resource.
      * \par Cyclomatic complexity: 1
      */
     explicit MainController(QObject *parent = nullptr);

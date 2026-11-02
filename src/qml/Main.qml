@@ -108,12 +108,14 @@ ApplicationWindow {
     Platform.SystemTrayIcon {
         id: trayIcon
         visible: window.trayAvailable
-        // A file:// path on disk (extracted from the qrc resource by
-        // MainController), not a qrc:/... resource path: Qt.labs.platform's
+        // On Linux this is a file:// path extracted to disk by
+        // MainController, not a qrc:/... resource path: Qt.labs.platform's
         // Linux tray backend silently produces no icon at all when
         // icon.source points into the Qt resource system, regardless of
-        // image format. The icon itself tracks controller.userStatus -
-        // green while active, red on error, the default icon otherwise.
+        // image format. Other platforms don't have that limitation, so
+        // MainController binds straight to the qrc:/ resource there. The
+        // icon itself tracks controller.userStatus - green while active,
+        // red on error, the default icon otherwise.
         icon.source: controller.statusIconSource
         tooltip: "WorkTime"
 
