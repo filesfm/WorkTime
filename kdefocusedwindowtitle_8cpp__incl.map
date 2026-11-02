@@ -1,23 +1,23 @@
 <map id="core/kdefocusedwindowtitle.cpp" name="core/kdefocusedwindowtitle.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="254,5,486,31"/>
-<area shape="rect" id="Node000002" href="$kdefocusedwindowtitle_8hpp.html" title=" " alt="" coords="269,79,471,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="373,31,373,65,367,65,367,31"/>
-<area shape="rect" id="Node000009" href="$kwinscript_8hpp.html" title=" " alt="" coords="127,79,245,104"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="341,33,230,76,228,71,339,28"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="495,79,634,104"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="402,28,521,71,519,76,400,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,148,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="323,107,138,151,137,146,322,101"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="545,152,619,177"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="405,101,536,145,534,150,403,107"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="643,152,718,177"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="421,101,630,149,629,154,420,107"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="172,152,243,177"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="345,106,248,149,245,144,343,102"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="267,152,430,177"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="369,105,359,140,353,138,364,104"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="454,152,521,177"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="390,102,458,142,455,147,387,106"/>
-<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="170,106,108,147,105,142,167,102"/>
-<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="192,104,203,138,197,140,187,105"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="251,5,482,33"/>
+<area shape="rect" id="Node000002" href="$kdefocusedwindowtitle_8hpp.html" title=" " alt="" coords="266,81,467,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="368,31,369,67,364,64,365,36"/>
+<area shape="rect" id="Node000009" href="$kwinscript_8hpp.html" title=" " alt="" coords="126,81,242,109"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="332,35,231,77,229,72,336,32"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="491,81,629,109"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="402,31,514,75,509,76,401,36"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,157,147,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="315,112,144,155,143,150,314,107"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="540,157,612,184"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="405,107,528,151,522,152,404,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="637,157,710,184"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="424,107,624,156,619,156,423,112"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="171,157,240,184"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="340,109,248,153,247,148,335,110"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="265,157,426,184"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="365,108,355,144,351,140,361,111"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="450,157,516,184"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="388,107,452,148,447,148,387,112"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="167,108,109,150,106,145,162,110"/>
+<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="189,107,200,143,195,141,186,111"/>
 </map>

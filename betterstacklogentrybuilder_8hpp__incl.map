@@ -1,9 +1,9 @@
 <map id="core/logging/betterstacklogentrybuilder.hpp" name="core/logging/betterstacklogentrybuilder.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="9,5,315,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,103,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,33,85,73,82,69,143,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="127,79,197,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,31,165,65,159,65,159,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="221,79,300,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="179,29,235,68,232,73,176,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="7,5,313,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,102,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,33,86,74,83,70,139,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="126,81,195,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,32,163,67,158,64,158,36"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="218,81,297,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="178,31,231,72,226,72,177,36"/>
 </map>
