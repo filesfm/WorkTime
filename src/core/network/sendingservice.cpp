@@ -118,6 +118,11 @@ void SendingService::handleReplyFinished(QNetworkReply *reply)
         const QVariant status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
         qCWarning(worktimeSendingService) << "submission failed (HTTP" << status << "):" << reply->errorString();
 
+        // Force any future request on this manager to open a fresh connection,
+        // in case this failure was caused by a network change (switching
+        // WiFi/cable/VPN) leaving a pooled connection bound to a dead route.
+        m_networkManager.clearConnectionCache();
+
         try {
             m_sqliteConnection.addEntryToNotSentTable(focusedWindowTitle, utcTimestamp, shootTime, httpSize);
         } catch (const std::exception &e) {
