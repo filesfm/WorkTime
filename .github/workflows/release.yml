@@ -600,3 +600,4 @@ jobs:
           files: dist/*
           fail_on_unmatched_files: true
           body_path: ${{ runner.temp }}/changelog.md
+          prerelease: true
