@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">worktime<span id="projectnumber">&#160;0.6.7</span>
+   <div id="projectname">worktime<span id="projectnumber">&#160;0.6.8</span>
    </div>
   </td>
  </tr>
@@ -110,6 +110,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:afe3c841d79c4538fa3bbd3fd06a24101"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies a file (e.g. a <span class="tt">:/</span> Qt resource) to a fixed path under the system temp directory, overwriting any file already there.  <br /></td></tr>
 <tr class="memitem:a2eb264806f76291f0e34196a21429e3a" id="r_a2eb264806f76291f0e34196a21429e3a"><td class="memItemLeft" align="right" valign="top">static QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2eb264806f76291f0e34196a21429e3a">truncateUtf8Safe</a> (const QString &amp;value, qsizetype maxCodePoints)</td></tr>
 <tr class="memdesc:a2eb264806f76291f0e34196a21429e3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncates <em class="arg">value</em> to at most <em class="arg">maxCodePoints</em> Unicode code points.  <br /></td></tr>
+<tr class="memitem:aa098a7198c31a355bf22951b21ad0869" id="r_aa098a7198c31a355bf22951b21ad0869"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa098a7198c31a355bf22951b21ad0869">isClockSyncEnabled</a> ()</td></tr>
+<tr class="memdesc:aa098a7198c31a355bf22951b21ad0869"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the OS is currently configured to automatically sync its clock (e.g. via NTP), rather than relying on a wall clock that could have been set to anything.  <br /></td></tr>
 <tr class="memitem:a7693b4dd83127e42bc92ecd929762db6" id="r_a7693b4dd83127e42bc92ecd929762db6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7693b4dd83127e42bc92ecd929762db6">autostart</a> (bool autostart=true)</td></tr>
 <tr class="memdesc:a7693b4dd83127e42bc92ecd929762db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers or unregisters the application to launch at login.  <br /></td></tr>
 <tr class="memitem:adf2d674503d459b09636d33de3e94f54" id="r_adf2d674503d459b09636d33de3e94f54"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf2d674503d459b09636d33de3e94f54">isAutostartEnabled</a> ()</td></tr>
@@ -270,6 +272,37 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Whether the OS is actually set up to launch the application at login. </p>
 <p>Reads the real OS state rather than the stored setting: the Run registry entry on Windows, the SMAppService status on macOS and the autostart desktop entry written by the Background portal on Linux. </p>
+
+</div>
+</div>
+<a id="aa098a7198c31a355bf22951b21ad0869" name="aa098a7198c31a355bf22951b21ad0869"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa098a7198c31a355bf22951b21ad0869">&#9670;&#160;</a></span>isClockSyncEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Utilities::isClockSyncEnabled </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the OS is currently configured to automatically sync its clock (e.g. via NTP), rather than relying on a wall clock that could have been set to anything. </p>
+<p>Checked because activity timestamps sent to the server come straight from the local wall clock (QDateTime::currentSecsSinceEpoch(), see SendingService::sendNow()) with no server-side validation: a wrong OS clock means wrong tracked-time data, silently.</p>
+<p>Fails open (returns <code>true</code>) whenever the underlying check itself is inconclusive - a D-Bus error, a missing registry key, a failed shell command. A false "enabled" costs nothing beyond today's status quo (silence); a false "disabled" costs an actionable-looking notification the user may have no way to act on - the second is worse, so ties go to "enabled".</p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if automatic clock sync is on (or the check couldn't tell), <code>false</code> if it's confirmed off. Backed by the <span class="tt">NTP</span> property of <span class="tt">org.freedesktop.timedate1</span> over the D-Bus system bus (Linux), the W32Time <span class="tt">Parameters\Type</span> registry value (Windows), or the <span class="tt">TMAutomaticTimeOnlyEnabled</span> value in the <span class="tt">com.apple.timed</span> preferences domain (macOS). </dd></dl>
+<dl class="section user"><dt>Cyclomatic complexity: 5 (Linux), 3 (Windows), 3 (macOS).</dt><dd></dd></dl>
 
 </div>
 </div>

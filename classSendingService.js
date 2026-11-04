@@ -3,6 +3,7 @@ var classSendingService =
     [ "SendingService", "classSendingService.html#a4725127232ea47a6cd1708510d5abec8", null ],
     [ "~SendingService", "classSendingService.html#aafe20a3ec04dbabda73d1249026bf70e", null ],
     [ "authenticationFailed", "classSendingService.html#a1d8818fb7eb8e2bbe154a661208c0213", null ],
+    [ "clockSyncDisabled", "classSendingService.html#a77dc37f6c2b476ab2bcd122cf519dac7", null ],
     [ "isActive", "classSendingService.html#adc824d31c0e51a45e6364c81b57d20f9", null ],
     [ "sendFailed", "classSendingService.html#a1f06beef9e350a0218e68dca42828a12", null ],
     [ "sendSucceeded", "classSendingService.html#a98ac1cf723a73b1d32e464c3418a5694", null ],

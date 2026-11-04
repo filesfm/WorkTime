@@ -1,13 +1,15 @@
 <map id="qml/controller/maincontroller.cpp" name="qml/controller/maincontroller.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="643,5,880,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="743,5,980,33"/>
 <area shape="rect" id="Node000002" href="$maincontroller_8hpp.html" title=" " alt="" coords="790,81,933,109"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="780,31,834,72,829,71,779,36"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="863,31,864,67,859,64,860,36"/>
 <area shape="rect" id="Node000019" href="$settings_8hpp.html" title=" " alt="" coords="368,157,557,184"/>
-<area shape="poly" id="edge26_Node000001_Node000019" title=" " alt="" coords="738,32,503,152,501,147,733,34"/>
+<area shape="poly" id="edge26_Node000001_Node000019" title=" " alt="" coords="829,33,513,153,511,148,824,34"/>
 <area shape="rect" id="Node000022" href="$utilities_8hpp.html" title=" " alt="" coords="198,157,328,184"/>
-<area shape="poly" id="edge31_Node000001_Node000022" title=" " alt="" coords="717,36,322,154,320,149,718,31"/>
-<area shape="rect" id="Node000026" title=" " alt="" coords="957,81,1043,109"/>
-<area shape="poly" id="edge37_Node000001_Node000026" title=" " alt="" coords="804,31,946,76,940,76,804,36"/>
+<area shape="poly" id="edge31_Node000001_Node000022" title=" " alt="" coords="809,36,331,155,329,150,809,31"/>
+<area shape="rect" id="Node000026" title=" " alt="" coords="958,81,1053,109"/>
+<area shape="poly" id="edge37_Node000001_Node000026" title=" " alt="" coords="887,31,969,74,964,74,887,36"/>
+<area shape="rect" id="Node000027" title=" " alt="" coords="1077,81,1163,109"/>
+<area shape="poly" id="edge38_Node000001_Node000027" title=" " alt="" coords="908,31,1065,77,1060,77,907,36"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="799,308,940,336"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="787,105,689,127,647,141,622,158,618,170,622,183,637,206,656,226,700,259,748,283,797,303,792,303,746,288,697,263,652,230,633,209,618,186,612,170,618,155,645,136,688,121,792,104"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="825,232,898,260"/>
