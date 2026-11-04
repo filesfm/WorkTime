@@ -93,7 +93,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif(WIN32)
     target_sources(worktime PRIVATE ${CMAKE_SOURCE_DIR}/resource/windows/icon.rc)
 elseif(APPLE)
-    target_sources(worktime PRIVATE core/utilities_mac.mm core/activity/activitymonitor_mac.mm)
+    target_sources(worktime PRIVATE core/utilities_mac.mm core/activity/activitymonitor_mac.mm
+        qml/controller/traymenuopener.hpp qml/controller/traymenuopener_mac.mm)
 
     set(ICON_FILE ${CMAKE_SOURCE_DIR}/resource/macos/icon.icns)
     set_source_files_properties(${ICON_FILE} PROPERTIES
@@ -197,6 +198,7 @@ if(BUILD_DOCS)
             qml/controller/maincontroller.hpp
             qml/controller/appquitter.cpp
             qml/controller/appquitter.hpp
+            qml/controller/traymenuopener.hpp
             qml/controller/screengeometry.cpp
             qml/controller/screengeometry.hpp
             qml/controller/popupplacement.cpp

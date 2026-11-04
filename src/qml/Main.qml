@@ -128,7 +128,7 @@ ApplicationWindow {
         onActivated: function (reason) {
             if (reason === Platform.SystemTrayIcon.Context) {
                 if (Qt.platform.os === "osx")
-                    trayMenu.open()
+                    trayMenuOpener.open(function () { trayMenu.open() })
                 return
             }
             if (reason !== Platform.SystemTrayIcon.Trigger)

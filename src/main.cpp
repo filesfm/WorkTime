@@ -21,6 +21,10 @@
 #    include "core/kdefocusedwindowtitle.hpp"
 #endif
 
+#if defined(Q_OS_MACOS)
+#    include "qml/controller/traymenuopener.hpp"
+#endif
+
 Q_LOGGING_CATEGORY(worktimeMain, "worktime.main")
 
 int main(int argc, char *argv[])
@@ -75,6 +79,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     AppQuitter appQuitter;
     engine.rootContext()->setContextProperty("appQuitter", &appQuitter);
+#if defined(Q_OS_MACOS)
+    TrayMenuOpener trayMenuOpener;
+    engine.rootContext()->setContextProperty("trayMenuOpener", &trayMenuOpener);
+#endif
     ScreenGeometry screenGeometry;
     engine.rootContext()->setContextProperty("screenGeometry", &screenGeometry);
     PopupPlacement popupPlacement;
