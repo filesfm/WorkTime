@@ -7,5 +7,6 @@ var dir_f0b51a5ba69d6af31fd4a036260705a8 =
     [ "popupplacement.cpp", "popupplacement_8cpp.html", null ],
     [ "popupplacement.hpp", "popupplacement_8hpp.html", "popupplacement_8hpp" ],
     [ "screengeometry.cpp", "screengeometry_8cpp.html", null ],
-    [ "screengeometry.hpp", "screengeometry_8hpp.html", "screengeometry_8hpp" ]
+    [ "screengeometry.hpp", "screengeometry_8hpp.html", "screengeometry_8hpp" ],
+    [ "traymenuopener.hpp", "traymenuopener_8hpp.html", "traymenuopener_8hpp" ]
 ];

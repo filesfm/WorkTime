@@ -11,5 +11,6 @@ var annotated_dup =
     [ "SendingService", "classSendingService.html", "classSendingService" ],
     [ "Settings", "classSettings.html", "classSettings" ],
     [ "SQLiteConnection", "classSQLiteConnection.html", "classSQLiteConnection" ],
+    [ "TrayMenuOpener", "classTrayMenuOpener.html", "classTrayMenuOpener" ],
     [ "Utilities", "classUtilities.html", "classUtilities" ]
 ];

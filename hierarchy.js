@@ -11,7 +11,8 @@ var hierarchy =
       [ "PopupPlacement", "classPopupPlacement.html", null ],
       [ "ScreenGeometry", "classScreenGeometry.html", null ],
       [ "SendingService", "classSendingService.html", null ],
-      [ "Settings", "classSettings.html", null ]
+      [ "Settings", "classSettings.html", null ],
+      [ "TrayMenuOpener", "classTrayMenuOpener.html", null ]
     ] ],
     [ "SQLiteConnection::SentTableRow", "structSQLiteConnection_1_1SentTableRow.html", null ],
     [ "SQLiteConnection", "classSQLiteConnection.html", null ],

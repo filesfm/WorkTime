@@ -157,8 +157,10 @@ $(function(){initNavTree('utilities_8hpp_source.html','',''); });
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="preprocessor">#if defined(Q_OS_WINDOWS)</span></div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">static</span> QString s_clockSyncRegistryKey;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>};</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="preprocessor">#elif defined(Q_OS_MACOS)</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *s_clockSyncMachService;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>};</div>
 </div>
 <div class="ttc" id="aclassUtilities_html_a2eb264806f76291f0e34196a21429e3a"><div class="ttname"><a href="classUtilities.html#a2eb264806f76291f0e34196a21429e3a">Utilities::truncateUtf8Safe</a></div><div class="ttdeci">static QString truncateUtf8Safe(const QString &amp;value, qsizetype maxCodePoints)</div><div class="ttdoc">Truncates value to at most maxCodePoints Unicode code points.</div><div class="ttdef"><b>Definition</b> utilities.cpp:44</div></div>
 <div class="ttc" id="aclassUtilities_html_a6fcc6c62410cba290dc2f372bb1416d5"><div class="ttname"><a href="classUtilities.html#a6fcc6c62410cba290dc2f372bb1416d5">Utilities::focusedWindowTitle</a></div><div class="ttdeci">static QString focusedWindowTitle()</div><div class="ttdoc">Title of the currently focused window.</div></div>

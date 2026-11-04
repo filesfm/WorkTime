@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['utilities_0',['Utilities',['../classUtilities.html',1,'']]]
+  ['traymenuopener_0',['TrayMenuOpener',['../classTrayMenuOpener.html',1,'']]]
 ];
