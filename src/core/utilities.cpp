@@ -157,16 +157,25 @@ bool Utilities::isClockSyncEnabled()
 #elif defined(Q_OS_WINDOWS)
 
 QString Utilities::s_clockSyncRegistryKey = QStringLiteral(
-    "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\TimeProviders\\NtpClient");
+    "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters");
 
 bool Utilities::isClockSyncEnabled()
 {
+    // TimeProviders\NtpClient\Enabled (an earlier approach) controls whether
+    // that provider module is loaded into the time service - it stays 1
+    // essentially always and does NOT reflect the Settings app's "Set time
+    // automatically" toggle. That toggle actually writes Parameters\Type to
+    // "NTP" (on) or "NoSync" (off). A domain-joined machine may instead show
+    // "NT5DS"/"AllSync" (syncing from the domain hierarchy rather than a
+    // public NTP server) - that's still automatic sync, just via a different
+    // source, so only the explicit "NoSync" value is treated as disabled.
     QSettings registry(s_clockSyncRegistryKey, QSettings::NativeFormat);
 
-    if (!registry.contains(QStringLiteral("Enabled")))
+    const QVariant typeValue = registry.value(QStringLiteral("Type"));
+    if (!typeValue.isValid())
         return true; // key/value absent - can't tell, assume enabled
 
-    return registry.value(QStringLiteral("Enabled")).toUInt() != 0;
+    return typeValue.toString().compare(QStringLiteral("NoSync"), Qt::CaseInsensitive) != 0;
 }
 
 #elif defined(Q_OS_MACOS)

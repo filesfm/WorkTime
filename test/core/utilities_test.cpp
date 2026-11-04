@@ -404,22 +404,33 @@ protected:
 
 } // namespace
 
-TEST_F(UtilitiesClockSyncTest, EnabledValueOneMeansSyncIsOn)
+TEST_F(UtilitiesClockSyncTest, TypeNtpMeansSyncIsOn)
 {
     QSettings registry(TestableClockSyncUtilities::s_clockSyncRegistryKey, QSettings::NativeFormat);
-    registry.setValue("Enabled", 1);
+    registry.setValue("Type", "NTP");
     registry.sync();
 
     EXPECT_TRUE(Utilities::isClockSyncEnabled());
 }
 
-TEST_F(UtilitiesClockSyncTest, EnabledValueZeroMeansSyncIsOff)
+TEST_F(UtilitiesClockSyncTest, TypeNoSyncMeansSyncIsOff)
 {
     QSettings registry(TestableClockSyncUtilities::s_clockSyncRegistryKey, QSettings::NativeFormat);
-    registry.setValue("Enabled", 0);
+    registry.setValue("Type", "NoSync");
     registry.sync();
 
     EXPECT_FALSE(Utilities::isClockSyncEnabled());
+}
+
+TEST_F(UtilitiesClockSyncTest, TypeNt5dsMeansSyncIsOn)
+{
+    // A domain-joined machine syncs from the domain hierarchy instead of a
+    // public NTP server - still automatic sync, just via a different source.
+    QSettings registry(TestableClockSyncUtilities::s_clockSyncRegistryKey, QSettings::NativeFormat);
+    registry.setValue("Type", "NT5DS");
+    registry.sync();
+
+    EXPECT_TRUE(Utilities::isClockSyncEnabled());
 }
 
 TEST_F(UtilitiesClockSyncTest, MissingValueFailsOpenAsEnabled)

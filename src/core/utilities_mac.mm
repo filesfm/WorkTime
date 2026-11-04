@@ -85,45 +85,30 @@ bool Utilities::isAutostartEnabled()
 
 bool Utilities::isClockSyncEnabled()
 {
-    NSTask *task = [[NSTask alloc] init];
-    task.launchPath = @"/usr/sbin/systemsetup";
-    task.arguments = @[@"-getusingnetworktime"];
-
-    NSPipe *outputPipe = [NSPipe pipe];
-    task.standardOutput = outputPipe;
-    task.standardError = [NSPipe pipe]; // discard stderr (e.g. permission-denied chatter)
-
-    NSError *error = nil;
-    BOOL launched = [task launchAndReturnError:&error];
-    if (!launched) {
-        qCWarning(worktimeUtilities) << "systemsetup -getusingnetworktime failed to launch:"
-                                     << QString::fromNSString(error.localizedDescription);
-        [task release];
+    // systemsetup -getusingnetworktime (an earlier approach) genuinely
+    // requires root, not just admin, on modern macOS - it fails for a normal
+    // user, which made this always fail open. TMAutomaticTimeOnlyEnabled in
+    // the com.apple.timed preferences domain is the same toggle, readable as
+    // the current user with no elevated privileges (this is undocumented by
+    // Apple, but is relied on by DISA's macOS 14/15 security-compliance
+    // benchmarks, which is about as much external confirmation as an
+    // unofficial API gets).
+    NSUserDefaults *timedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.apple.timed"];
+    if (!timedDefaults) {
+        qCWarning(worktimeUtilities) << "could not open com.apple.timed preferences, assuming clock sync is enabled";
         return true;
     }
 
-    NSData *outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
-    [task waitUntilExit];
-    const int status = task.terminationStatus;
-    [task release];
+    id value = [timedDefaults objectForKey:@"TMAutomaticTimeOnlyEnabled"];
+    [timedDefaults release];
 
-    if (status != 0) {
-        qCWarning(worktimeUtilities) << "systemsetup -getusingnetworktime exited with status" << status
-                                     << "(may need elevated privileges), assuming clock sync is enabled";
+    if (!value) {
+        qCWarning(worktimeUtilities)
+            << "TMAutomaticTimeOnlyEnabled not present in com.apple.timed, assuming clock sync is enabled";
         return true;
     }
 
-    NSString *outputString = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
-    const QString output = QString::fromNSString(outputString);
-    [outputString release];
-
-    if (output.contains(QStringLiteral("Network Time: On"), Qt::CaseInsensitive))
-        return true;
-    if (output.contains(QStringLiteral("Network Time: Off"), Qt::CaseInsensitive))
-        return false;
-
-    qCWarning(worktimeUtilities) << "could not parse systemsetup output, assuming clock sync is enabled:" << output;
-    return true;
+    return [value boolValue];
 }
 
 void Utilities::showNotification(const QString &title, const QString &message)

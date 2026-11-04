@@ -78,9 +78,10 @@ public:
      * \return \c true if automatic clock sync is on (or the check couldn't
      * tell), \c false if it's confirmed off. Backed by the `NTP` property of
      * `org.freedesktop.timedate1` over the D-Bus system bus (Linux), the
-     * W32Time `NtpClient\Enabled` registry value (Windows), or
-     * `systemsetup -getusingnetworktime` (macOS).
-     * \par Cyclomatic complexity: 5 (Linux), 3 (Windows), 6 (macOS).
+     * W32Time `Parameters\Type` registry value (Windows), or
+     * the `TMAutomaticTimeOnlyEnabled` value in the `com.apple.timed`
+     * preferences domain (macOS).
+     * \par Cyclomatic complexity: 5 (Linux), 3 (Windows), 3 (macOS).
      */
     static bool isClockSyncEnabled();
 
