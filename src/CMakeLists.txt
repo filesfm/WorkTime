@@ -106,6 +106,10 @@ elseif(APPLE)
         COMMAND ${CMAKE_COMMAND} -E rename "$<TARGET_BUNDLE_DIR:worktime>" "${WORKTIME_APP_BUNDLE_DIR}"
         COMMENT "Renaming app bundle to WorkTime.app"
     )
+    add_custom_command(TARGET worktime POST_BUILD
+        COMMAND codesign --force --sign - "${WORKTIME_APP_BUNDLE_DIR}"
+        COMMENT "Ad-hoc signing WorkTime.app"
+    )
 endif()
 
 set_target_properties(worktime PROPERTIES

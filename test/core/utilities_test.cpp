@@ -439,3 +439,36 @@ TEST_F(UtilitiesClockSyncTest, MissingValueFailsOpenAsEnabled)
 }
 
 #endif // defined(Q_OS_WINDOWS)
+
+#if defined(Q_OS_MACOS)
+
+namespace {
+
+class TestableClockSyncUtilities : public Utilities
+{
+public:
+    using Utilities::s_clockSyncMachService;
+};
+
+class UtilitiesClockSyncTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_previousService = TestableClockSyncUtilities::s_clockSyncMachService;
+        TestableClockSyncUtilities::s_clockSyncMachService = "io.github.filesfm.worktime.missing-timed";
+    }
+
+    void TearDown() override { TestableClockSyncUtilities::s_clockSyncMachService = m_previousService; }
+
+    const char *m_previousService = nullptr;
+};
+
+} // namespace
+
+TEST_F(UtilitiesClockSyncTest, UnreachableServiceFailsOpenAsEnabled)
+{
+    EXPECT_TRUE(Utilities::isClockSyncEnabled());
+}
+
+#endif // defined(Q_OS_MACOS)

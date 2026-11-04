@@ -79,8 +79,8 @@ public:
      * tell), \c false if it's confirmed off. Backed by the `NTP` property of
      * `org.freedesktop.timedate1` over the D-Bus system bus (Linux), the
      * W32Time `Parameters\Type` registry value (Windows), or
-     * the `TMAutomaticTimeOnlyEnabled` value in the `com.apple.timed`
-     * preferences domain (macOS).
+     * the `TMAutomaticTimeEnabled` reply of the `timed` daemon over the
+     * `com.apple.timed.xpc` XPC service (macOS).
      * \par Cyclomatic complexity: 5 (Linux), 3 (Windows), 3 (macOS).
      */
     static bool isClockSyncEnabled();
@@ -153,5 +153,8 @@ private:
 #if defined(Q_OS_WINDOWS)
     //! \brief Registry key isClockSyncEnabled() reads the NTP-enabled toggle from.
     static QString s_clockSyncRegistryKey;
+#elif defined(Q_OS_MACOS)
+    //! \brief Mach service isClockSyncEnabled() asks for the automatic-time toggle.
+    static const char *s_clockSyncMachService;
 #endif
 };

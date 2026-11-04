@@ -4,6 +4,7 @@
 #import <ApplicationServices/ApplicationServices.h>
 #include <ServiceManagement/ServiceManagement.h>
 #import <UserNotifications/UserNotifications.h>
+#include <xpc/xpc.h>
 
 QString Utilities::focusedWindowTitle()
 {
@@ -83,32 +84,33 @@ bool Utilities::isAutostartEnabled()
 
 #endif // !defined(BUILD_WITHOUT_AUTOSTART)
 
+const char *Utilities::s_clockSyncMachService = "com.apple.timed.xpc";
+
 bool Utilities::isClockSyncEnabled()
 {
-    // systemsetup -getusingnetworktime (an earlier approach) genuinely
-    // requires root, not just admin, on modern macOS - it fails for a normal
-    // user, which made this always fail open. TMAutomaticTimeOnlyEnabled in
-    // the com.apple.timed preferences domain is the same toggle, readable as
-    // the current user with no elevated privileges (this is undocumented by
-    // Apple, but is relied on by DISA's macOS 14/15 security-compliance
-    // benchmarks, which is about as much external confirmation as an
-    // unofficial API gets).
-    NSUserDefaults *timedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.apple.timed"];
-    if (!timedDefaults) {
-        qCWarning(worktimeUtilities) << "could not open com.apple.timed preferences, assuming clock sync is enabled";
-        return true;
+    xpc_connection_t connection = xpc_connection_create_mach_service(s_clockSyncMachService, nullptr, 0);
+    xpc_connection_set_event_handler(connection,
+                                     ^(xpc_object_t){
+                                     });
+    xpc_connection_resume(connection);
+
+    xpc_object_t request = xpc_dictionary_create(nullptr, nullptr, 0);
+    xpc_dictionary_set_string(request, "TMCommand", "TMIsAutomaticTimeEnabled");
+    xpc_object_t reply = xpc_connection_send_message_with_reply_sync(connection, request);
+    xpc_release(request);
+    xpc_connection_cancel(connection);
+    xpc_release(connection);
+
+    bool enabled = true;
+    if (xpc_get_type(reply) != XPC_TYPE_DICTIONARY) {
+        qCWarning(worktimeUtilities) << "timed did not answer, assuming clock sync is enabled";
+    } else if (xpc_dictionary_get_value(reply, "TMAutomaticTimeEnabled") == nullptr) {
+        qCWarning(worktimeUtilities) << "timed reply has no TMAutomaticTimeEnabled, assuming clock sync is enabled";
+    } else {
+        enabled = xpc_dictionary_get_bool(reply, "TMAutomaticTimeEnabled");
     }
-
-    id value = [timedDefaults objectForKey:@"TMAutomaticTimeOnlyEnabled"];
-    [timedDefaults release];
-
-    if (!value) {
-        qCWarning(worktimeUtilities)
-            << "TMAutomaticTimeOnlyEnabled not present in com.apple.timed, assuming clock sync is enabled";
-        return true;
-    }
-
-    return [value boolValue];
+    xpc_release(reply);
+    return enabled;
 }
 
 void Utilities::showNotification(const QString &title, const QString &message)
