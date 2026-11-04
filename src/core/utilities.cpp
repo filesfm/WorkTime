@@ -7,6 +7,7 @@
 #include <QScreen>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QTimer>
 
 #if defined(Q_OS_LINUX)
 #    include <QDBusArgument>
@@ -400,17 +401,29 @@ void Utilities::showNotification(const QString &title, const QString &message)
 
 void Utilities::showNotification(const QString &title, const QString &message)
 {
+    HWND hwnd = CreateWindowW(L"STATIC", L"", 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr);
+    HICON hIcon = (HICON)LoadImageW(nullptr, L"icon.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+
     NOTIFYICONDATAW nid = {sizeof(nid)};
-    nid.hWnd = CreateWindowW(L"STATIC", L"", 0, 0, 0, 0, 0, nullptr, nullptr, nullptr, nullptr);
+    nid.hWnd = hwnd;
     nid.uFlags = NIF_ICON | NIF_INFO;
-    nid.hIcon = (HICON)LoadImageW(nullptr, L"icon.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+    nid.hIcon = hIcon;
     nid.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
     wcsncpy_s(nid.szInfoTitle, reinterpret_cast<const wchar_t *>(title.utf16()), _TRUNCATE);
     wcsncpy_s(nid.szInfo, reinterpret_cast<const wchar_t *>(message.utf16()), _TRUNCATE);
 
     Shell_NotifyIconW(NIM_ADD, &nid);
-    Sleep(5000);
-    Shell_NotifyIconW(NIM_DELETE, &nid);
+
+    // Clean up asynchronously instead of blocking this thread with Sleep():
+    // this thread also runs ActivityMonitor's global low-level keyboard/mouse
+    // hooks (see activitymonitor.cpp), which Windows calls synchronously on
+    // the installing thread for every system-wide input event - blocking it
+    // for 5s caused system-wide input lag, not just an app freeze.
+    QTimer::singleShot(5000, qApp, [nid, hwnd, hIcon]() mutable {
+        Shell_NotifyIconW(NIM_DELETE, &nid);
+        DestroyIcon(hIcon);
+        DestroyWindow(hwnd);
+    });
 }
 
 #elif defined(Q_OS_MACOS)
