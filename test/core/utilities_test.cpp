@@ -24,6 +24,9 @@
 
 #if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
 #    include <QCoreApplication>
+#endif
+
+#if defined(Q_OS_WINDOWS)
 #    include <QSettings>
 #endif
 
@@ -362,3 +365,66 @@ TEST_F(UtilitiesAutostartTest, EntryForAnotherExecutableMeansDisabled)
 }
 
 #endif // !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
+
+#if defined(Q_OS_WINDOWS)
+
+namespace {
+
+class TestableClockSyncUtilities : public Utilities
+{
+public:
+    using Utilities::s_clockSyncRegistryKey;
+};
+
+class UtilitiesClockSyncTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_previousKey = TestableClockSyncUtilities::s_clockSyncRegistryKey;
+        TestableClockSyncUtilities::s_clockSyncRegistryKey = QStringLiteral(
+            "HKEY_CURRENT_USER\\Software\\Files.fm\\WorktimeClockSyncTest");
+        removeTestKey();
+    }
+
+    void TearDown() override
+    {
+        removeTestKey();
+        TestableClockSyncUtilities::s_clockSyncRegistryKey = m_previousKey;
+    }
+
+    static void removeTestKey()
+    {
+        QSettings parent(QStringLiteral("HKEY_CURRENT_USER\\Software\\Files.fm"), QSettings::NativeFormat);
+        parent.remove(QStringLiteral("WorktimeClockSyncTest"));
+    }
+
+    QString m_previousKey;
+};
+
+} // namespace
+
+TEST_F(UtilitiesClockSyncTest, EnabledValueOneMeansSyncIsOn)
+{
+    QSettings registry(TestableClockSyncUtilities::s_clockSyncRegistryKey, QSettings::NativeFormat);
+    registry.setValue("Enabled", 1);
+    registry.sync();
+
+    EXPECT_TRUE(Utilities::isClockSyncEnabled());
+}
+
+TEST_F(UtilitiesClockSyncTest, EnabledValueZeroMeansSyncIsOff)
+{
+    QSettings registry(TestableClockSyncUtilities::s_clockSyncRegistryKey, QSettings::NativeFormat);
+    registry.setValue("Enabled", 0);
+    registry.sync();
+
+    EXPECT_FALSE(Utilities::isClockSyncEnabled());
+}
+
+TEST_F(UtilitiesClockSyncTest, MissingValueFailsOpenAsEnabled)
+{
+    EXPECT_TRUE(Utilities::isClockSyncEnabled());
+}
+
+#endif // defined(Q_OS_WINDOWS)

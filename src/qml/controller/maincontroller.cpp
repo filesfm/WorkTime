@@ -3,6 +3,8 @@
 #include "core/settings/settings.hpp"
 #include "core/utilities.hpp"
 
+#include <QDateTime>
+
 #include <exception>
 
 Q_LOGGING_CATEGORY(worktimeMainController, "worktime.main.controller")
@@ -11,6 +13,12 @@ namespace {
 constexpr int kInactivityTimeoutMs = 60000;
 constexpr int kStartButtonNotPushedTimeoutMs = 1800000;
 constexpr int kSentStatsRefreshIntervalMs = 60000;
+// SendingService emits clockSyncDisabled() on every retry attempt while OS
+// clock sync stays off (as often as every couple of seconds, see
+// SendingService's own retry-interval constant) - throttle the actual
+// desktop notification to at most once per minute rather than spamming one
+// per retry.
+constexpr qint64 kClockSyncNotificationIntervalMs = 60000;
 } // namespace
 
 void MainController::activityChecker()
@@ -37,6 +45,18 @@ void MainController::activityChecker()
     } else {
         m_startButtonNotPushedTimer.start();
     }
+}
+
+void MainController::notifyClockSyncDisabled()
+{
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (now - m_lastClockSyncNotificationMs < kClockSyncNotificationIntervalMs)
+        return;
+
+    m_lastClockSyncNotificationMs = now;
+    Utilities::showNotification("WorkTime",
+                                "Automatic time sync appears to be turned off. Please turn it back on in your "
+                                "system clock settings so WorkTime keeps tracking accurate time.");
 }
 
 void MainController::setUserStatus(UserStatus status)
@@ -93,6 +113,7 @@ MainController::MainController(QObject *parent)
     }
 
     activityChecker();
+    connect(&m_sendingService, &SendingService::clockSyncDisabled, this, &MainController::notifyClockSyncDisabled);
 
     connect(&m_sendingService, &SendingService::sendSucceeded, this, &MainController::refreshSentStats);
     connect(&m_sendingService, &SendingService::sendFailed, this, &MainController::refreshSentStats);

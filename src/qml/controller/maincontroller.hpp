@@ -189,6 +189,16 @@ private:
 private slots:
     void showStartButtonNotPushedNotification();
     void toggleStartButtonNotPushedTimer();
+    /*!
+     * \brief Shows the clock-sync-disabled notification, throttled to at
+     * most once per kClockSyncNotificationIntervalMs - SendingService emits
+     * SendingService::clockSyncDisabled() on every retry attempt while sync
+     * stays off (as often as every few seconds), so this only actually
+     * calls Utilities::showNotification() the first time and again once the
+     * interval has elapsed, rather than on every single emission.
+     * \par Cyclomatic complexity: 2
+     */
+    void notifyClockSyncDisabled();
 
 private:
     void setRunning(bool running);
@@ -198,6 +208,8 @@ private:
     ActivityMonitor m_activityMonitor;
     QTimer m_inactivityTimer;
     QTimer m_startButtonNotPushedTimer;
+    /*! \brief Epoch ms of the last clock-sync-disabled notification; see notifyClockSyncDisabled(). */
+    qint64 m_lastClockSyncNotificationMs = 0;
 
     /*! \brief Backs sentCountLast24Hours()/sentBytesLast24Hours(); see refreshSentStats(). */
     SQLiteConnection m_sqliteConnection;

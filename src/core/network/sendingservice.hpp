@@ -68,6 +68,14 @@ signals:
     /*! \brief Emitted after a send request fails, with a human-readable reason. */
     void sendFailed(const QString &errorString);
     void authenticationFailed();
+    /*!
+     * \brief Emitted every time sendNow() skips sending because
+     * Utilities::isClockSyncEnabled() reports the OS's automatic clock sync
+     * is off - i.e. on every retry attempt while it stays off, not just
+     * once. MainController throttles how often this actually surfaces a
+     * desktop notification.
+     */
+    void clockSyncDisabled();
 
 private:
     /*!

@@ -58,6 +58,32 @@ public:
      */
     static QString truncateUtf8Safe(const QString &value, qsizetype maxCodePoints);
 
+    /*!
+     * \brief Whether the OS is currently configured to automatically sync its
+     * clock (e.g. via NTP), rather than relying on a wall clock that could
+     * have been set to anything.
+     *
+     * Checked because activity timestamps sent to the server come straight
+     * from the local wall clock (QDateTime::currentSecsSinceEpoch(), see
+     * SendingService::sendNow()) with no server-side validation: a wrong OS
+     * clock means wrong tracked-time data, silently.
+     *
+     * Fails open (returns \c true) whenever the underlying check itself is
+     * inconclusive - a D-Bus error, a missing registry key, a failed shell
+     * command. A false "enabled" costs nothing beyond today's status quo
+     * (silence); a false "disabled" costs an actionable-looking notification
+     * the user may have no way to act on - the second is worse, so ties go
+     * to "enabled".
+     *
+     * \return \c true if automatic clock sync is on (or the check couldn't
+     * tell), \c false if it's confirmed off. Backed by the `NTP` property of
+     * `org.freedesktop.timedate1` over the D-Bus system bus (Linux), the
+     * W32Time `NtpClient\Enabled` registry value (Windows), or
+     * `systemsetup -getusingnetworktime` (macOS).
+     * \par Cyclomatic complexity: 5 (Linux), 3 (Windows), 6 (macOS).
+     */
+    static bool isClockSyncEnabled();
+
 #if !defined(BUILD_WITHOUT_AUTOSTART)
     //! \brief Registers or unregisters the application to launch at login.
     static void autostart(bool autostart = true);
@@ -116,5 +142,15 @@ private:
      */
     static void *s_autostartAppService;
 #    endif
+#endif
+
+#if defined(BUILD_TESTING)
+protected:
+#else
+private:
+#endif
+#if defined(Q_OS_WINDOWS)
+    //! \brief Registry key isClockSyncEnabled() reads the NTP-enabled toggle from.
+    static QString s_clockSyncRegistryKey;
 #endif
 };

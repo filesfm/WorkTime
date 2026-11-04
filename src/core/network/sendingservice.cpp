@@ -18,6 +18,14 @@
 
 Q_LOGGING_CATEGORY(worktimeSendingService, "worktime.sending.service")
 
+namespace {
+constexpr int kNormalIntervalMs = 60000;
+// Fast poll while blocked on a disabled OS clock sync, so sending resumes
+// near-instantly once the user re-enables it, instead of waiting for the
+// next normal-cadence tick.
+constexpr int kClockSyncRetryIntervalMs = 2000;
+} // namespace
+
 SendingService::SendingService(QObject *parent)
     : QObject(parent)
 {
@@ -54,7 +62,7 @@ void SendingService::setServerUrl(const QUrl &url)
 void SendingService::start()
 {
     qCInfo(worktimeSendingService) << "starting sending service";
-    m_timer.setInterval(60000);
+    m_timer.setInterval(kNormalIntervalMs);
     m_timer.start();
     if (!m_notSentSender.isRunning())
         m_notSentSender.start();
@@ -96,6 +104,15 @@ void SendingService::sendNow()
         emit sendFailed(QStringLiteral("No server URL configured"));
         return;
     }
+
+    if (!Utilities::isClockSyncEnabled()) {
+        qCWarning(worktimeSendingService) << "automatic clock sync is disabled, skipping send";
+        m_timer.setInterval(kClockSyncRetryIntervalMs);
+        emit clockSyncDisabled();
+        emit sendFailed(QStringLiteral("Automatic clock sync is disabled"));
+        return;
+    }
+    m_timer.setInterval(kNormalIntervalMs);
 
     qCDebug(worktimeSendingService) << "posting activity sample to" << m_serverUrl;
 

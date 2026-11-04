@@ -13,6 +13,7 @@
 #    include <QDBusConnection>
 #    include <QDBusMessage>
 #    include <QDBusObjectPath>
+#    include <QDBusVariant>
 #    include <QJsonArray>
 #    include <QJsonDocument>
 #    include <QJsonObject>
@@ -114,6 +115,58 @@ QString Utilities::focusedWindowTitle()
     GetWindowTextW(hwnd, title, std::size(title));
 
     return QString::fromWCharArray(title);
+}
+
+#elif defined(Q_OS_MACOS)
+
+// Implemented in utilities_mac.mm
+
+#endif
+
+#if defined(Q_OS_LINUX)
+
+bool Utilities::isClockSyncEnabled()
+{
+    QDBusConnection bus = QDBusConnection::systemBus();
+    if (!bus.isConnected()) {
+        qCWarning(worktimeUtilities) << "system D-Bus bus not connected, assuming clock sync is enabled";
+        return true;
+    }
+
+    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.timedate1"),
+                                                      QStringLiteral("/org/freedesktop/timedate1"),
+                                                      QStringLiteral("org.freedesktop.DBus.Properties"),
+                                                      QStringLiteral("Get"));
+    msg << QStringLiteral("org.freedesktop.timedate1") << QStringLiteral("NTP");
+
+    QDBusMessage reply = bus.call(msg);
+    if (reply.type() != QDBusMessage::ReplyMessage || reply.arguments().isEmpty()) {
+        qCWarning(worktimeUtilities) << "timedate1 Properties.Get(NTP) D-Bus call failed:" << reply.errorMessage();
+        return true;
+    }
+
+    const QVariant outer = reply.arguments().constFirst();
+    if (!outer.canConvert<QDBusVariant>()) {
+        qCWarning(worktimeUtilities) << "timedate1 Properties.Get(NTP) reply had an unexpected type";
+        return true;
+    }
+
+    return outer.value<QDBusVariant>().variant().toBool();
+}
+
+#elif defined(Q_OS_WINDOWS)
+
+QString Utilities::s_clockSyncRegistryKey = QStringLiteral(
+    "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\TimeProviders\\NtpClient");
+
+bool Utilities::isClockSyncEnabled()
+{
+    QSettings registry(s_clockSyncRegistryKey, QSettings::NativeFormat);
+
+    if (!registry.contains(QStringLiteral("Enabled")))
+        return true; // key/value absent - can't tell, assume enabled
+
+    return registry.value(QStringLiteral("Enabled")).toUInt() != 0;
 }
 
 #elif defined(Q_OS_MACOS)

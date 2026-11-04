@@ -83,6 +83,49 @@ bool Utilities::isAutostartEnabled()
 
 #endif // !defined(BUILD_WITHOUT_AUTOSTART)
 
+bool Utilities::isClockSyncEnabled()
+{
+    NSTask *task = [[NSTask alloc] init];
+    task.launchPath = @"/usr/sbin/systemsetup";
+    task.arguments = @[@"-getusingnetworktime"];
+
+    NSPipe *outputPipe = [NSPipe pipe];
+    task.standardOutput = outputPipe;
+    task.standardError = [NSPipe pipe]; // discard stderr (e.g. permission-denied chatter)
+
+    NSError *error = nil;
+    BOOL launched = [task launchAndReturnError:&error];
+    if (!launched) {
+        qCWarning(worktimeUtilities) << "systemsetup -getusingnetworktime failed to launch:"
+                                     << QString::fromNSString(error.localizedDescription);
+        [task release];
+        return true;
+    }
+
+    NSData *outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
+    [task waitUntilExit];
+    const int status = task.terminationStatus;
+    [task release];
+
+    if (status != 0) {
+        qCWarning(worktimeUtilities) << "systemsetup -getusingnetworktime exited with status" << status
+                                     << "(may need elevated privileges), assuming clock sync is enabled";
+        return true;
+    }
+
+    NSString *outputString = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
+    const QString output = QString::fromNSString(outputString);
+    [outputString release];
+
+    if (output.contains(QStringLiteral("Network Time: On"), Qt::CaseInsensitive))
+        return true;
+    if (output.contains(QStringLiteral("Network Time: Off"), Qt::CaseInsensitive))
+        return false;
+
+    qCWarning(worktimeUtilities) << "could not parse systemsetup output, assuming clock sync is enabled:" << output;
+    return true;
+}
+
 void Utilities::showNotification(const QString &title, const QString &message)
 {
     // UNUserNotificationCenter raises an exception when the app has no bundle identifier, which
