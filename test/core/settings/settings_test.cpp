@@ -10,6 +10,7 @@
 #include "core/settings/settings.hpp"
 
 #if defined(Q_OS_LINUX)
+#    include <QDBusArgument>
 #    include <QDBusConnection>
 #    include <QDBusError>
 #    include <QDBusMessage>
@@ -387,6 +388,8 @@ public:
 class FakeSecretService : public QDBusVirtualObject
 {
 public:
+    bool reportExistingItem = false;
+
     QString introspect(const QString &) const override { return QString(); }
 
     bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
@@ -399,8 +402,37 @@ public:
                 QList<QVariant>{QVariant::fromValue(QDBusVariant(QString())),
                                 QVariant::fromValue(QDBusObjectPath(QStringLiteral("/session/s1")))}));
         } else if (message.member() == QStringLiteral("SearchItems")) {
-            connection.send(message.createReply(QList<QVariant>{QVariant::fromValue(QList<QDBusObjectPath>{}),
-                                                                QVariant::fromValue(QList<QDBusObjectPath>{})}));
+            QList<QDBusObjectPath> unlocked;
+            if (reportExistingItem)
+                unlocked.append(QDBusObjectPath(QStringLiteral("/secrets/item")));
+            connection.send(message.createReply(
+                QList<QVariant>{QVariant::fromValue(unlocked), QVariant::fromValue(QList<QDBusObjectPath>{})}));
+        }
+        return true;
+    }
+};
+
+// Stands in for a stored item, for the "already has a cached password"
+// migration branch, which needs readPassword() to return something.
+class FakeItem : public QDBusVirtualObject
+{
+public:
+    QByteArray secretValue = "existing-credential-store-password";
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        if (message.interface() == QStringLiteral("org.freedesktop.DBus.Introspectable"))
+            return false;
+
+        if (message.member() == QStringLiteral("GetSecret")) {
+            QDBusArgument secretArg;
+            secretArg.beginStructure();
+            secretArg << QDBusObjectPath(QStringLiteral("/session/s1")) << QByteArray() << secretValue
+                      << QStringLiteral("text/plain; charset=utf8");
+            secretArg.endStructure();
+            connection.send(message.createReply(QVariant::fromValue(secretArg)));
         }
         return true;
     }
@@ -442,6 +474,7 @@ protected:
 
         ASSERT_TRUE(m_bus.registerVirtualObject("/secrets", &m_service));
         ASSERT_TRUE(m_bus.registerVirtualObject("/secrets/collection", &m_collection));
+        ASSERT_TRUE(m_bus.registerVirtualObject("/secrets/item", &m_item));
         m_previousServiceName = TestableCredentialStore::s_secretServiceName;
         m_previousServicePath = TestableCredentialStore::s_secretServicePath;
         m_previousCollectionPath = TestableCredentialStore::s_defaultCollectionPath;
@@ -464,11 +497,13 @@ protected:
         TestableCredentialStore::s_defaultCollectionPath = m_previousCollectionPath;
         m_bus.unregisterObject("/secrets");
         m_bus.unregisterObject("/secrets/collection");
+        m_bus.unregisterObject("/secrets/item");
     }
 
     QDBusConnection m_bus{QString()};
     FakeSecretService m_service;
     FakeCollection m_collection;
+    FakeItem m_item;
     QString m_previousServiceName;
     QString m_previousServicePath;
     QString m_previousCollectionPath;
@@ -496,6 +531,18 @@ TEST_F(SettingsPasswordMigrationTest, FailedMigrationKeepsLegacyEntryAndCachedPa
 
     QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
     EXPECT_TRUE(raw.contains("password"));
+}
+
+TEST_F(SettingsPasswordMigrationTest, ExistingCachedPasswordDropsLegacyEntryWithoutMigrating)
+{
+    m_service.reportExistingItem = true;
+
+    TestableSettings settings;
+
+    EXPECT_EQ(settings.password(), QStringLiteral("existing-credential-store-password"));
+
+    QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
+    EXPECT_FALSE(raw.contains("password"));
 }
 
 #endif // defined(Q_OS_LINUX)

@@ -47,6 +47,23 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/qml/controller/popupplacement_test.cpp
 )
 
+# Embeds the real GNOME extension files at the same virtual paths the main
+# target does (see src/CMakeLists.txt), so PopupPlacement's
+# installGnomeExtension() has something real to read instead of always
+# failing at the resource-open step.
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/metadata.json PROPERTIES
+    QT_RESOURCE_ALIAS "worktime-placement-metadata.json"
+)
+set_source_files_properties(${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/extension.js PROPERTIES
+    QT_RESOURCE_ALIAS "worktime-placement-extension.js"
+)
+qt_add_resources(worktime_tests "popupplacement_test_resources"
+    PREFIX "/qt/qml/Worktime"
+    FILES
+        ${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/metadata.json
+        ${CMAKE_SOURCE_DIR}/resource/gnome/worktime-placement/extension.js
+)
+
 target_compile_definitions(worktime_tests PRIVATE BUILD_TESTING)
 
 if(BUILD_WITHOUT_KF6IDLETIME)

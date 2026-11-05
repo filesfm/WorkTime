@@ -5,6 +5,7 @@
 #include <QDBusMessage>
 #include <QDBusVirtualObject>
 #include <QList>
+#include <QStandardPaths>
 #include <QString>
 
 #include "core/kwinscript.hpp"
@@ -114,6 +115,12 @@ class PopupPlacementTest : public ::testing::Test
 protected:
     void SetUp() override
     {
+        // installGnomeExtension() writes under GenericDataLocation; without
+        // this, a run where QStandardPaths test mode hasn't already been
+        // enabled by an earlier test (e.g. this file filtered on its own)
+        // would read/write the developer's real GNOME extensions directory.
+        QStandardPaths::setTestModeEnabled(true);
+
         m_bus = QDBusConnection::sessionBus();
         if (!m_bus.isConnected())
             GTEST_SKIP() << "no D-Bus session bus available";
