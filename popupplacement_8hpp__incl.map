@@ -1,7 +1,9 @@
 <map id="qml/controller/popupplacement.hpp" name="qml/controller/popupplacement.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,259,33"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="25,81,98,109"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,32,86,72,82,68,117,35"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="122,81,283,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="146,31,182,70,177,70,144,36"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="11,5,265,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,79,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,33,73,74,70,69,118,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,81,173,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,32,140,66,136,64,136,36"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="197,81,359,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="164,31,242,73,237,74,162,36"/>
 </map>
