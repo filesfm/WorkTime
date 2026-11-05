@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileDevice>
+#include <QSqlQuery>
 #include <QStandardPaths>
 #include <QString>
 
@@ -268,18 +269,113 @@ TEST_F(SQLiteConnectionTest, ConstructorSetsCorrectDatabaseName)
     EXPECT_EQ(connection.m_databaseConnection.databaseName(), TestableSQLiteConnection::filePath());
 }
 
-/*TEST_F(SQLiteConnectionTest, ConstructorThrowsExceptionIfCannotConnectToDatabase)
+TEST_F(SQLiteConnectionTest, ConstructorThrowsWhenDatabaseCannotBeOpened)
 {
-    QFile file{TestableSQLiteConnection::filePath()};
-    QFileDevice::Permissions startPermissions{file.permissions()};
-    bool opened{file.open(QIODevice::WriteOnly)};
+    QFile file{databaseFilePath()};
+    ASSERT_TRUE(file.open(QIODevice::WriteOnly));
+    file.close();
+    const QFileDevice::Permissions startPermissions{file.permissions()};
+    ASSERT_TRUE(file.setPermissions(QFileDevice::Permissions()));
 
-    if (opened) {
-        file.close();
-        file.setPermissions(QFileDevice::Permissions());
-        EXPECT_ANY_THROW(SQLiteConnection connection);
-        file.setPermissions(startPermissions);
-    } else {
-        FAIL(); // TODO: find out other way to break connection
-    }
-}*/
+    EXPECT_THROW(SQLiteConnection connection, std::runtime_error);
+
+    file.setPermissions(startPermissions);
+}
+
+TEST_F(SQLiteConnectionTest, AddEntryToSentTableThrowsWhenConnectionIsClosed)
+{
+    TestableSQLiteConnection connection;
+    connection.m_databaseConnection.close();
+
+    EXPECT_THROW(connection.addEntryToSentTable("window", 1, 2, 3), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, AddEntryToNotSentTableThrowsWhenConnectionIsClosed)
+{
+    TestableSQLiteConnection connection;
+    connection.m_databaseConnection.close();
+
+    EXPECT_THROW(connection.addEntryToNotSentTable("window", 1, 2, 3), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, DeleteEntriesOlderThan24HoursThrowsWhenConnectionIsClosed)
+{
+    TestableSQLiteConnection connection;
+    connection.m_databaseConnection.close();
+
+    EXPECT_THROW(connection.deleteEntriesOlderThan24HoursFromSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, CountEntriesInLast24HoursThrowsWhenConnectionIsClosed)
+{
+    TestableSQLiteConnection connection;
+    connection.m_databaseConnection.close();
+
+    EXPECT_THROW(connection.countEntriesInLast24HoursFromSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, SumHttpSizeInLast24HoursThrowsWhenConnectionIsClosed)
+{
+    TestableSQLiteConnection connection;
+    connection.m_databaseConnection.close();
+
+    EXPECT_THROW(connection.sumHttpSizeInLast24HoursFromSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, TakeOldestFromSentTableThrowsWhenTransactionCannotStart)
+{
+    TestableSQLiteConnection connection;
+    connection.m_databaseConnection.close();
+
+    EXPECT_THROW(connection.takeOldestEntryFromSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, TakeOldestFromNotSentTableThrowsWhenTransactionCannotStart)
+{
+    TestableSQLiteConnection connection;
+    connection.m_databaseConnection.close();
+
+    EXPECT_THROW(connection.takeOldestEntryFromNotSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, TakeOldestFromSentTableThrowsWhenSelectFails)
+{
+    TestableSQLiteConnection connection;
+    QSqlQuery dropQuery(connection.m_databaseConnection);
+    ASSERT_TRUE(dropQuery.exec(QStringLiteral("DROP TABLE sent")));
+
+    EXPECT_THROW(connection.takeOldestEntryFromSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, TakeOldestFromNotSentTableThrowsWhenSelectFails)
+{
+    TestableSQLiteConnection connection;
+    QSqlQuery dropQuery(connection.m_databaseConnection);
+    ASSERT_TRUE(dropQuery.exec(QStringLiteral("DROP TABLE not_sent")));
+
+    EXPECT_THROW(connection.takeOldestEntryFromNotSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, TakeOldestFromSentTableThrowsWhenDeleteFails)
+{
+    TestableSQLiteConnection connection;
+    connection.addEntryToSentTable("window", 1, 2, 3);
+
+    // query_only lets the transaction start and the SELECT succeed, but
+    // rejects the DELETE - isolating that one failure branch.
+    QSqlQuery pragmaQuery(connection.m_databaseConnection);
+    ASSERT_TRUE(pragmaQuery.exec(QStringLiteral("PRAGMA query_only = ON")));
+
+    EXPECT_THROW(connection.takeOldestEntryFromSentTable(), std::runtime_error);
+}
+
+TEST_F(SQLiteConnectionTest, TakeOldestFromNotSentTableThrowsWhenDeleteFails)
+{
+    TestableSQLiteConnection connection;
+    connection.addEntryToNotSentTable("window", 1, 2, 3);
+
+    QSqlQuery pragmaQuery(connection.m_databaseConnection);
+    ASSERT_TRUE(pragmaQuery.exec(QStringLiteral("PRAGMA query_only = ON")));
+
+    EXPECT_THROW(connection.takeOldestEntryFromNotSentTable(), std::runtime_error);
+}
