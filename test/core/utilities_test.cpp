@@ -22,6 +22,15 @@
 #    include <QVariantMap>
 #endif
 
+#if defined(Q_OS_LINUX)
+#    include <QDBusConnection>
+#    include <QDBusError>
+#    include <QDBusMessage>
+#    include <QDBusVariant>
+#    include <QDBusVirtualObject>
+#    include <QVariantMap>
+#endif
+
 #if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
 #    include <QCoreApplication>
 #endif
@@ -284,6 +293,270 @@ TEST_F(UtilitiesAutostartStateTest, OtherApplicationsDesktopEntryIsIgnored)
 }
 
 #endif // !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_LINUX)
+
+#if defined(Q_OS_LINUX)
+
+namespace {
+
+class TestableUtilitiesGnomeExtensions : public Utilities
+{
+public:
+    using Utilities::s_gnomeExtensionsService;
+};
+
+// Stands in for org.gnome.Shell.Extensions: tracks calls and replies the
+// way the real extension manager does to GetExtensionInfo (controlled via
+// extensionInfo) and to InstallRemoteExtension/EnableExtension (void reply).
+class FakeGnomeExtensionsManager : public QDBusVirtualObject
+{
+public:
+    QList<QDBusMessage> calls;
+    QVariantMap extensionInfo; // empty map = "not installed"
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        calls.append(message);
+        if (message.member() == QStringLiteral("GetExtensionInfo"))
+            connection.send(message.createReply(QVariant::fromValue(extensionInfo)));
+        else
+            connection.send(message.createReply());
+        return true;
+    }
+};
+
+class UtilitiesGnomeExtensionsTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::sessionBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus session bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/gnome/Shell/Extensions", &m_manager));
+        m_previousService = TestableUtilitiesGnomeExtensions::s_gnomeExtensionsService;
+        TestableUtilitiesGnomeExtensions::s_gnomeExtensionsService = m_bus.baseService();
+    }
+
+    void TearDown() override
+    {
+        if (!m_bus.isConnected())
+            return;
+
+        TestableUtilitiesGnomeExtensions::s_gnomeExtensionsService = m_previousService;
+        m_bus.unregisterObject("/org/gnome/Shell/Extensions");
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeGnomeExtensionsManager m_manager;
+    QString m_previousService;
+};
+
+} // namespace
+
+TEST_F(UtilitiesGnomeExtensionsTest, NotInstalledWhenExtensionInfoIsEmpty)
+{
+    EXPECT_FALSE(Utilities::isGNOMEFocusedWindowDBusInstalled());
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, InstalledWhenExtensionInfoIsNonEmpty)
+{
+    m_manager.extensionInfo = {{"uuid", "focused-window-dbus@flexagoon.com"}};
+    EXPECT_TRUE(Utilities::isGNOMEFocusedWindowDBusInstalled());
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, NotEnabledWhenStateIsNotOne)
+{
+    m_manager.extensionInfo = {{"state", 0u}};
+    EXPECT_FALSE(Utilities::isGNOMEFocusedWindowDBusEnabled());
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, EnabledWhenStateIsOne)
+{
+    m_manager.extensionInfo = {{"state", 1u}};
+    EXPECT_TRUE(Utilities::isGNOMEFocusedWindowDBusEnabled());
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, InstallCallsInstallRemoteExtension)
+{
+    Utilities::installGNOMEFocusedWindowDBus();
+
+    ASSERT_EQ(m_manager.calls.size(), 1);
+    EXPECT_EQ(m_manager.calls.constFirst().member(), QStringLiteral("InstallRemoteExtension"));
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, EnableCallsEnableExtension)
+{
+    Utilities::enableGNOMEFocusedWindowDBus();
+
+    ASSERT_EQ(m_manager.calls.size(), 1);
+    EXPECT_EQ(m_manager.calls.constFirst().member(), QStringLiteral("EnableExtension"));
+}
+
+namespace {
+
+class TestableUtilitiesNotifications : public Utilities
+{
+public:
+    using Utilities::s_notificationsService;
+};
+
+// Stands in for org.freedesktop.Notifications: tracks the call and replies
+// with a notification id, like the real daemon does.
+class FakeNotificationsService : public QDBusVirtualObject
+{
+public:
+    QList<QDBusMessage> calls;
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        calls.append(message);
+        connection.send(message.createReply(QVariant::fromValue(quint32(1))));
+        return true;
+    }
+};
+
+class UtilitiesNotificationTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::sessionBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus session bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/freedesktop/Notifications", &m_service));
+        m_previousService = TestableUtilitiesNotifications::s_notificationsService;
+        TestableUtilitiesNotifications::s_notificationsService = m_bus.baseService();
+    }
+
+    void TearDown() override
+    {
+        if (!m_bus.isConnected())
+            return;
+
+        TestableUtilitiesNotifications::s_notificationsService = m_previousService;
+        m_bus.unregisterObject("/org/freedesktop/Notifications");
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeNotificationsService m_service;
+    QString m_previousService;
+};
+
+} // namespace
+
+TEST_F(UtilitiesNotificationTest, ShowNotificationSendsNotifyWithTitleAndMessage)
+{
+    Utilities::showNotification(QStringLiteral("Title"), QStringLiteral("Message"));
+
+    ASSERT_EQ(m_service.calls.size(), 1);
+    const QDBusMessage &call = m_service.calls.constFirst();
+    EXPECT_EQ(call.member(), QStringLiteral("Notify"));
+    ASSERT_GE(call.arguments().size(), 5);
+    EXPECT_EQ(call.arguments().at(3).toString(), QStringLiteral("Title"));
+    EXPECT_EQ(call.arguments().at(4).toString(), QStringLiteral("Message"));
+}
+
+namespace {
+
+class TestableUtilitiesClockSync : public Utilities
+{
+public:
+    using Utilities::s_clockSyncService;
+};
+
+// Stands in for org.freedesktop.timedate1 on the system bus: replies to
+// Properties.Get("NTP") the way the real daemon does, or with an error, or
+// with an unexpected (non-variant) reply type.
+class FakeTimedate : public QDBusVirtualObject
+{
+public:
+    QList<QDBusMessage> calls;
+    bool ntpEnabled = true;
+    bool replyShouldFail = false;
+    bool replyWithUnexpectedType = false;
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        calls.append(message);
+        if (replyShouldFail) {
+            connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no timedate1")));
+        } else if (replyWithUnexpectedType) {
+            connection.send(message.createReply(QVariant::fromValue(ntpEnabled)));
+        } else {
+            connection.send(message.createReply(QVariant::fromValue(QDBusVariant(QVariant(ntpEnabled)))));
+        }
+        return true;
+    }
+};
+
+// systemBus(), not sessionBus(): isClockSyncEnabled() asks timedate1 there.
+// Registering a virtual object under this process's own unique name doesn't
+// need any special system-bus policy grant (only owning a well-known name
+// does), so this works the same way the session-bus fakes elsewhere do.
+class UtilitiesClockSyncLinuxTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::systemBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus system bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/freedesktop/timedate1", &m_timedate));
+        m_previousService = TestableUtilitiesClockSync::s_clockSyncService;
+        TestableUtilitiesClockSync::s_clockSyncService = m_bus.baseService();
+    }
+
+    void TearDown() override
+    {
+        if (!m_bus.isConnected())
+            return;
+
+        TestableUtilitiesClockSync::s_clockSyncService = m_previousService;
+        m_bus.unregisterObject("/org/freedesktop/timedate1");
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeTimedate m_timedate;
+    QString m_previousService;
+};
+
+} // namespace
+
+TEST_F(UtilitiesClockSyncLinuxTest, NtpTrueMeansSyncIsOn)
+{
+    m_timedate.ntpEnabled = true;
+    EXPECT_TRUE(Utilities::isClockSyncEnabled());
+}
+
+TEST_F(UtilitiesClockSyncLinuxTest, NtpFalseMeansSyncIsOff)
+{
+    m_timedate.ntpEnabled = false;
+    EXPECT_FALSE(Utilities::isClockSyncEnabled());
+}
+
+TEST_F(UtilitiesClockSyncLinuxTest, FailedCallFailsOpenAsEnabled)
+{
+    m_timedate.replyShouldFail = true;
+    EXPECT_TRUE(Utilities::isClockSyncEnabled());
+}
+
+TEST_F(UtilitiesClockSyncLinuxTest, UnexpectedReplyTypeFailsOpenAsEnabled)
+{
+    m_timedate.replyWithUnexpectedType = true;
+    m_timedate.ntpEnabled = false;
+    EXPECT_TRUE(Utilities::isClockSyncEnabled());
+}
+
+#endif // defined(Q_OS_LINUX)
 
 #if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_WINDOWS)
 

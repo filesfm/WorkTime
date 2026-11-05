@@ -126,6 +126,8 @@ QString Utilities::focusedWindowTitle()
 
 #if defined(Q_OS_LINUX)
 
+QString Utilities::s_clockSyncService = QStringLiteral("org.freedesktop.timedate1");
+
 bool Utilities::isClockSyncEnabled()
 {
     QDBusConnection bus = QDBusConnection::systemBus();
@@ -134,7 +136,7 @@ bool Utilities::isClockSyncEnabled()
         return true;
     }
 
-    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.timedate1"),
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_clockSyncService,
                                                       QStringLiteral("/org/freedesktop/timedate1"),
                                                       QStringLiteral("org.freedesktop.DBus.Properties"),
                                                       QStringLiteral("Get"));
@@ -288,11 +290,14 @@ bool Utilities::isAutostartEnabled()
 
 #if defined(Q_OS_LINUX)
 
+QString Utilities::s_gnomeExtensionsService = QStringLiteral("org.gnome.Shell.Extensions");
+QString Utilities::s_notificationsService = QStringLiteral("org.freedesktop.Notifications");
+
 bool Utilities::isGNOMEFocusedWindowDBusInstalled()
 {
     QDBusConnection bus = QDBusConnection::sessionBus();
 
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_gnomeExtensionsService,
                                                       "/org/gnome/Shell/Extensions",
                                                       "org.gnome.Shell.Extensions",
                                                       "GetExtensionInfo");
@@ -312,7 +317,7 @@ bool Utilities::isGNOMEFocusedWindowDBusEnabled()
 {
     QDBusConnection bus = QDBusConnection::sessionBus();
 
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_gnomeExtensionsService,
                                                       "/org/gnome/Shell/Extensions",
                                                       "org.gnome.Shell.Extensions",
                                                       "GetExtensionInfo");
@@ -335,7 +340,7 @@ void Utilities::installGNOMEFocusedWindowDBus()
 
     QDBusConnection bus = QDBusConnection::sessionBus();
 
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_gnomeExtensionsService,
                                                       "/org/gnome/Shell/Extensions",
                                                       "org.gnome.Shell.Extensions",
                                                       "InstallRemoteExtension");
@@ -354,7 +359,7 @@ void Utilities::enableGNOMEFocusedWindowDBus()
 
     QDBusConnection bus = QDBusConnection::sessionBus();
 
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.gnome.Shell.Extensions",
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_gnomeExtensionsService,
                                                       "/org/gnome/Shell/Extensions",
                                                       "org.gnome.Shell.Extensions",
                                                       "EnableExtension");
@@ -373,7 +378,7 @@ void Utilities::enableGNOMEFocusedWindowDBus()
 
 void Utilities::showNotification(const QString &title, const QString &message)
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.Notifications",
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_notificationsService,
                                                       "/org/freedesktop/Notifications",
                                                       "org.freedesktop.Notifications",
                                                       "Notify");

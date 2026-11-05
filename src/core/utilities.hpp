@@ -145,12 +145,27 @@ private:
 #    endif
 #endif
 
+#if defined(Q_OS_LINUX)
+#    if defined(BUILD_TESTING)
+protected:
+#    else
+private:
+#    endif
+    //! \brief D-Bus destination isGNOMEFocusedWindowDBus*()/installGNOMEFocusedWindowDBus()/enableGNOMEFocusedWindowDBus() talk to; overridable in tests.
+    static QString s_gnomeExtensionsService;
+    //! \brief D-Bus destination showNotification() talks to; overridable in tests.
+    static QString s_notificationsService;
+#endif
+
 #if defined(BUILD_TESTING)
 protected:
 #else
 private:
 #endif
-#if defined(Q_OS_WINDOWS)
+#if defined(Q_OS_LINUX)
+    //! \brief D-Bus destination isClockSyncEnabled() talks to on the system bus; overridable in tests.
+    static QString s_clockSyncService;
+#elif defined(Q_OS_WINDOWS)
     //! \brief Registry key isClockSyncEnabled() reads the NTP-enabled toggle from.
     static QString s_clockSyncRegistryKey;
 #elif defined(Q_OS_MACOS)
