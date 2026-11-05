@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    app.setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
-    app.setQuitOnLastWindowClosed(false);
+    QApplication::setDesktopFileName(QStringLiteral("io.github.filesfm.worktime"));
+    QApplication::setQuitOnLastWindowClosed(false);
 
 #if !defined(BUILD_WITHOUT_AUTOSTART)
     if (const bool autostartWanted = Settings::instance()->autoStartup();
@@ -110,5 +110,5 @@ int main(int argc, char *argv[])
 
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &appQuitter, &AppQuitter::quit);
 
-    return app.exec();
+    return QApplication::exec();
 }

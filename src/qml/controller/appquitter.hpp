@@ -16,5 +16,5 @@ public:
      * \brief Quits the application, safely from any QML call stack.
      * \par Cyclomatic complexity: 1
      */
-    Q_INVOKABLE void quit();
+    Q_INVOKABLE void quit() const;
 };

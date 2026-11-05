@@ -85,7 +85,7 @@ private:
      * \return An empty string on success, otherwise a human-readable error.
      * \par Cyclomatic complexity: 2
      */
-    QString sendRowSynchronously(const QUrl &url, const SQLiteConnection::NotSentTableRow &row);
+    QString sendRowSynchronously(const QUrl &url, const SQLiteConnection::NotSentTableRow &row) const;
 
     QUrl serverUrl() const;
     int retryIntervalMs() const;

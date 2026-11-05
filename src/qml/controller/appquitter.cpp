@@ -3,7 +3,7 @@
 #include <QCoreApplication>
 #include <QTimer>
 
-void AppQuitter::quit()
+void AppQuitter::quit() const
 {
     QTimer::singleShot(0, qApp, []() { QCoreApplication::exit(0); });
 }

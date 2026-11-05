@@ -67,8 +67,8 @@ private:
     // event via the compositor's idle protocol, so no "input" group membership
     // is required. Only available when built with KF6IdleTime.
     bool startKdeIdleMonitor();
-    void stopKdeIdleMonitor();
-    void armKdeResumeWatch();
+    void stopKdeIdleMonitor() const;
+    void armKdeResumeWatch() const;
 
     // Fallback for desktops without an idle monitor above: reads
     // /dev/input/event* directly, which requires "input" group membership

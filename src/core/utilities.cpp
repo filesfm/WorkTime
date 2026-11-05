@@ -238,16 +238,6 @@ void Utilities::autostart(bool autostart)
     if (response.type() != QDBusMessage::ReplyMessage) {
         qCWarning(worktimeUtilities) << "RequestBackground D-Bus call failed:" << response.errorMessage();
     }
-
-    /*if (response.type() == QDBusMessage::ReplyMessage) {
-        QDBusObjectPath handle = response.arguments().at(0).value<QDBusObjectPath>();
-        bus.connect("org.freedesktop.portal.Desktop",
-                    handle.path(),
-                    "org.freedesktop.portal.Request",
-                    "Response",
-                    this,
-                    SLOT(handleFlatpakResponse(uint, QVariantMap)));
-    }*/
 }
 
 bool Utilities::isAutostartEnabled()

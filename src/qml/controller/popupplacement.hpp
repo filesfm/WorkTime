@@ -51,7 +51,7 @@ public:
      * extension isn't in use, since KWin places the popup on its own.
      * \par Cyclomatic complexity: 2
      */
-    Q_INVOKABLE void requestPlacement();
+    Q_INVOKABLE void requestPlacement() const;
 
 private:
     //! \brief Whether the GNOME Shell extension is enabled for this session.

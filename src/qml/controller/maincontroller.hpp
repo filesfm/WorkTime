@@ -187,7 +187,7 @@ private:
     void setCredentialsRejected(bool rejected);
 
 private slots:
-    void showStartButtonNotPushedNotification();
+    void showStartButtonNotPushedNotification() const;
     void toggleStartButtonNotPushedTimer();
     /*!
      * \brief Shows the clock-sync-disabled notification, throttled to at

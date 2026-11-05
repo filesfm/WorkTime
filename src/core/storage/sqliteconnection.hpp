@@ -49,7 +49,10 @@ public:
     /*!
      * \throws std::runtime_error if the entry can't be inserted.
      */
-    void addEntryToSentTable(const QString &focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime, qint64 httpSize);
+    void addEntryToSentTable(const QString &focusedWindowTitle,
+                             qint64 utcTimestamp,
+                             qint64 shootTime,
+                             qint64 httpSize) const;
 
     /*!
      * \return The oldest entry, or std::nullopt if the table is empty.
@@ -63,21 +66,21 @@ public:
      *
      * \throws std::runtime_error if the operation fails.
      */
-    void deleteEntriesOlderThan24HoursFromSentTable();
+    void deleteEntriesOlderThan24HoursFromSentTable() const;
 
     /*!
      * \return The number of entries in the `sent` table whose
      * `utc_timestamp` is within the last 24 hours.
      * \throws std::runtime_error if the operation fails.
      */
-    qint64 countEntriesInLast24HoursFromSentTable();
+    qint64 countEntriesInLast24HoursFromSentTable() const;
 
     /*!
      * \return The sum of `http_size` for entries in the `sent` table whose
      * `utc_timestamp` is within the last 24 hours.
      * \throws std::runtime_error if the operation fails.
      */
-    qint64 sumHttpSizeInLast24HoursFromSentTable();
+    qint64 sumHttpSizeInLast24HoursFromSentTable() const;
 
     /*!
      * \throws std::runtime_error if the entry can't be inserted.
@@ -85,7 +88,7 @@ public:
     void addEntryToNotSentTable(const QString &focusedWindowTitle,
                                 qint64 utcTimestamp,
                                 qint64 shootTime,
-                                qint64 httpSize);
+                                qint64 httpSize) const;
 
     /*!
      * \return The oldest entry, or std::nullopt if the table is empty.

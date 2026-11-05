@@ -152,7 +152,7 @@ void PopupPlacement::stop()
 #endif
 }
 
-void PopupPlacement::requestPlacement()
+void PopupPlacement::requestPlacement() const
 {
 #if defined(Q_OS_LINUX)
     if (!m_gnomeActive)

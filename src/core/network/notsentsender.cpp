@@ -63,7 +63,7 @@ void NotSentSender::stop()
     wait();
 }
 
-QString NotSentSender::sendRowSynchronously(const QUrl &url, const SQLiteConnection::NotSentTableRow &row)
+QString NotSentSender::sendRowSynchronously(const QUrl &url, const SQLiteConnection::NotSentTableRow &row) const
 {
     QNetworkAccessManager networkManager;
     QNetworkRequest request(url);

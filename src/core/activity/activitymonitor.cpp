@@ -139,7 +139,7 @@ bool ActivityMonitor::startKdeIdleMonitor()
 #    endif
 }
 
-void ActivityMonitor::stopKdeIdleMonitor()
+void ActivityMonitor::stopKdeIdleMonitor() const
 {
 #    if !defined(BUILD_WITHOUT_KF6IDLETIME)
     KIdleTime::instance()->stopCatchingResumeEvent();
@@ -147,7 +147,7 @@ void ActivityMonitor::stopKdeIdleMonitor()
 #    endif
 }
 
-void ActivityMonitor::armKdeResumeWatch()
+void ActivityMonitor::armKdeResumeWatch() const
 {
 #    if !defined(BUILD_WITHOUT_KF6IDLETIME)
     KIdleTime::instance()->catchNextResumeEvent();
@@ -297,7 +297,7 @@ void ActivityMonitor::removeInputDevice(const QString &devNode)
 
     qCDebug(worktimeActivityMonitor) << "no longer watching input device" << devNode;
 
-    const int fd = static_cast<int>(notifier->socket());
+    const auto fd = static_cast<int>(notifier->socket());
     delete notifier;
     ::close(fd);
 }

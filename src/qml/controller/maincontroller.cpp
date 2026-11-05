@@ -269,7 +269,7 @@ void MainController::setStartButtonPushed(bool pushed) const
     emit startButtonChanged();
 }
 
-void MainController::showStartButtonNotPushedNotification()
+void MainController::showStartButtonNotPushedNotification() const
 {
     Utilities::showNotification("WorkTime", "WorkTime is launched but the Start button is not pushed!");
 }

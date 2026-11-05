@@ -73,7 +73,7 @@ SQLiteConnection::~SQLiteConnection()
 void SQLiteConnection::addEntryToSentTable(const QString &focusedWindowTitle,
                                            qint64 utcTimestamp,
                                            qint64 shootTime,
-                                           qint64 httpSize)
+                                           qint64 httpSize) const
 {
     QSqlQuery query(m_databaseConnection);
     query.prepare(QStringLiteral("INSERT INTO sent (focused_window_title, utc_timestamp, shoot_time, http_size) "
@@ -144,7 +144,7 @@ std::optional<SQLiteConnection::SentTableRow> SQLiteConnection::takeOldestEntryF
     return row;
 }
 
-void SQLiteConnection::deleteEntriesOlderThan24HoursFromSentTable()
+void SQLiteConnection::deleteEntriesOlderThan24HoursFromSentTable() const
 {
     const qint64 cutoffTimestamp = QDateTime::currentSecsSinceEpoch() - 24 * 60 * 60;
 
@@ -160,7 +160,7 @@ void SQLiteConnection::deleteEntriesOlderThan24HoursFromSentTable()
     qCDebug(worktimeSqliteConnection) << "deleted" << query.numRowsAffected() << "old sent entries";
 }
 
-qint64 SQLiteConnection::countEntriesInLast24HoursFromSentTable()
+qint64 SQLiteConnection::countEntriesInLast24HoursFromSentTable() const
 {
     const qint64 cutoffTimestamp = QDateTime::currentSecsSinceEpoch() - 24 * 60 * 60;
 
@@ -176,7 +176,7 @@ qint64 SQLiteConnection::countEntriesInLast24HoursFromSentTable()
     return query.value(0).toLongLong();
 }
 
-qint64 SQLiteConnection::sumHttpSizeInLast24HoursFromSentTable()
+qint64 SQLiteConnection::sumHttpSizeInLast24HoursFromSentTable() const
 {
     const qint64 cutoffTimestamp = QDateTime::currentSecsSinceEpoch() - 24 * 60 * 60;
 
@@ -196,7 +196,7 @@ qint64 SQLiteConnection::sumHttpSizeInLast24HoursFromSentTable()
 void SQLiteConnection::addEntryToNotSentTable(const QString &focusedWindowTitle,
                                               qint64 utcTimestamp,
                                               qint64 shootTime,
-                                              qint64 httpSize)
+                                              qint64 httpSize) const
 {
     QSqlQuery query(m_databaseConnection);
     query.prepare(QStringLiteral("INSERT INTO not_sent (focused_window_title, utc_timestamp, shoot_time, http_size) "
