@@ -155,6 +155,10 @@ private:
     static QString s_gnomeExtensionsService;
     //! \brief D-Bus destination showNotification() talks to; overridable in tests.
     static QString s_notificationsService;
+    //! \brief D-Bus destination focusedWindowTitle() talks to under GNOME; overridable in tests.
+    static QString s_gnomeShellService;
+    //! \brief D-Bus destination focusedWindowTitle() talks to under Cinnamon; overridable in tests.
+    static QString s_cinnamonService;
 #endif
 
 #if defined(BUILD_TESTING)

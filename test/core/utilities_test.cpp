@@ -143,6 +143,188 @@ TEST(UtilitiesTest, TruncateUtf8SafeEmptyValueIsUnchanged)
     EXPECT_EQ(Utilities::truncateUtf8Safe(QString(), 255), QString());
 }
 
+#if defined(Q_OS_LINUX)
+
+TEST(UtilitiesTest, FocusedWindowTitleReturnsEmptyOnUnknownDesktop)
+{
+    const QString previousDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+    qputenv("XDG_CURRENT_DESKTOP", "someunknowndesktop");
+
+    EXPECT_EQ(Utilities::focusedWindowTitle(), QString());
+
+    qputenv("XDG_CURRENT_DESKTOP", previousDesktop.toUtf8());
+}
+
+TEST(UtilitiesTest, FocusedWindowTitleDelegatesToKDEFocusedWindowTitleUnderKde)
+{
+    const QString previousDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+    qputenv("XDG_CURRENT_DESKTOP", "kde");
+
+    // KDEFocusedWindowTitle has its own dedicated tests; this only guards
+    // the one-line delegation itself against crashing.
+    (void)Utilities::focusedWindowTitle();
+
+    qputenv("XDG_CURRENT_DESKTOP", previousDesktop.toUtf8());
+}
+
+namespace {
+
+class TestableUtilitiesFocusedWindow : public Utilities
+{
+public:
+    using Utilities::s_cinnamonService;
+    using Utilities::s_gnomeShellService;
+};
+
+// Stands in for org.gnome.Shell's FocusedWindow extension: replies with a
+// JSON string, {"title": "..."}, the way the real extension does.
+class FakeGnomeFocusedWindow : public QDBusVirtualObject
+{
+public:
+    QList<QDBusMessage> calls;
+    bool shouldFail = false;
+    QString jsonReply = QStringLiteral("{}");
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        calls.append(message);
+        if (shouldFail)
+            connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no shell")));
+        else
+            connection.send(message.createReply(QVariant::fromValue(jsonReply)));
+        return true;
+    }
+};
+
+class UtilitiesFocusedWindowGnomeTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::sessionBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus session bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/gnome/shell/extensions/FocusedWindow", &m_fake));
+        m_previousService = TestableUtilitiesFocusedWindow::s_gnomeShellService;
+        TestableUtilitiesFocusedWindow::s_gnomeShellService = m_bus.baseService();
+        m_previousDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+        qputenv("XDG_CURRENT_DESKTOP", "gnome");
+    }
+
+    void TearDown() override
+    {
+        qputenv("XDG_CURRENT_DESKTOP", m_previousDesktop.toUtf8());
+        if (!m_bus.isConnected())
+            return;
+
+        TestableUtilitiesFocusedWindow::s_gnomeShellService = m_previousService;
+        m_bus.unregisterObject("/org/gnome/shell/extensions/FocusedWindow");
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeGnomeFocusedWindow m_fake;
+    QString m_previousService;
+    QString m_previousDesktop;
+};
+
+} // namespace
+
+TEST_F(UtilitiesFocusedWindowGnomeTest, ReturnsTitleFromJsonReply)
+{
+    m_fake.jsonReply = QStringLiteral(R"({"title": "My Window"})");
+    EXPECT_EQ(Utilities::focusedWindowTitle(), QStringLiteral("My Window"));
+}
+
+TEST_F(UtilitiesFocusedWindowGnomeTest, ReturnsEmptyWhenCallFails)
+{
+    m_fake.shouldFail = true;
+    EXPECT_EQ(Utilities::focusedWindowTitle(), QString());
+}
+
+namespace {
+
+// Stands in for org.Cinnamon's Eval method: replies (success, result) the
+// way the real Cinnamon shell does, with result a raw JS expression result.
+class FakeCinnamonEval : public QDBusVirtualObject
+{
+public:
+    QList<QDBusMessage> calls;
+    bool shouldFail = false;
+    bool success = true;
+    QString result;
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        calls.append(message);
+        if (shouldFail)
+            connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no cinnamon")));
+        else
+            connection.send(message.createReply(QList<QVariant>{QVariant(success), QVariant(result)}));
+        return true;
+    }
+};
+
+class UtilitiesFocusedWindowCinnamonTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::sessionBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus session bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/Cinnamon", &m_fake));
+        m_previousService = TestableUtilitiesFocusedWindow::s_cinnamonService;
+        TestableUtilitiesFocusedWindow::s_cinnamonService = m_bus.baseService();
+        m_previousDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+        qputenv("XDG_CURRENT_DESKTOP", "cinnamon");
+    }
+
+    void TearDown() override
+    {
+        qputenv("XDG_CURRENT_DESKTOP", m_previousDesktop.toUtf8());
+        if (!m_bus.isConnected())
+            return;
+
+        TestableUtilitiesFocusedWindow::s_cinnamonService = m_previousService;
+        m_bus.unregisterObject("/org/Cinnamon");
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeCinnamonEval m_fake;
+    QString m_previousService;
+    QString m_previousDesktop;
+};
+
+} // namespace
+
+TEST_F(UtilitiesFocusedWindowCinnamonTest, ReturnsTitleOnSuccess)
+{
+    m_fake.success = true;
+    m_fake.result = QStringLiteral("\"My Window\""); // Eval returns a JS string literal, unquoted here
+    EXPECT_EQ(Utilities::focusedWindowTitle(), QStringLiteral("My Window"));
+}
+
+TEST_F(UtilitiesFocusedWindowCinnamonTest, ReturnsEmptyWhenEvalReportsFailure)
+{
+    m_fake.success = false;
+    m_fake.result = QStringLiteral("some error");
+    EXPECT_EQ(Utilities::focusedWindowTitle(), QString());
+}
+
+TEST_F(UtilitiesFocusedWindowCinnamonTest, ReturnsEmptyWhenCallFails)
+{
+    m_fake.shouldFail = true;
+    EXPECT_EQ(Utilities::focusedWindowTitle(), QString());
+}
+
+#endif // defined(Q_OS_LINUX)
+
 #if !defined(BUILD_WITHOUT_AUTOSTART) && defined(Q_OS_LINUX)
 
 namespace {
