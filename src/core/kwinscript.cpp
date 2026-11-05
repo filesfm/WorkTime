@@ -8,23 +8,19 @@
 
 Q_LOGGING_CATEGORY(worktimeKWinScript, "worktime.kwin.script")
 
-namespace {
+QString KWinScript::s_serviceName = QStringLiteral("org.kde.KWin");
 
-QDBusInterface kwinScriptingInterface()
+QDBusInterface KWinScript::scriptingInterface()
 {
-    return QDBusInterface(QStringLiteral("org.kde.KWin"),
+    return QDBusInterface(s_serviceName,
                           QStringLiteral("/Scripting"),
                           QStringLiteral("org.kde.kwin.Scripting"),
                           QDBusConnection::sessionBus());
 }
 
-} // namespace
-
-namespace KWinScript {
-
-bool load(const QString &pluginName, const QString &resourcePath, const QString &fileName)
+bool KWinScript::load(const QString &pluginName, const QString &resourcePath, const QString &fileName)
 {
-    QDBusInterface scripting = kwinScriptingInterface();
+    QDBusInterface scripting = scriptingInterface();
     if (!scripting.isValid()) {
         qCWarning(worktimeKWinScript) << "org.kde.KWin Scripting interface unavailable";
         return false;
@@ -45,7 +41,7 @@ bool load(const QString &pluginName, const QString &resourcePath, const QString 
         return false;
     }
 
-    QDBusInterface(QStringLiteral("org.kde.KWin"),
+    QDBusInterface(s_serviceName,
                    QStringLiteral("/Scripting/Script%1").arg(scriptId.value()),
                    QStringLiteral("org.kde.kwin.Script"),
                    QDBusConnection::sessionBus())
@@ -54,10 +50,8 @@ bool load(const QString &pluginName, const QString &resourcePath, const QString 
     return true;
 }
 
-void unload(const QString &pluginName)
+void KWinScript::unload(const QString &pluginName)
 {
-    if (QDBusInterface scripting = kwinScriptingInterface(); scripting.isValid())
+    if (QDBusInterface scripting = scriptingInterface(); scripting.isValid())
         scripting.call(QStringLiteral("unloadScript"), pluginName);
 }
-
-} // namespace KWinScript
