@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['load_0',['load',['../namespaceKWinScript.html#ae90954f2c9219fc064acb0891fd13842',1,'KWinScript']]]
+  ['kwinscript_0',['KWinScript',['../classKWinScript.html#a2a1552042f0710492d4a3a2086f2a8b9',1,'KWinScript']]]
 ];

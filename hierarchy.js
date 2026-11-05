@@ -1,6 +1,7 @@
 var hierarchy =
 [
     [ "BetterStackLogger", "classBetterStackLogger.html", null ],
+    [ "KWinScript", "classKWinScript.html", null ],
     [ "SQLiteConnection::NotSentTableRow", "structSQLiteConnection_1_1NotSentTableRow.html", null ],
     [ "OneInstanceGuarantor", "classOneInstanceGuarantor.html", null ],
     [ "QObject", null, [

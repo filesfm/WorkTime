@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['unload_0',['unload',['../namespaceKWinScript.html#a30a0892994d5fc64c17c1701342e3ed7',1,'KWinScript']]],
+  ['unload_0',['unload',['../classKWinScript.html#a30a0892994d5fc64c17c1701342e3ed7',1,'KWinScript']]],
   ['username_1',['username',['../classMainController.html#a131593c59b76d3039c8de6f678a0cad9',1,'MainController::username'],['../classMainController.html#aa72ee6f59e3032bb273f3038bb01d381',1,'MainController::username() const'],['../classSettings.html#a2dd990f24f454a583b13fe20ca74953a',1,'Settings::username()']]],
   ['usernamechanged_2',['usernameChanged',['../classMainController.html#a049c2801ed98c7c753f4a7026eeef068',1,'MainController::usernameChanged()'],['../classSettings.html#a2ed184026b41135288447db16a2002fe',1,'Settings::usernameChanged()']]],
   ['userstatus_3',['UserStatus',['../classMainController.html#a566f6f1bb208b7ed0282fb1881e92f5e',1,'MainController']]],

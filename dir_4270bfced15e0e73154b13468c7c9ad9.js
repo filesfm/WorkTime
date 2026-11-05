@@ -7,7 +7,7 @@ var dir_4270bfced15e0e73154b13468c7c9ad9 =
     [ "storage", "dir_37ae60fc3af43e123fcf3cf05274a52e.html", "dir_37ae60fc3af43e123fcf3cf05274a52e" ],
     [ "kdefocusedwindowtitle.cpp", "kdefocusedwindowtitle_8cpp.html", null ],
     [ "kdefocusedwindowtitle.hpp", "kdefocusedwindowtitle_8hpp.html", "kdefocusedwindowtitle_8hpp" ],
-    [ "kwinscript.cpp", "kwinscript_8cpp.html", "kwinscript_8cpp" ],
+    [ "kwinscript.cpp", "kwinscript_8cpp.html", null ],
     [ "kwinscript.hpp", "kwinscript_8hpp.html", "kwinscript_8hpp" ],
     [ "oneinstanceguarantor.cpp", "oneinstanceguarantor_8cpp.html", null ],
     [ "oneinstanceguarantor.hpp", "oneinstanceguarantor_8hpp.html", "oneinstanceguarantor_8hpp" ],

@@ -96,19 +96,39 @@ $(function(){initNavTree('kwinscript_8hpp_source.html','',''); });
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;QLoggingCategory&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QString&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>Q_DECLARE_LOGGING_CATEGORY(worktimeKWinScript)</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">class </span>QDBusInterface;</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceKWinScript.html">KWinScript</a> {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keywordtype">bool</span> <a class="code hl_function" href="namespaceKWinScript.html#ae90954f2c9219fc064acb0891fd13842">load</a>(<span class="keyword">const</span> QString &amp;pluginName, <span class="keyword">const</span> QString &amp;resourcePath, <span class="keyword">const</span> QString &amp;fileName);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceKWinScript.html#a30a0892994d5fc64c17c1701342e3ed7">unload</a>(<span class="keyword">const</span> QString &amp;pluginName);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>} <span class="comment">// namespace KWinScript</span></div>
-<div class="ttc" id="anamespaceKWinScript_html"><div class="ttname"><a href="namespaceKWinScript.html">KWinScript</a></div><div class="ttdoc">Loads and unloads KWin scripts bundled as Qt resources, under KDE Plasma.</div><div class="ttdef"><b>Definition</b> kwinscript.cpp:23</div></div>
-<div class="ttc" id="anamespaceKWinScript_html_a30a0892994d5fc64c17c1701342e3ed7"><div class="ttname"><a href="namespaceKWinScript.html#a30a0892994d5fc64c17c1701342e3ed7">KWinScript::unload</a></div><div class="ttdeci">void unload(const QString &amp;pluginName)</div><div class="ttdoc">Unloads the script registered under pluginName. No-op if KWin is unreachable or the script is not loa...</div><div class="ttdef"><b>Definition</b> kwinscript.cpp:57</div></div>
-<div class="ttc" id="anamespaceKWinScript_html_ae90954f2c9219fc064acb0891fd13842"><div class="ttname"><a href="namespaceKWinScript.html#ae90954f2c9219fc064acb0891fd13842">KWinScript::load</a></div><div class="ttdeci">bool load(const QString &amp;pluginName, const QString &amp;resourcePath, const QString &amp;fileName)</div><div class="ttdoc">Extracts the script at resourcePath to disk and runs it in KWin under pluginName, replacing any copy ...</div><div class="ttdef"><b>Definition</b> kwinscript.cpp:25</div></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>Q_DECLARE_LOGGING_CATEGORY(worktimeKWinScript)</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#if defined(BUILD_TESTING)</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">class </span><a class="code hl_class" href="classKWinScript.html">KWinScript</a></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>#else</div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classKWinScript.html">   19</a></span>class <a class="code hl_function" href="classKWinScript.html#a2a1552042f0710492d4a3a2086f2a8b9">KWinScript</a> final</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>#endif</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classKWinScript.html#a2a1552042f0710492d4a3a2086f2a8b9">   24</a></span>    <a class="code hl_function" href="classKWinScript.html#a2a1552042f0710492d4a3a2086f2a8b9">KWinScript</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classKWinScript.html#ae90954f2c9219fc064acb0891fd13842">load</a>(<span class="keyword">const</span> QString &amp;pluginName, <span class="keyword">const</span> QString &amp;resourcePath, <span class="keyword">const</span> QString &amp;fileName);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classKWinScript.html#a30a0892994d5fc64c17c1701342e3ed7">unload</a>(<span class="keyword">const</span> QString &amp;pluginName);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#if defined(BUILD_TESTING)</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">static</span> QDBusInterface scriptingInterface();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">static</span> QString s_serviceName;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
+</div>
+<div class="ttc" id="aclassKWinScript_html"><div class="ttname"><a href="classKWinScript.html">KWinScript</a></div><div class="ttdoc">Loads and unloads KWin scripts bundled as Qt resources, under KDE Plasma.</div><div class="ttdef"><b>Definition</b> kwinscript.hpp:21</div></div>
+<div class="ttc" id="aclassKWinScript_html_a2a1552042f0710492d4a3a2086f2a8b9"><div class="ttname"><a href="classKWinScript.html#a2a1552042f0710492d4a3a2086f2a8b9">KWinScript::KWinScript</a></div><div class="ttdeci">KWinScript()=delete</div><div class="ttdoc">Deleted: KWinScript is never instantiated, only used via its static members.</div></div>
+<div class="ttc" id="aclassKWinScript_html_a30a0892994d5fc64c17c1701342e3ed7"><div class="ttname"><a href="classKWinScript.html#a30a0892994d5fc64c17c1701342e3ed7">KWinScript::unload</a></div><div class="ttdeci">static void unload(const QString &amp;pluginName)</div><div class="ttdoc">Unloads the script registered under pluginName. No-op if KWin is unreachable or the script is not loa...</div><div class="ttdef"><b>Definition</b> kwinscript.cpp:53</div></div>
+<div class="ttc" id="aclassKWinScript_html_ae90954f2c9219fc064acb0891fd13842"><div class="ttname"><a href="classKWinScript.html#ae90954f2c9219fc064acb0891fd13842">KWinScript::load</a></div><div class="ttdeci">static bool load(const QString &amp;pluginName, const QString &amp;resourcePath, const QString &amp;fileName)</div><div class="ttdoc">Extracts the script at resourcePath to disk and runs it in KWin under pluginName, replacing any copy ...</div><div class="ttdef"><b>Definition</b> kwinscript.cpp:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

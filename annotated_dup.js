@@ -4,6 +4,7 @@ var annotated_dup =
     [ "AppQuitter", "classAppQuitter.html", "classAppQuitter" ],
     [ "BetterStackLogger", "classBetterStackLogger.html", "classBetterStackLogger" ],
     [ "KDEFocusedWindowTitle", "classKDEFocusedWindowTitle.html", "classKDEFocusedWindowTitle" ],
+    [ "KWinScript", "classKWinScript.html", "classKWinScript" ],
     [ "MainController", "classMainController.html", "classMainController" ],
     [ "OneInstanceGuarantor", "classOneInstanceGuarantor.html", "classOneInstanceGuarantor" ],
     [ "PopupPlacement", "classPopupPlacement.html", "classPopupPlacement" ],
