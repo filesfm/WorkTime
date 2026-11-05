@@ -9,6 +9,18 @@
 
 #include "core/settings/settings.hpp"
 
+#if defined(Q_OS_LINUX)
+#    include <QDBusConnection>
+#    include <QDBusError>
+#    include <QDBusMessage>
+#    include <QDBusObjectPath>
+#    include <QDBusVariant>
+#    include <QDBusVirtualObject>
+#    include <QList>
+
+#    include "core/settings/credentialstore.hpp"
+#endif
+
 namespace {
 
 class SettingsEnvironment : public ::testing::Environment
@@ -354,3 +366,136 @@ TEST(SettingsTest, SanitizeLogsResetToDefaultForMissingKey)
 
     qInstallMessageHandler(previous);
 }
+
+#if defined(Q_OS_LINUX)
+
+namespace {
+
+class TestableCredentialStore : public CredentialStore
+{
+public:
+    using CredentialStore::s_defaultCollectionPath;
+    using CredentialStore::s_secretServiceName;
+    using CredentialStore::s_secretServicePath;
+};
+
+// Minimal Secret Service fake: SearchItems always reports nothing stored
+// (so readPassword() returns empty, exercising loadPassword()'s migration
+// path rather than its "already cached" early-out), and CreateItem's
+// success is controllable, so writePassword() - the migration itself - can
+// be made to succeed or fail on demand.
+class FakeSecretService : public QDBusVirtualObject
+{
+public:
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        if (message.interface() == QStringLiteral("org.freedesktop.DBus.Introspectable"))
+            return false;
+
+        if (message.member() == QStringLiteral("OpenSession")) {
+            connection.send(message.createReply(
+                QList<QVariant>{QVariant::fromValue(QDBusVariant(QString())),
+                                QVariant::fromValue(QDBusObjectPath(QStringLiteral("/session/s1")))}));
+        } else if (message.member() == QStringLiteral("SearchItems")) {
+            connection.send(message.createReply(QList<QVariant>{QVariant::fromValue(QList<QDBusObjectPath>{}),
+                                                                QVariant::fromValue(QList<QDBusObjectPath>{})}));
+        }
+        return true;
+    }
+};
+
+class FakeCollection : public QDBusVirtualObject
+{
+public:
+    bool createItemShouldFail = false;
+
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        if (message.interface() == QStringLiteral("org.freedesktop.DBus.Introspectable"))
+            return false;
+
+        if (message.member() == QStringLiteral("CreateItem")) {
+            if (createItemShouldFail) {
+                connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("cannot create")));
+            } else {
+                connection.send(message.createReply(
+                    QList<QVariant>{QVariant::fromValue(QDBusObjectPath(QStringLiteral("/item/i1"))),
+                                    QVariant::fromValue(QDBusObjectPath(QStringLiteral("/")))}));
+            }
+        }
+        return true;
+    }
+};
+
+class SettingsPasswordMigrationTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::sessionBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus session bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/secrets", &m_service));
+        ASSERT_TRUE(m_bus.registerVirtualObject("/secrets/collection", &m_collection));
+        m_previousServiceName = TestableCredentialStore::s_secretServiceName;
+        m_previousServicePath = TestableCredentialStore::s_secretServicePath;
+        m_previousCollectionPath = TestableCredentialStore::s_defaultCollectionPath;
+        TestableCredentialStore::s_secretServiceName = m_bus.baseService();
+        TestableCredentialStore::s_secretServicePath = QStringLiteral("/secrets");
+        TestableCredentialStore::s_defaultCollectionPath = QStringLiteral("/secrets/collection");
+
+        QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
+        raw.setValue("password", "legacy-plaintext-password");
+        raw.sync();
+    }
+
+    void TearDown() override
+    {
+        if (!m_bus.isConnected())
+            return;
+
+        TestableCredentialStore::s_secretServiceName = m_previousServiceName;
+        TestableCredentialStore::s_secretServicePath = m_previousServicePath;
+        TestableCredentialStore::s_defaultCollectionPath = m_previousCollectionPath;
+        m_bus.unregisterObject("/secrets");
+        m_bus.unregisterObject("/secrets/collection");
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeSecretService m_service;
+    FakeCollection m_collection;
+    QString m_previousServiceName;
+    QString m_previousServicePath;
+    QString m_previousCollectionPath;
+};
+
+} // namespace
+
+TEST_F(SettingsPasswordMigrationTest, SuccessfulMigrationCachesPasswordAndRemovesLegacyEntry)
+{
+    TestableSettings settings;
+
+    EXPECT_EQ(settings.password(), QStringLiteral("legacy-plaintext-password"));
+
+    QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
+    EXPECT_FALSE(raw.contains("password"));
+}
+
+TEST_F(SettingsPasswordMigrationTest, FailedMigrationKeepsLegacyEntryAndCachedPassword)
+{
+    m_collection.createItemShouldFail = true;
+
+    TestableSettings settings;
+
+    EXPECT_EQ(settings.password(), QStringLiteral("legacy-plaintext-password"));
+
+    QSettings raw(QSettings::NativeFormat, QSettings::UserScope, "Files.fm", "Worktime");
+    EXPECT_TRUE(raw.contains("password"));
+}
+
+#endif // defined(Q_OS_LINUX)
