@@ -9,10 +9,17 @@
 #    include <QDBusError>
 #    include <QDBusMessage>
 #    include <QDBusVirtualObject>
+#    include <QFile>
 #    include <QList>
 #    include <QSignalSpy>
 #    include <QString>
+#    include <QTemporaryDir>
 #    include <QTest>
+
+#    include <fcntl.h>
+#    include <linux/input.h>
+#    include <sys/stat.h>
+#    include <unistd.h>
 #endif
 
 namespace {
@@ -23,12 +30,16 @@ public:
     bool isRunning() const { return m_running; }
 
 #if defined(Q_OS_LINUX)
+    using ActivityMonitor::addInputDevice;
+    using ActivityMonitor::readInputDevice;
+    using ActivityMonitor::removeInputDevice;
     using ActivityMonitor::s_gnomeIdleMonitorService;
     using ActivityMonitor::startGnomeIdleMonitor;
     using ActivityMonitor::stopGnomeIdleMonitor;
 
     bool isUsingGnomeIdleMonitor() const { return m_usingGnomeIdleMonitor; }
     bool hasGnomeIdleMonitorInterface() const { return m_gnomeIdleMonitor != nullptr; }
+    int deviceNotifierCount() const { return m_deviceNotifiers.size(); }
 #endif
 };
 
@@ -273,6 +284,170 @@ TEST_F(ActivityMonitorGnomeTest, AddUserActiveWatchFailureIsNonFatal)
     EXPECT_TRUE(monitor.isRunning());
 
     monitor.stop();
+}
+
+// The udev-based fallback's enumeration/monitor layer (scanInputDevices(),
+// readUdevMonitor()) isn't realistically fakeable without intercepting real
+// libudev calls, but addInputDevice()/removeInputDevice()/readInputDevice()
+// only need an openable path or a plain fd - a FIFO and a pipe stand in for
+// a /dev/input device node without needing udev at all.
+class ActivityMonitorInputDeviceTest : public ::testing::Test
+{
+protected:
+    void TearDown() override
+    {
+        for (const QString &path : m_fifoPaths)
+            QFile::remove(path);
+    }
+
+    QString makeFifo()
+    {
+        if (!m_tempDir.isValid())
+            return QString();
+        const QString path = m_tempDir.filePath(QStringLiteral("fake-input-device-%1").arg(m_fifoPaths.size()));
+        if (::mkfifo(path.toUtf8().constData(), 0600) != 0)
+            return QString();
+        m_fifoPaths.append(path);
+        return path;
+    }
+
+    QTemporaryDir m_tempDir;
+    QList<QString> m_fifoPaths;
+};
+
+TEST_F(ActivityMonitorInputDeviceTest, AddInputDeviceTracksAnOpenablePath)
+{
+    const QString fifo = makeFifo();
+    ASSERT_FALSE(fifo.isEmpty());
+
+    TestableActivityMonitor monitor;
+    monitor.addInputDevice(fifo);
+
+    EXPECT_EQ(monitor.deviceNotifierCount(), 1);
+}
+
+TEST_F(ActivityMonitorInputDeviceTest, AddInputDeviceIsNoOpForAnAlreadyTrackedPath)
+{
+    const QString fifo = makeFifo();
+    ASSERT_FALSE(fifo.isEmpty());
+
+    TestableActivityMonitor monitor;
+    monitor.addInputDevice(fifo);
+    monitor.addInputDevice(fifo);
+
+    EXPECT_EQ(monitor.deviceNotifierCount(), 1);
+}
+
+TEST_F(ActivityMonitorInputDeviceTest, AddInputDeviceIgnoresAPathThatCannotBeOpened)
+{
+    TestableActivityMonitor monitor;
+    monitor.addInputDevice(QStringLiteral("/nonexistent/worktime-test-device"));
+
+    EXPECT_EQ(monitor.deviceNotifierCount(), 0);
+}
+
+TEST_F(ActivityMonitorInputDeviceTest, RemoveInputDeviceDropsATrackedPath)
+{
+    const QString fifo = makeFifo();
+    ASSERT_FALSE(fifo.isEmpty());
+
+    TestableActivityMonitor monitor;
+    monitor.addInputDevice(fifo);
+    monitor.removeInputDevice(fifo);
+
+    EXPECT_EQ(monitor.deviceNotifierCount(), 0);
+}
+
+TEST_F(ActivityMonitorInputDeviceTest, RemoveInputDeviceIsNoOpForAnUntrackedPath)
+{
+    TestableActivityMonitor monitor;
+
+    EXPECT_NO_THROW(monitor.removeInputDevice(QStringLiteral("/nonexistent/worktime-test-device")));
+    EXPECT_EQ(monitor.deviceNotifierCount(), 0);
+}
+
+namespace {
+
+// A plain pipe stands in for an input device fd: readInputDevice() only
+// ever does raw read()s on whatever fd it's given.
+class ActivityMonitorReadInputDeviceTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        ASSERT_EQ(::pipe(m_fds), 0);
+        ASSERT_EQ(::fcntl(m_fds[0], F_SETFL, O_NONBLOCK), 0);
+    }
+
+    void TearDown() override
+    {
+        ::close(m_fds[0]);
+        ::close(m_fds[1]);
+    }
+
+    void writeEvent(quint16 type)
+    {
+        struct input_event event{};
+        event.type = type;
+        ASSERT_EQ(::write(m_fds[1], &event, sizeof(event)), static_cast<ssize_t>(sizeof(event)));
+    }
+
+    int m_fds[2] = {-1, -1};
+};
+
+} // namespace
+
+TEST_F(ActivityMonitorReadInputDeviceTest, KeyEventEmitsActivityDetected)
+{
+    writeEvent(EV_KEY);
+
+    TestableActivityMonitor monitor;
+    QSignalSpy spy(&monitor, &ActivityMonitor::activityDetected);
+    monitor.readInputDevice(m_fds[0]);
+
+    EXPECT_EQ(spy.count(), 1);
+}
+
+TEST_F(ActivityMonitorReadInputDeviceTest, RelEventEmitsActivityDetected)
+{
+    writeEvent(EV_REL);
+
+    TestableActivityMonitor monitor;
+    QSignalSpy spy(&monitor, &ActivityMonitor::activityDetected);
+    monitor.readInputDevice(m_fds[0]);
+
+    EXPECT_EQ(spy.count(), 1);
+}
+
+TEST_F(ActivityMonitorReadInputDeviceTest, AbsEventEmitsActivityDetected)
+{
+    writeEvent(EV_ABS);
+
+    TestableActivityMonitor monitor;
+    QSignalSpy spy(&monitor, &ActivityMonitor::activityDetected);
+    monitor.readInputDevice(m_fds[0]);
+
+    EXPECT_EQ(spy.count(), 1);
+}
+
+TEST_F(ActivityMonitorReadInputDeviceTest, OtherEventTypeDoesNotEmitActivityDetected)
+{
+    writeEvent(EV_SYN);
+
+    TestableActivityMonitor monitor;
+    QSignalSpy spy(&monitor, &ActivityMonitor::activityDetected);
+    monitor.readInputDevice(m_fds[0]);
+
+    EXPECT_EQ(spy.count(), 0);
+}
+
+TEST_F(ActivityMonitorReadInputDeviceTest, NoDataAvailableDoesNotEmitActivityDetected)
+{
+    TestableActivityMonitor monitor;
+    QSignalSpy spy(&monitor, &ActivityMonitor::activityDetected);
+    monitor.readInputDevice(m_fds[0]);
+
+    EXPECT_EQ(spy.count(), 0);
 }
 
 #endif // defined(Q_OS_LINUX)
