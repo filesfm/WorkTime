@@ -420,6 +420,30 @@ TEST_F(UtilitiesAutostartTest, DisablingRevokesAutostartFromTheBackgroundPortal)
     EXPECT_FALSE(options.value("autostart").toBool());
 }
 
+TEST_F(UtilitiesAutostartTest, CommandLineUsesFlatpakRunWhenFlatpakIdIsSet)
+{
+    qputenv("FLATPAK_ID", "io.github.filesfm.worktime");
+
+    Utilities::autostart(true);
+
+    const QStringList commandLine = onlyRequestOptions().value("commandline").toStringList();
+    EXPECT_EQ(commandLine, QStringList({"flatpak", "run", "io.github.filesfm.worktime"}));
+
+    qunsetenv("FLATPAK_ID");
+}
+
+TEST_F(UtilitiesAutostartTest, CommandLineUsesSnapRunWhenSnapIsSet)
+{
+    qputenv("SNAP", "1");
+
+    Utilities::autostart(true);
+
+    const QStringList commandLine = onlyRequestOptions().value("commandline").toStringList();
+    EXPECT_EQ(commandLine, QStringList({"snap", "run", "files-fm-worktime"}));
+
+    qunsetenv("SNAP");
+}
+
 namespace {
 
 class UtilitiesAutostartStateTest : public ::testing::Test
@@ -494,16 +518,20 @@ class FakeGnomeExtensionsManager : public QDBusVirtualObject
 public:
     QList<QDBusMessage> calls;
     QVariantMap extensionInfo; // empty map = "not installed"
+    bool callsShouldFail = false;
 
     QString introspect(const QString &) const override { return QString(); }
 
     bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
     {
         calls.append(message);
-        if (message.member() == QStringLiteral("GetExtensionInfo"))
+        if (callsShouldFail) {
+            connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no shell")));
+        } else if (message.member() == QStringLiteral("GetExtensionInfo")) {
             connection.send(message.createReply(QVariant::fromValue(extensionInfo)));
-        else
+        } else {
             connection.send(message.createReply());
+        }
         return true;
     }
 };
@@ -577,6 +605,30 @@ TEST_F(UtilitiesGnomeExtensionsTest, EnableCallsEnableExtension)
     EXPECT_EQ(m_manager.calls.constFirst().member(), QStringLiteral("EnableExtension"));
 }
 
+TEST_F(UtilitiesGnomeExtensionsTest, NotInstalledWhenCallFails)
+{
+    m_manager.callsShouldFail = true;
+    EXPECT_FALSE(Utilities::isGNOMEFocusedWindowDBusInstalled());
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, NotEnabledWhenCallFails)
+{
+    m_manager.callsShouldFail = true;
+    EXPECT_FALSE(Utilities::isGNOMEFocusedWindowDBusEnabled());
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, InstallHandlesAFailedCall)
+{
+    m_manager.callsShouldFail = true;
+    EXPECT_NO_FATAL_FAILURE(Utilities::installGNOMEFocusedWindowDBus());
+}
+
+TEST_F(UtilitiesGnomeExtensionsTest, EnableHandlesAFailedCall)
+{
+    m_manager.callsShouldFail = true;
+    EXPECT_NO_FATAL_FAILURE(Utilities::enableGNOMEFocusedWindowDBus());
+}
+
 namespace {
 
 class TestableUtilitiesNotifications : public Utilities
@@ -591,13 +643,17 @@ class FakeNotificationsService : public QDBusVirtualObject
 {
 public:
     QList<QDBusMessage> calls;
+    bool callShouldFail = false;
 
     QString introspect(const QString &) const override { return QString(); }
 
     bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
     {
         calls.append(message);
-        connection.send(message.createReply(QVariant::fromValue(quint32(1))));
+        if (callShouldFail)
+            connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no notifications")));
+        else
+            connection.send(message.createReply(QVariant::fromValue(quint32(1))));
         return true;
     }
 };
@@ -642,6 +698,12 @@ TEST_F(UtilitiesNotificationTest, ShowNotificationSendsNotifyWithTitleAndMessage
     ASSERT_GE(call.arguments().size(), 5);
     EXPECT_EQ(call.arguments().at(3).toString(), QStringLiteral("Title"));
     EXPECT_EQ(call.arguments().at(4).toString(), QStringLiteral("Message"));
+}
+
+TEST_F(UtilitiesNotificationTest, ShowNotificationHandlesAFailedCall)
+{
+    m_service.callShouldFail = true;
+    EXPECT_NO_FATAL_FAILURE(Utilities::showNotification(QStringLiteral("Title"), QStringLiteral("Message")));
 }
 
 namespace {

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <QDBusConnection>
+#include <QDBusError>
 #include <QDBusMessage>
 #include <QDBusVirtualObject>
 #include <QList>
@@ -36,6 +37,7 @@ public:
     QList<QDBusMessage> calls;
     bool enableReturnValue = true;
     bool disableReturnValue = true;
+    bool callsShouldFail = false;
 
     QString introspect(const QString &) const override { return QString(); }
 
@@ -45,10 +47,13 @@ public:
             return false;
 
         calls.append(message);
-        if (message.member() == QStringLiteral("EnableExtension"))
+        if (callsShouldFail) {
+            connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no shell")));
+        } else if (message.member() == QStringLiteral("EnableExtension")) {
             connection.send(message.createReply(enableReturnValue));
-        else if (message.member() == QStringLiteral("DisableExtension"))
+        } else if (message.member() == QStringLiteral("DisableExtension")) {
             connection.send(message.createReply(disableReturnValue));
+        }
         return true;
     }
 };
@@ -58,6 +63,7 @@ class FakeGnomePlacement : public QDBusVirtualObject
 {
 public:
     QList<QDBusMessage> calls;
+    bool callsShouldFail = false;
 
     QString introspect(const QString &) const override { return QString(); }
 
@@ -67,7 +73,10 @@ public:
             return false;
 
         calls.append(message);
-        connection.send(message.createReply());
+        if (callsShouldFail)
+            connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no shell")));
+        else
+            connection.send(message.createReply());
         return true;
     }
 };
@@ -240,4 +249,32 @@ TEST_F(PopupPlacementTest, StartOnKdeLoadsTheKWinScriptAndStopUnloadsIt)
 
     TestableKWinScript::s_serviceName = previousKWinService;
     m_bus.unregisterObject("/Scripting");
+}
+
+TEST_F(PopupPlacementTest, StopWithoutKdeActiveIsNoOp)
+{
+    PopupPlacement placement;
+
+    EXPECT_NO_FATAL_FAILURE(placement.stop());
+}
+
+TEST_F(PopupPlacementTest, StartOnGnomeHandlesAFailedEnableExtensionCall)
+{
+    qputenv("XDG_CURRENT_DESKTOP", "gnome");
+    m_extensionsManager.callsShouldFail = true;
+
+    PopupPlacement placement;
+    EXPECT_NO_FATAL_FAILURE(placement.start());
+}
+
+TEST_F(PopupPlacementTest, RequestPlacementHandlesAFailedPlaceNextPopupCall)
+{
+    qputenv("XDG_CURRENT_DESKTOP", "gnome");
+    m_extensionsManager.enableReturnValue = true;
+
+    PopupPlacement placement;
+    placement.start();
+
+    m_placement.callsShouldFail = true;
+    EXPECT_NO_FATAL_FAILURE(placement.requestPlacement());
 }
