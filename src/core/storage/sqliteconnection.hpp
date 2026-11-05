@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 #include <QSqlDatabase>
+#include <QtClassHelperMacros>
 
 #include <optional>
 
@@ -23,6 +24,8 @@ class SQLiteConnection
 class SQLiteConnection final
 #endif
 {
+    Q_DISABLE_COPY_MOVE(SQLiteConnection)
+
 public:
     struct SentTableRow
     {

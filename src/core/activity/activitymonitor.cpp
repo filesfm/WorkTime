@@ -55,15 +55,14 @@ bool ActivityMonitor::startGnomeIdleMonitor()
     if (!qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("gnome", Qt::CaseInsensitive))
         return false;
 
-    m_gnomeIdleMonitor = new QDBusInterface(QString(kGnomeIdleMonitorService),
-                                            QString(kGnomeIdleMonitorPath),
-                                            QString(kGnomeIdleMonitorInterface),
-                                            QDBusConnection::sessionBus(),
-                                            this);
+    m_gnomeIdleMonitor = std::make_unique<QDBusInterface>(QString(kGnomeIdleMonitorService),
+                                                          QString(kGnomeIdleMonitorPath),
+                                                          QString(kGnomeIdleMonitorInterface),
+                                                          QDBusConnection::sessionBus(),
+                                                          this);
     if (!m_gnomeIdleMonitor->isValid()) {
         qCWarning(worktimeActivityMonitor) << "org.gnome.Mutter.IdleMonitor unavailable, falling back to /dev/input";
-        delete m_gnomeIdleMonitor;
-        m_gnomeIdleMonitor = nullptr;
+        m_gnomeIdleMonitor.reset();
         return false;
     }
 
@@ -91,8 +90,7 @@ void ActivityMonitor::stopGnomeIdleMonitor()
     if (m_gnomeIdleMonitor && m_gnomeWatchId != 0)
         m_gnomeIdleMonitor->call(QStringLiteral("RemoveWatch"), m_gnomeWatchId);
 
-    delete m_gnomeIdleMonitor;
-    m_gnomeIdleMonitor = nullptr;
+    m_gnomeIdleMonitor.reset();
     m_gnomeWatchId = 0;
 }
 
@@ -202,8 +200,10 @@ void ActivityMonitor::start()
     udev_monitor_filter_add_match_subsystem_devtype(m_udevMonitor, "input", nullptr);
     udev_monitor_enable_receiving(m_udevMonitor);
 
-    m_udevMonitorNotifier = new QSocketNotifier(udev_monitor_get_fd(m_udevMonitor), QSocketNotifier::Read, this);
-    connect(m_udevMonitorNotifier, &QSocketNotifier::activated, this, &ActivityMonitor::readUdevMonitor);
+    m_udevMonitorNotifier = std::make_unique<QSocketNotifier>(udev_monitor_get_fd(m_udevMonitor),
+                                                              QSocketNotifier::Read,
+                                                              this);
+    connect(m_udevMonitorNotifier.get(), &QSocketNotifier::activated, this, &ActivityMonitor::readUdevMonitor);
 
     scanInputDevices();
     m_running = true;
@@ -234,8 +234,7 @@ void ActivityMonitor::stop()
     for (const QString &devNode : devNodes)
         removeInputDevice(devNode);
 
-    delete m_udevMonitorNotifier;
-    m_udevMonitorNotifier = nullptr;
+    m_udevMonitorNotifier.reset();
 
     if (m_udevMonitor)
         udev_monitor_unref(m_udevMonitor);
@@ -298,7 +297,10 @@ void ActivityMonitor::removeInputDevice(const QString &devNode)
     qCDebug(worktimeActivityMonitor) << "no longer watching input device" << devNode;
 
     const auto fd = static_cast<int>(notifier->socket());
-    delete notifier;
+    // Disable synchronously so the event loop stops watching fd before it's
+    // closed below, then defer actual destruction instead of a raw delete.
+    notifier->setEnabled(false);
+    notifier->deleteLater();
     ::close(fd);
 }
 

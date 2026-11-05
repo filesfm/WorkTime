@@ -4,6 +4,8 @@
 #include <QLoggingCategory>
 #include <QObject>
 
+#include <memory>
+
 class QSocketNotifier;
 
 #if defined(Q_OS_LINUX)
@@ -79,14 +81,14 @@ private:
     void readInputDevice(int fd);
     void readUdevMonitor();
 
-    QDBusInterface *m_gnomeIdleMonitor = nullptr;
+    std::unique_ptr<QDBusInterface> m_gnomeIdleMonitor;
     uint m_gnomeWatchId = 0;
     bool m_usingGnomeIdleMonitor = false;
     bool m_usingKdeIdleMonitor = false;
 
     udev *m_udev = nullptr;
     udev_monitor *m_udevMonitor = nullptr;
-    QSocketNotifier *m_udevMonitorNotifier = nullptr;
+    std::unique_ptr<QSocketNotifier> m_udevMonitorNotifier;
     QHash<QString, QSocketNotifier *> m_deviceNotifiers;
 #elif defined(Q_OS_WIN)
     void *m_keyboardHook = nullptr;
