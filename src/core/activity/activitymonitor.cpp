@@ -262,8 +262,7 @@ void ActivityMonitor::scanInputDevices()
         if (!device)
             continue;
 
-        const char *devNode = udev_device_get_devnode(device);
-        if (devNode && isKeyboardOrMouse(device))
+        if (const char *devNode = udev_device_get_devnode(device); devNode && isKeyboardOrMouse(device))
             addInputDevice(QString::fromUtf8(devNode));
 
         udev_device_unref(device);
@@ -323,10 +322,8 @@ void ActivityMonitor::readUdevMonitor()
     if (!device)
         return;
 
-    const char *action = udev_device_get_action(device);
-    const char *devNode = udev_device_get_devnode(device);
-
-    if (action && devNode) {
+    if (const char *action = udev_device_get_action(device), *devNode = udev_device_get_devnode(device);
+        action && devNode) {
         const QString devNodeStr = QString::fromUtf8(devNode);
 
         if (QLatin1String(action) == "remove") {

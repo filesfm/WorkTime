@@ -139,11 +139,11 @@ QDBusObjectPath findItem()
     }
 
     QList<QDBusObjectPath> unlocked = qdbus_cast<QList<QDBusObjectPath>>(searchReply.arguments().at(0));
-    const QList<QDBusObjectPath> locked = qdbus_cast<QList<QDBusObjectPath>>(searchReply.arguments().at(1));
 
-    if (unlocked.isEmpty() && !locked.isEmpty()) {
-        QDBusMessage unlockReply = serviceInterface().call("Unlock", QVariant::fromValue(locked));
-        if (unlockReply.type() == QDBusMessage::ReplyMessage && unlockReply.arguments().size() >= 2)
+    if (const QList<QDBusObjectPath> locked = qdbus_cast<QList<QDBusObjectPath>>(searchReply.arguments().at(1));
+        unlocked.isEmpty() && !locked.isEmpty()) {
+        if (QDBusMessage unlockReply = serviceInterface().call("Unlock", QVariant::fromValue(locked));
+            unlockReply.type() == QDBusMessage::ReplyMessage && unlockReply.arguments().size() >= 2)
             waitForPrompt(qvariant_cast<QDBusObjectPath>(unlockReply.arguments().at(1)));
 
         // Re-search rather than parse the prompt's result: simpler, and

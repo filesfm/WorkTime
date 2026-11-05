@@ -62,8 +62,8 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
 #if !defined(BUILD_WITHOUT_AUTOSTART)
-    const bool autostartWanted = Settings::instance()->autoStartup();
-    if (Utilities::isAutostartEnabled() != autostartWanted)
+    if (const bool autostartWanted = Settings::instance()->autoStartup();
+        Utilities::isAutostartEnabled() != autostartWanted)
         Utilities::autostart(autostartWanted);
 #endif
 

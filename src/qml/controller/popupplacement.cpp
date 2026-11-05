@@ -126,10 +126,9 @@ void PopupPlacement::start()
         return;
 
     if (desktopContains("gnome")) {
-        const bool changed = installGnomeExtension();
         // GNOME Shell only reloads an extension when it is disabled and enabled again,
         // so the new files take effect only after this cycle.
-        if (changed)
+        if (const bool changed = installGnomeExtension(); changed)
             callGnomeExtensionManager(QStringLiteral("DisableExtension"));
         m_gnomeActive = callGnomeExtensionManager(QStringLiteral("EnableExtension"));
         if (!m_gnomeActive)
