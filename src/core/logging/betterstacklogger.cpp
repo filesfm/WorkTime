@@ -12,13 +12,15 @@
 #include <QUrl>
 
 #include <cstdio>
-#include <cstring>
 
 Q_LOGGING_CATEGORY(worktimeBetterStackLogger, "worktime.betterstack.logger")
 
+QString BetterStackLogger::s_ingestingHost = QString::fromUtf8(WORKTIME_BETTERSTACK_INGESTING_HOST);
+QString BetterStackLogger::s_sourceToken = QString::fromUtf8(WORKTIME_BETTERSTACK_SOURCE_TOKEN);
+
 void BetterStackLogger::install()
 {
-    if (std::strlen(WORKTIME_BETTERSTACK_SOURCE_TOKEN) == 0 || std::strlen(WORKTIME_BETTERSTACK_INGESTING_HOST) == 0)
+    if (s_sourceToken.isEmpty() || s_ingestingHost.isEmpty())
         return;
 
     qInstallMessageHandler(&BetterStackLogger::messageHandler);
@@ -54,10 +56,9 @@ void BetterStackLogger::send(QtMsgType type, const QString &message, const QStri
                                                      QString::fromUtf8(WORKTIME_APP_VERSION));
 
     QNetworkAccessManager manager;
-    QNetworkRequest request(
-        QUrl(QStringLiteral("https://%1").arg(QString::fromUtf8(WORKTIME_BETTERSTACK_INGESTING_HOST))));
+    QNetworkRequest request(QUrl(QStringLiteral("https://%1").arg(s_ingestingHost)));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
-    request.setRawHeader("Authorization", QByteArray("Bearer ") + WORKTIME_BETTERSTACK_SOURCE_TOKEN);
+    request.setRawHeader("Authorization", QByteArray("Bearer ") + s_sourceToken.toUtf8());
     // Short and blocking: a QtFatalMsg aborts the process as soon as this
     // function returns, so delivery must be attempted synchronously rather
     // than queued for later on an event loop that may never run again.

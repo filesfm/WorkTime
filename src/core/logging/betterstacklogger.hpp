@@ -32,7 +32,11 @@ public:
      */
     static void install();
 
+#if defined(BUILD_TESTING)
+protected:
+#else
 private:
+#endif
     /*!
      * \brief Prints \a message exactly as Qt's default handler would, but
      * only if QT_LOGGING_RULES is set in the environment - otherwise nothing
@@ -52,4 +56,9 @@ private:
      * \par Cyclomatic complexity: 3
      */
     static void send(QtMsgType type, const QString &message, const QString &category);
+
+    //! \brief Ingesting host send() POSTs to (https://<host>); overridable in tests.
+    static QString s_ingestingHost;
+    //! \brief Source token send() authenticates with; overridable in tests.
+    static QString s_sourceToken;
 };

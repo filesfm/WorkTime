@@ -25,6 +25,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/oneinstanceguarantor.cpp
     ${CMAKE_SOURCE_DIR}/src/core/activity/activitymonitor.cpp
     ${CMAKE_SOURCE_DIR}/src/core/logging/betterstacklogentrybuilder.cpp
+    ${CMAKE_SOURCE_DIR}/src/core/logging/betterstacklogger.cpp
     ${CMAKE_SOURCE_DIR}/src/qml/controller/appquitter.cpp
     ${CMAKE_SOURCE_DIR}/src/qml/controller/screengeometry.cpp
     ${CMAKE_SOURCE_DIR}/src/qml/controller/popupplacement.cpp
@@ -40,6 +41,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/core/kwinscript_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/activity/activitymonitor_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/logging/betterstacklogentrybuilder_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/logging/betterstacklogger_test.cpp
     ${CMAKE_SOURCE_DIR}/test/qml/controller/appquitter_test.cpp
     ${CMAKE_SOURCE_DIR}/test/qml/controller/screengeometry_test.cpp
     ${CMAKE_SOURCE_DIR}/test/qml/controller/popupplacement_test.cpp
@@ -70,7 +72,7 @@ set_target_properties(worktime_tests PROPERTIES EXPORT_COMPILE_COMMANDS YES)
 
 target_compile_features(worktime_tests PRIVATE cxx_std_17)
 
-target_include_directories(worktime_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(worktime_tests PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}/generated)
 
 target_link_libraries(worktime_tests
     PRIVATE
