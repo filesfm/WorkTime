@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quit_0',['quit',['../classAppQuitter.html#ae7442307bb3ced2b226d7d5987177364',1,'AppQuitter']]]
+  ['quit_0',['quit',['../classAppQuitter.html#abec7b5a08ada6ec96f1980447910356a',1,'AppQuitter']]]
 ];

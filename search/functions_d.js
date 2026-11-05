@@ -21,5 +21,5 @@ var searchData=
   ['startbuttonpushed_18',['startButtonPushed',['../classMainController.html#a3a2e210e17847e0c5ad3a7e39e0199c7',1,'MainController::startButtonPushed()'],['../classSettings.html#ab2f834a5d54962a7ded4a316559f94b1',1,'Settings::startButtonPushed()']]],
   ['statusiconsource_19',['statusIconSource',['../classMainController.html#a5461cf906fcefee2214e8058bbe59741',1,'MainController']]],
   ['stop_20',['stop',['../classPopupPlacement.html#aba287c11df9c51c27e869b213508757d',1,'PopupPlacement::stop()'],['../classSendingService.html#a5c9b8669459dbe85bbd290f2560af17a',1,'SendingService::stop()'],['../classActivityMonitor.html#a569aa938c299808739fc7ec4eb172c70',1,'ActivityMonitor::stop()'],['../classKDEFocusedWindowTitle.html#a7b924256b168b49d383bc0288d45aaad',1,'KDEFocusedWindowTitle::stop()']]],
-  ['sumhttpsizeinlast24hoursfromsenttable_21',['sumHttpSizeInLast24HoursFromSentTable',['../classSQLiteConnection.html#ab5e37212dc680028945e999a4a2d3722',1,'SQLiteConnection']]]
+  ['sumhttpsizeinlast24hoursfromsenttable_21',['sumHttpSizeInLast24HoursFromSentTable',['../classSQLiteConnection.html#a2f769f81b1f7ad15b7df4fb929caf5cd',1,'SQLiteConnection']]]
 ];

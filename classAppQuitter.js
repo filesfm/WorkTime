@@ -1,4 +1,4 @@
 var classAppQuitter =
 [
-    [ "quit", "classAppQuitter.html#ae7442307bb3ced2b226d7d5987177364", null ]
+    [ "quit", "classAppQuitter.html#abec7b5a08ada6ec96f1980447910356a", null ]
 ];

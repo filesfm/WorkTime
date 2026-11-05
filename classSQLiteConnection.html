@@ -106,12 +106,12 @@ Classes</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:acf3ff0b05a16059ecaf740becbb7e981" id="r_acf3ff0b05a16059ecaf740becbb7e981"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf3ff0b05a16059ecaf740becbb7e981">SQLiteConnection</a> ()</td></tr>
 <tr class="memitem:a34a6929c3e6d0b28d90525ef3b8c3bd7" id="r_a34a6929c3e6d0b28d90525ef3b8c3bd7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34a6929c3e6d0b28d90525ef3b8c3bd7">~SQLiteConnection</a> ()</td></tr>
-<tr class="memitem:a1ddca42f4460305eba627a9ffcdb8897" id="r_a1ddca42f4460305eba627a9ffcdb8897"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ddca42f4460305eba627a9ffcdb8897">addEntryToSentTable</a> (const QString &amp;focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime, qint64 httpSize)</td></tr>
+<tr class="memitem:a709266bbea78c045378eeb799e00198d" id="r_a709266bbea78c045378eeb799e00198d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a709266bbea78c045378eeb799e00198d">addEntryToSentTable</a> (const QString &amp;focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime, qint64 httpSize) const</td></tr>
 <tr class="memitem:a406d67c587a3567ac8a5ef88a697d644" id="r_a406d67c587a3567ac8a5ef88a697d644"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structSQLiteConnection_1_1SentTableRow.html">SentTableRow</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a406d67c587a3567ac8a5ef88a697d644">takeOldestEntryFromSentTable</a> ()</td></tr>
-<tr class="memitem:ac0045c6d40394ff28871a884f909735f" id="r_ac0045c6d40394ff28871a884f909735f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0045c6d40394ff28871a884f909735f">deleteEntriesOlderThan24HoursFromSentTable</a> ()</td></tr>
-<tr class="memitem:a3bceb79e4b564b4e15f75f10c3c9eac7" id="r_a3bceb79e4b564b4e15f75f10c3c9eac7"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bceb79e4b564b4e15f75f10c3c9eac7">countEntriesInLast24HoursFromSentTable</a> ()</td></tr>
-<tr class="memitem:ab5e37212dc680028945e999a4a2d3722" id="r_ab5e37212dc680028945e999a4a2d3722"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5e37212dc680028945e999a4a2d3722">sumHttpSizeInLast24HoursFromSentTable</a> ()</td></tr>
-<tr class="memitem:a755a0c11ba3e4f2497442c6569263bb9" id="r_a755a0c11ba3e4f2497442c6569263bb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a755a0c11ba3e4f2497442c6569263bb9">addEntryToNotSentTable</a> (const QString &amp;focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime, qint64 httpSize)</td></tr>
+<tr class="memitem:aa72960e97b5cfd774224bb4db16361bd" id="r_aa72960e97b5cfd774224bb4db16361bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa72960e97b5cfd774224bb4db16361bd">deleteEntriesOlderThan24HoursFromSentTable</a> () const</td></tr>
+<tr class="memitem:a30aa8e9e1bb1b1fafd33f9c6c115a514" id="r_a30aa8e9e1bb1b1fafd33f9c6c115a514"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30aa8e9e1bb1b1fafd33f9c6c115a514">countEntriesInLast24HoursFromSentTable</a> () const</td></tr>
+<tr class="memitem:a2f769f81b1f7ad15b7df4fb929caf5cd" id="r_a2f769f81b1f7ad15b7df4fb929caf5cd"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f769f81b1f7ad15b7df4fb929caf5cd">sumHttpSizeInLast24HoursFromSentTable</a> () const</td></tr>
+<tr class="memitem:a741a675b5b68308af0b785ab656faee3" id="r_a741a675b5b68308af0b785ab656faee3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a741a675b5b68308af0b785ab656faee3">addEntryToNotSentTable</a> (const QString &amp;focusedWindowTitle, qint64 utcTimestamp, qint64 shootTime, qint64 httpSize) const</td></tr>
 <tr class="memitem:a733b00a3723589a639a0b6a1d6c29e21" id="r_a733b00a3723589a639a0b6a1d6c29e21"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structSQLiteConnection_1_1NotSentTableRow.html">NotSentTableRow</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a733b00a3723589a639a0b6a1d6c29e21">takeOldestEntryFromNotSentTable</a> ()</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -160,8 +160,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a755a0c11ba3e4f2497442c6569263bb9" name="a755a0c11ba3e4f2497442c6569263bb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a755a0c11ba3e4f2497442c6569263bb9">&#9670;&#160;</a></span>addEntryToNotSentTable()</h2>
+<a id="a741a675b5b68308af0b785ab656faee3" name="a741a675b5b68308af0b785ab656faee3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a741a675b5b68308af0b785ab656faee3">&#9670;&#160;</a></span>addEntryToNotSentTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +184,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">qint64</td>          <td class="paramname"><span class="paramname"><em>httpSize</em></span>&#160;)</td>
+          <td class="paramtype">qint64</td>          <td class="paramname"><span class="paramname"><em>httpSize</em></span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -197,8 +197,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ddca42f4460305eba627a9ffcdb8897" name="a1ddca42f4460305eba627a9ffcdb8897"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ddca42f4460305eba627a9ffcdb8897">&#9670;&#160;</a></span>addEntryToSentTable()</h2>
+<a id="a709266bbea78c045378eeb799e00198d" name="a709266bbea78c045378eeb799e00198d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a709266bbea78c045378eeb799e00198d">&#9670;&#160;</a></span>addEntryToSentTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,7 +221,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">qint64</td>          <td class="paramname"><span class="paramname"><em>httpSize</em></span>&#160;)</td>
+          <td class="paramtype">qint64</td>          <td class="paramname"><span class="paramname"><em>httpSize</em></span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -234,8 +234,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a3bceb79e4b564b4e15f75f10c3c9eac7" name="a3bceb79e4b564b4e15f75f10c3c9eac7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bceb79e4b564b4e15f75f10c3c9eac7">&#9670;&#160;</a></span>countEntriesInLast24HoursFromSentTable()</h2>
+<a id="a30aa8e9e1bb1b1fafd33f9c6c115a514" name="a30aa8e9e1bb1b1fafd33f9c6c115a514"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30aa8e9e1bb1b1fafd33f9c6c115a514">&#9670;&#160;</a></span>countEntriesInLast24HoursFromSentTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,7 +244,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">qint64 SQLiteConnection::countEntriesInLast24HoursFromSentTable </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -258,8 +258,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac0045c6d40394ff28871a884f909735f" name="ac0045c6d40394ff28871a884f909735f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0045c6d40394ff28871a884f909735f">&#9670;&#160;</a></span>deleteEntriesOlderThan24HoursFromSentTable()</h2>
+<a id="aa72960e97b5cfd774224bb4db16361bd" name="aa72960e97b5cfd774224bb4db16361bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa72960e97b5cfd774224bb4db16361bd">&#9670;&#160;</a></span>deleteEntriesOlderThan24HoursFromSentTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -268,7 +268,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void SQLiteConnection::deleteEntriesOlderThan24HoursFromSentTable </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -282,8 +282,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab5e37212dc680028945e999a4a2d3722" name="ab5e37212dc680028945e999a4a2d3722"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5e37212dc680028945e999a4a2d3722">&#9670;&#160;</a></span>sumHttpSizeInLast24HoursFromSentTable()</h2>
+<a id="a2f769f81b1f7ad15b7df4fb929caf5cd" name="a2f769f81b1f7ad15b7df4fb929caf5cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f769f81b1f7ad15b7df4fb929caf5cd">&#9670;&#160;</a></span>sumHttpSizeInLast24HoursFromSentTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,7 +292,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">qint64 SQLiteConnection::sumHttpSizeInLast24HoursFromSentTable </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
