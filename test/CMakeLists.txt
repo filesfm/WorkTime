@@ -31,6 +31,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings/settings_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/network/sendingservice_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/core/network/notsentsender_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/storage/sqliteconnection_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/utilities_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/oneinstanceguarantor_test.cpp
