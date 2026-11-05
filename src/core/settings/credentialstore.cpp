@@ -10,7 +10,6 @@
 #    include <QDBusInterface>
 #    include <QDBusMessage>
 #    include <QDBusMetaType>
-#    include <QDBusObjectPath>
 #    include <QDBusVariant>
 #    include <QEventLoop>
 #    include <QMap>
@@ -34,9 +33,6 @@ Q_GLOBAL_STATIC(QMutex, credentialStoreMutex)
 
 namespace {
 
-constexpr auto kSecretServiceName = "org.freedesktop.secrets";
-constexpr auto kSecretServicePath = "/org/freedesktop/secrets";
-constexpr auto kDefaultCollectionPath = "/org/freedesktop/secrets/aliases/default";
 constexpr auto kApplicationAttribute = "application";
 
 // The Secret Service "Secret" struct: (session, parameters, value, content_type).
@@ -86,11 +82,17 @@ QMap<QString, QString> itemAttributes()
     return {{kApplicationAttribute, kApplicationId}};
 }
 
-QDBusInterface serviceInterface()
+} // namespace
+
+QString CredentialStore::s_secretServiceName = QStringLiteral("org.freedesktop.secrets");
+QString CredentialStore::s_secretServicePath = QStringLiteral("/org/freedesktop/secrets");
+QString CredentialStore::s_defaultCollectionPath = QStringLiteral("/org/freedesktop/secrets/aliases/default");
+
+QDBusInterface CredentialStore::serviceInterface()
 {
-    return QDBusInterface(kSecretServiceName,
-                          kSecretServicePath,
-                          "org.freedesktop.Secret.Service",
+    return QDBusInterface(s_secretServiceName,
+                          s_secretServicePath,
+                          QStringLiteral("org.freedesktop.Secret.Service"),
                           QDBusConnection::sessionBus());
 }
 
@@ -98,14 +100,14 @@ QDBusInterface serviceInterface()
 // e.g. because unlocking the keyring required a user-facing dialog. A no-op
 // if promptPath is "/", the well-known path meaning no prompt is needed,
 // which is the common case for an already-unlocked login keyring.
-void waitForPrompt(const QDBusObjectPath &promptPath)
+void CredentialStore::waitForPrompt(const QDBusObjectPath &promptPath)
 {
     if (promptPath.path().isEmpty() || promptPath.path() == QLatin1String("/"))
         return;
 
-    QDBusInterface prompt(kSecretServiceName,
+    QDBusInterface prompt(s_secretServiceName,
                           promptPath.path(),
-                          "org.freedesktop.Secret.Prompt",
+                          QStringLiteral("org.freedesktop.Secret.Prompt"),
                           QDBusConnection::sessionBus());
     QEventLoop loop;
     QObject::connect(&prompt, SIGNAL(Completed(bool, QDBusVariant)), &loop, SLOT(quit()));
@@ -116,7 +118,7 @@ void waitForPrompt(const QDBusObjectPath &promptPath)
 // Opens a "plain" (unencrypted) Secret Service session. "plain" is
 // explicitly permitted by the spec and avoids needing a crypto
 // implementation here: the transport is local D-Bus, not a network channel.
-QDBusObjectPath openSession()
+QDBusObjectPath CredentialStore::openSession()
 {
     QDBusMessage reply = serviceInterface().call("OpenSession",
                                                  QStringLiteral("plain"),
@@ -130,7 +132,7 @@ QDBusObjectPath openSession()
 
 // Searches every collection for this app's item, unlocking it first if
 // needed. Returns the item's object path, or an empty path if none exists.
-QDBusObjectPath findItem()
+QDBusObjectPath CredentialStore::findItem()
 {
     QDBusMessage searchReply = serviceInterface().call("SearchItems", QVariant::fromValue(stringDict(itemAttributes())));
     if (searchReply.type() != QDBusMessage::ReplyMessage || searchReply.arguments().size() < 2) {
@@ -157,8 +159,6 @@ QDBusObjectPath findItem()
     return unlocked.isEmpty() ? QDBusObjectPath() : unlocked.first();
 }
 
-} // namespace
-
 QString CredentialStore::readPassword()
 {
     const QMutexLocker locker(credentialStoreMutex());
@@ -175,7 +175,7 @@ QString CredentialStore::readPassword()
     if (session.path().isEmpty())
         return QString();
 
-    QDBusInterface item(kSecretServiceName,
+    QDBusInterface item(s_secretServiceName,
                         itemPath.path(),
                         "org.freedesktop.Secret.Item",
                         QDBusConnection::sessionBus());
@@ -209,8 +209,8 @@ bool CredentialStore::writePassword(const QString &password)
     secret.value = password.toUtf8();
     secret.contentType = QStringLiteral("text/plain; charset=utf8");
 
-    QDBusInterface collection(kSecretServiceName,
-                              kDefaultCollectionPath,
+    QDBusInterface collection(s_secretServiceName,
+                              s_defaultCollectionPath,
                               "org.freedesktop.Secret.Collection",
                               QDBusConnection::sessionBus());
     QDBusMessage reply = collection.call("CreateItem", properties, QVariant::fromValue(secret), true);
@@ -233,7 +233,7 @@ bool CredentialStore::deletePassword()
     if (itemPath.path().isEmpty())
         return true;
 
-    QDBusInterface item(kSecretServiceName,
+    QDBusInterface item(s_secretServiceName,
                         itemPath.path(),
                         "org.freedesktop.Secret.Item",
                         QDBusConnection::sessionBus());
