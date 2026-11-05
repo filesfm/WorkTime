@@ -3,11 +3,18 @@
 #include <utility>
 
 #include <QByteArray>
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QDBusMessage>
+#include <QDBusVariant>
+#include <QDBusVirtualObject>
 #include <QDateTime>
+#include <QFile>
 #include <QHostAddress>
 #include <QList>
 #include <QMap>
 #include <QSignalSpy>
+#include <QStandardPaths>
 #include <QString>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -16,6 +23,8 @@
 
 #include "core/network/sendingservice.hpp"
 #include "core/settings/settings.hpp"
+#include "core/storage/sqliteconnection.hpp"
+#include "core/utilities.hpp"
 
 TEST(SendingServiceTest, DefaultServerUrlIsInvalid)
 {
@@ -218,6 +227,75 @@ CapturedRequest captureOneRequest(SendingService &service)
     return parseRequest(raw, headerEnd);
 }
 
+// Like captureOneRequest(), but replies with a caller-chosen response
+// instead of always synthesizing success - used by the failure-path tests.
+bool captureRequestAndReplyWith(SendingService &service, const QByteArray &response)
+{
+    QTcpServer server;
+    if (!server.listen(QHostAddress::LocalHost)) {
+        ADD_FAILURE() << "Failed to start local test server";
+        return false;
+    }
+
+    service.setServerUrl(QUrl(QStringLiteral("http://127.0.0.1:%1/remote").arg(server.serverPort())));
+    service.start();
+
+    QList<QTcpSocket *> candidates;
+    QTcpSocket *socket = nullptr;
+    QByteArray raw;
+    qint64 headerEnd = -1;
+    qint64 expectedBodyLength = -1;
+
+    const bool complete = QTest::qWaitFor(
+        [&]() {
+            while (server.hasPendingConnections())
+                candidates.append(server.nextPendingConnection());
+
+            for (QTcpSocket *candidate : std::as_const(candidates)) {
+                if (candidate->bytesAvailable() <= 0)
+                    continue;
+                if (!socket)
+                    socket = candidate;
+                if (candidate == socket)
+                    raw += candidate->readAll();
+                else
+                    candidate->readAll();
+            }
+
+            if (headerEnd < 0) {
+                const qint64 idx = raw.indexOf("\r\n\r\n");
+                if (idx >= 0) {
+                    headerEnd = idx;
+                    const QByteArray headerBlock = raw.left(idx);
+                    for (const QByteArray &line : headerBlock.split('\n')) {
+                        if (line.trimmed().toLower().startsWith("content-length:"))
+                            expectedBodyLength = line.mid(line.indexOf(':') + 1).trimmed().toLongLong();
+                    }
+                }
+            }
+
+            if (headerEnd < 0)
+                return false;
+            const qint64 bodyReceived = raw.size() - (headerEnd + 4);
+            return expectedBodyLength <= 0 || bodyReceived >= expectedBodyLength;
+        },
+        5000);
+
+    for (QTcpSocket *candidate : std::as_const(candidates)) {
+        if (candidate != socket)
+            candidate->deleteLater();
+    }
+
+    if (!complete || !socket) {
+        ADD_FAILURE() << "Did not receive a complete request from the client";
+        service.stop();
+        return false;
+    }
+
+    socket->write(response);
+    return socket->waitForBytesWritten(1000);
+}
+
 QMap<QString, QString> parseFormBody(const QByteArray &body)
 {
     QMap<QString, QString> fields;
@@ -312,4 +390,149 @@ TEST(SendingServiceTest, CredentialsArePassedThroughUnmodified)
     const QMap<QString, QString> fields = parseFormBody(request.body);
 
     EXPECT_EQ(fields.value("Shoot[password]"), password);
+}
+
+namespace {
+
+QString sqliteDatabaseFilePath()
+{
+    class TestableSQLiteConnection : public SQLiteConnection
+    {
+    public:
+        using SQLiteConnection::filePath;
+    };
+    return TestableSQLiteConnection::filePath();
+}
+
+// SendingService owns its own SQLiteConnection for the whole test, so each
+// test here starts from a clean db file rather than draining tables by hand.
+class SendingServiceFailureTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        QStandardPaths::setTestModeEnabled(true);
+        QFile::remove(sqliteDatabaseFilePath());
+    }
+};
+
+} // namespace
+
+TEST_F(SendingServiceFailureTest, FailedSubmissionEmitsSendFailedAndQueuesNotSentEntry)
+{
+    SendingService service;
+    QSignalSpy failedSpy(&service, &SendingService::sendFailed);
+    QSignalSpy successSpy(&service, &SendingService::sendSucceeded);
+
+    ASSERT_TRUE(captureRequestAndReplyWith(
+        service, "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"));
+    ASSERT_TRUE(failedSpy.wait(5000));
+    service.stop();
+
+    EXPECT_EQ(successSpy.count(), 0);
+    EXPECT_FALSE(failedSpy.at(0).at(0).toString().isEmpty());
+
+    SQLiteConnection verify;
+    EXPECT_TRUE(verify.takeOldestEntryFromNotSentTable().has_value());
+}
+
+TEST_F(SendingServiceFailureTest, UnauthorizedResponseEmitsAuthenticationFailed)
+{
+    SendingService service;
+    QSignalSpy authFailedSpy(&service, &SendingService::authenticationFailed);
+    QSignalSpy failedSpy(&service, &SendingService::sendFailed);
+
+    ASSERT_TRUE(
+        captureRequestAndReplyWith(service,
+                                   "HTTP/1.1 401 Unauthorized\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"));
+    ASSERT_TRUE(failedSpy.wait(5000));
+    service.stop();
+
+    EXPECT_EQ(authFailedSpy.count(), 1);
+}
+
+TEST_F(SendingServiceFailureTest, NonAuthErrorDoesNotEmitAuthenticationFailed)
+{
+    SendingService service;
+    QSignalSpy authFailedSpy(&service, &SendingService::authenticationFailed);
+    QSignalSpy failedSpy(&service, &SendingService::sendFailed);
+
+    ASSERT_TRUE(captureRequestAndReplyWith(
+        service, "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"));
+    ASSERT_TRUE(failedSpy.wait(5000));
+    service.stop();
+
+    EXPECT_EQ(authFailedSpy.count(), 0);
+}
+
+namespace {
+
+class TestableUtilitiesClockSync : public Utilities
+{
+public:
+    using Utilities::s_clockSyncService;
+};
+
+// Stands in for org.freedesktop.timedate1 on the system bus, same fake as
+// UtilitiesClockSyncLinuxTest, to force isClockSyncEnabled() to false so
+// sendNow()'s clock-sync-disabled branch runs deterministically.
+class FakeTimedate : public QDBusVirtualObject
+{
+public:
+    QString introspect(const QString &) const override { return QString(); }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        connection.send(message.createReply(QVariant::fromValue(QDBusVariant(QVariant(false)))));
+        return true;
+    }
+};
+
+class SendingServiceClockSyncTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::systemBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus system bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/freedesktop/timedate1", &m_timedate));
+        m_previousService = TestableUtilitiesClockSync::s_clockSyncService;
+        TestableUtilitiesClockSync::s_clockSyncService = m_bus.baseService();
+
+        QStandardPaths::setTestModeEnabled(true);
+        QFile::remove(sqliteDatabaseFilePath());
+    }
+
+    void TearDown() override
+    {
+        if (!m_bus.isConnected())
+            return;
+
+        TestableUtilitiesClockSync::s_clockSyncService = m_previousService;
+        m_bus.unregisterObject("/org/freedesktop/timedate1");
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeTimedate m_timedate;
+    QString m_previousService;
+};
+
+} // namespace
+
+TEST_F(SendingServiceClockSyncTest, DisabledClockSyncSkipsSendingAndEmitsBothSignals)
+{
+    SendingService service;
+    service.setServerUrl(QUrl("https://example.invalid/remote"));
+
+    QSignalSpy clockSyncSpy(&service, &SendingService::clockSyncDisabled);
+    QSignalSpy failedSpy(&service, &SendingService::sendFailed);
+
+    service.start();
+    service.stop();
+
+    ASSERT_EQ(clockSyncSpy.count(), 1);
+    ASSERT_EQ(failedSpy.count(), 1);
+    EXPECT_EQ(failedSpy.at(0).at(0).toString(), QStringLiteral("Automatic clock sync is disabled"));
 }
