@@ -138,3 +138,11 @@ TEST_F(KWinScriptTest, UnloadCallsUnloadScript)
     ASSERT_EQ(m_scripting.calls.size(), 1);
     EXPECT_EQ(m_scripting.calls.constFirst().member(), QStringLiteral("unloadScript"));
 }
+
+TEST_F(KWinScriptTest, LoadReturnsFalseWhenScriptingInterfaceIsUnavailable)
+{
+    TestableKWinScript::s_serviceName = QStringLiteral("org.nonexistent.worktime.test.kwin");
+
+    EXPECT_FALSE(KWinScript::load("worktime-test", ":/some/resource.js", "worktime-test.js"));
+    EXPECT_TRUE(m_scripting.calls.isEmpty());
+}

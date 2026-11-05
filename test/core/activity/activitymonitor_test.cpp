@@ -271,6 +271,22 @@ TEST_F(ActivityMonitorGnomeTest, WatchFiredWithStaleIdIsIgnored)
     monitor.stop();
 }
 
+TEST_F(ActivityMonitorGnomeTest, FallsBackWhenGnomeIdleMonitorInterfaceIsUnavailable)
+{
+    // Overrides the fixture's own (working) override with a destination
+    // nothing answers, so QDBusInterface::isValid() is false.
+    TestableActivityMonitor::s_gnomeIdleMonitorService = QStringLiteral("org.nonexistent.worktime.test.gnome");
+
+    TestableActivityMonitor monitor;
+    monitor.start();
+
+    EXPECT_FALSE(monitor.isUsingGnomeIdleMonitor());
+    EXPECT_FALSE(monitor.hasGnomeIdleMonitorInterface());
+    EXPECT_TRUE(monitor.isRunning()); // falls through to the udev fallback
+
+    monitor.stop();
+}
+
 TEST_F(ActivityMonitorGnomeTest, AddUserActiveWatchFailureIsNonFatal)
 {
     m_idleMonitor.addWatchShouldFail = true;

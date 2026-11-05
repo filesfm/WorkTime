@@ -67,6 +67,16 @@ TEST_F(BetterStackLoggerTest, DebugMessagesAreNotForwarded)
     EXPECT_FALSE(m_sawConnection);
 }
 
+TEST_F(BetterStackLoggerTest, PrintsToStderrOnlyWhenLoggingRulesIsSet)
+{
+    qputenv("QT_LOGGING_RULES", "*.debug=true");
+
+    QMessageLogContext context;
+    EXPECT_NO_FATAL_FAILURE(TestableBetterStackLogger::messageHandler(QtDebugMsg, context, QStringLiteral("debug")));
+
+    qunsetenv("QT_LOGGING_RULES");
+}
+
 TEST_F(BetterStackLoggerTest, InfoMessagesAreNotForwarded)
 {
     QMessageLogContext context;

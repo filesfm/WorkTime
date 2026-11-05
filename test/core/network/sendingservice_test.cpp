@@ -14,6 +14,7 @@
 #include <QList>
 #include <QMap>
 #include <QSignalSpy>
+#include <QSqlQuery>
 #include <QStandardPaths>
 #include <QString>
 #include <QTcpServer>
@@ -449,6 +450,54 @@ TEST_F(SendingServiceFailureTest, UnauthorizedResponseEmitsAuthenticationFailed)
     service.stop();
 
     EXPECT_EQ(authFailedSpy.count(), 1);
+}
+
+namespace {
+
+class TestableSQLiteConnection : public SQLiteConnection
+{
+public:
+    using SQLiteConnection::m_databaseConnection;
+};
+
+} // namespace
+
+TEST_F(SendingServiceFailureTest, SuccessfulSubmissionHandlesSqliteWriteFailureGracefully)
+{
+    SendingService service;
+
+    // Drop the table from a separate connection, after SendingService's own
+    // connection already created it, so its addEntryToSentTable() throws -
+    // exercising that catch block without crashing the process.
+    {
+        TestableSQLiteConnection separate;
+        QSqlQuery dropQuery(separate.m_databaseConnection);
+        ASSERT_TRUE(dropQuery.exec(QStringLiteral("DROP TABLE sent")));
+    }
+
+    QSignalSpy successSpy(&service, &SendingService::sendSucceeded);
+    captureOneRequest(service); // replies 200 OK and calls stop() itself
+
+    EXPECT_EQ(successSpy.count(), 1); // sendSucceeded still emits even though the write failed
+}
+
+TEST_F(SendingServiceFailureTest, FailedSubmissionHandlesSqliteWriteFailureGracefully)
+{
+    SendingService service;
+
+    {
+        TestableSQLiteConnection separate;
+        QSqlQuery dropQuery(separate.m_databaseConnection);
+        ASSERT_TRUE(dropQuery.exec(QStringLiteral("DROP TABLE not_sent")));
+    }
+
+    QSignalSpy failedSpy(&service, &SendingService::sendFailed);
+    ASSERT_TRUE(captureRequestAndReplyWith(
+        service, "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"));
+    ASSERT_TRUE(failedSpy.wait(5000));
+    service.stop();
+
+    EXPECT_EQ(failedSpy.count(), 1); // sendFailed still emits even though the write failed
 }
 
 TEST_F(SendingServiceFailureTest, NonAuthErrorDoesNotEmitAuthenticationFailed)

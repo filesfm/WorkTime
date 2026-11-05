@@ -218,6 +218,23 @@ TEST_F(KDEFocusedWindowTitleStartStopTest, StopIsNoOpWhenNotStarted)
     EXPECT_EQ(m_scripting.callCountFor(QStringLiteral("unloadScript")), 0);
 }
 
+TEST_F(KDEFocusedWindowTitleStartStopTest, StartLogsCriticalWhenServiceRegistrationFails)
+{
+    // A second connection claims the well-known name first, so start()'s
+    // own registerService() call on the default session bus fails.
+    QDBusConnection blocker = QDBusConnection::connectToBus(QDBusConnection::SessionBus,
+                                                            QStringLiteral("worktime-test-blocker"));
+    ASSERT_TRUE(blocker.isConnected());
+    ASSERT_TRUE(blocker.registerService(QString::fromLatin1(kServiceName)));
+
+    KDEFocusedWindowTitle::instance()->start();
+
+    EXPECT_EQ(m_scripting.callCountFor(QStringLiteral("loadScript")), 0);
+
+    blocker.unregisterService(QString::fromLatin1(kServiceName));
+    QDBusConnection::disconnectFromBus(QStringLiteral("worktime-test-blocker"));
+}
+
 TEST_F(KDEFocusedWindowTitleStartStopTest, StartDoesNotMarkStartedWhenScriptLoadFails)
 {
     m_scripting.loadScriptShouldFail = true;
