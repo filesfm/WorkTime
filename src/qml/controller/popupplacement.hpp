@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QString>
 #include <QtClassHelperMacros>
 
 /*!
@@ -52,6 +53,35 @@ public:
      * \par Cyclomatic complexity: 2
      */
     Q_INVOKABLE void requestPlacement() const;
+
+#if defined(BUILD_TESTING)
+protected:
+#else
+private:
+#endif
+#if defined(Q_OS_LINUX)
+    //! \brief Whether the session is running on Wayland (real check, bypassable in tests).
+    static bool isWayland();
+    //! \brief Whether XDG_CURRENT_DESKTOP contains \a name.
+    static bool desktopContains(const char *name);
+    //! \brief Copies the bundled GNOME extension into the user's extensions directory.
+    static bool installGnomeExtension();
+    //! \brief Calls \a method ("EnableExtension"/"DisableExtension") on the GNOME extension manager.
+    static bool callGnomeExtensionManager(const QString &method);
+
+    //! \brief D-Bus destination callGnomeExtensionManager() talks to; overridable in tests.
+    static QString s_gnomeShellExtensionsService;
+    static QString s_gnomeShellExtensionsPath;
+    //! \brief D-Bus destination requestPlacement() talks to; overridable in tests.
+    static QString s_gnomePlacementService;
+    static QString s_gnomePlacementPath;
+    static QString s_gnomePlacementInterface;
+
+#    if defined(BUILD_TESTING)
+    //! \brief Overrides isWayland()'s result in tests, bypassing the real QPA platform check.
+    static bool s_forceWaylandForTesting;
+#    endif
+#endif
 
 private:
     //! \brief Whether the GNOME Shell extension is enabled for this session.

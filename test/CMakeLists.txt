@@ -27,6 +27,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/src/core/logging/betterstacklogentrybuilder.cpp
     ${CMAKE_SOURCE_DIR}/src/qml/controller/appquitter.cpp
     ${CMAKE_SOURCE_DIR}/src/qml/controller/screengeometry.cpp
+    ${CMAKE_SOURCE_DIR}/src/qml/controller/popupplacement.cpp
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/test/core/settings/settings_test.cpp
     ${CMAKE_SOURCE_DIR}/test/core/network/sendingservice_test.cpp
@@ -39,6 +40,7 @@ add_executable(worktime_tests
     ${CMAKE_SOURCE_DIR}/test/core/logging/betterstacklogentrybuilder_test.cpp
     ${CMAKE_SOURCE_DIR}/test/qml/controller/appquitter_test.cpp
     ${CMAKE_SOURCE_DIR}/test/qml/controller/screengeometry_test.cpp
+    ${CMAKE_SOURCE_DIR}/test/qml/controller/popupplacement_test.cpp
 )
 
 target_compile_definitions(worktime_tests PRIVATE BUILD_TESTING)

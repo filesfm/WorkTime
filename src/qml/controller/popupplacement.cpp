@@ -16,10 +16,6 @@
 namespace {
 
 constexpr QLatin1StringView kGnomeExtensionUuid{"worktime-placement@filesfm.github.io"};
-constexpr QLatin1StringView kGnomeShellService{"org.gnome.Shell"};
-constexpr QLatin1StringView kGnomePlacementPath{"/io/github/filesfm/worktime/Placement"};
-constexpr QLatin1StringView kGnomePlacementInterface{"io.github.filesfm.worktime.Placement"};
-
 constexpr QLatin1StringView kKWinPluginName{"io.github.filesfm.worktime.popupplacement"};
 
 struct ExtensionFile
@@ -32,16 +28,6 @@ constexpr ExtensionFile kGnomeExtensionFiles[] = {
     {":/qt/qml/Worktime/worktime-placement-metadata.json", "metadata.json"},
     {":/qt/qml/Worktime/worktime-placement-extension.js", "extension.js"},
 };
-
-bool isWayland()
-{
-    return QGuiApplication::platformName().startsWith(QLatin1String("wayland"));
-}
-
-bool desktopContains(const char *name)
-{
-    return qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains(QLatin1String(name), Qt::CaseInsensitive);
-}
 
 /*!
  * \brief Writes \a content to \a path unless the file already holds exactly that.
@@ -64,13 +50,33 @@ bool writeIfChanged(const QString &path, const QByteArray &content)
     return true;
 }
 
-/*!
- * \brief Copies the bundled GNOME extension into the user's extensions
- * directory, where GNOME Shell looks for it.
- *
- * \return Whether the installed files changed, or false if copying failed.
- */
-bool installGnomeExtension()
+} // namespace
+
+QString PopupPlacement::s_gnomeShellExtensionsService = QStringLiteral("org.gnome.Shell.Extensions");
+QString PopupPlacement::s_gnomeShellExtensionsPath = QStringLiteral("/org/gnome/Shell/Extensions");
+QString PopupPlacement::s_gnomePlacementService = QStringLiteral("org.gnome.Shell");
+QString PopupPlacement::s_gnomePlacementPath = QStringLiteral("/io/github/filesfm/worktime/Placement");
+QString PopupPlacement::s_gnomePlacementInterface = QStringLiteral("io.github.filesfm.worktime.Placement");
+
+#    if defined(BUILD_TESTING)
+bool PopupPlacement::s_forceWaylandForTesting = false;
+#    endif
+
+bool PopupPlacement::isWayland()
+{
+#    if defined(BUILD_TESTING)
+    if (s_forceWaylandForTesting)
+        return true;
+#    endif
+    return QGuiApplication::platformName().startsWith(QLatin1String("wayland"));
+}
+
+bool PopupPlacement::desktopContains(const char *name)
+{
+    return qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains(QLatin1String(name), Qt::CaseInsensitive);
+}
+
+bool PopupPlacement::installGnomeExtension()
 {
     const QDir extensionDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
                             + QStringLiteral("/gnome-shell/extensions/") + kGnomeExtensionUuid);
@@ -91,16 +97,11 @@ bool installGnomeExtension()
     return changed;
 }
 
-/*!
- * \brief Calls \a method (`EnableExtension` or `DisableExtension`) on GNOME
- * Shell's extension manager for the bundled extension.
- * \return The method's result, or false if the call failed.
- */
-bool callGnomeExtensionManager(const QString &method)
+bool PopupPlacement::callGnomeExtensionManager(const QString &method)
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.gnome.Shell.Extensions"),
-                                                      QStringLiteral("/org/gnome/Shell/Extensions"),
-                                                      QStringLiteral("org.gnome.Shell.Extensions"),
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_gnomeShellExtensionsService,
+                                                      s_gnomeShellExtensionsPath,
+                                                      s_gnomeShellExtensionsService,
                                                       method);
     msg << kGnomeExtensionUuid.toString();
     const QDBusReply<bool> reply = QDBusConnection::sessionBus().call(msg);
@@ -110,8 +111,6 @@ bool callGnomeExtensionManager(const QString &method)
     }
     return reply.value();
 }
-
-} // namespace
 
 #endif
 
@@ -158,9 +157,9 @@ void PopupPlacement::requestPlacement() const
     if (!m_gnomeActive)
         return;
 
-    QDBusMessage msg = QDBusMessage::createMethodCall(QString(kGnomeShellService),
-                                                      QString(kGnomePlacementPath),
-                                                      QString(kGnomePlacementInterface),
+    QDBusMessage msg = QDBusMessage::createMethodCall(s_gnomePlacementService,
+                                                      s_gnomePlacementPath,
+                                                      s_gnomePlacementInterface,
                                                       QStringLiteral("PlaceNextPopup"));
     // Short timeout so a stalled shell can't freeze the tray click.
     const QDBusMessage reply = QDBusConnection::sessionBus().call(msg, QDBus::Block, 500);
