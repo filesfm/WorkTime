@@ -81,6 +81,9 @@ private:
     void readInputDevice(int fd);
     void readUdevMonitor();
 
+    //! \brief D-Bus destination startGnomeIdleMonitor() talks to; overridable in tests.
+    static QString s_gnomeIdleMonitorService;
+
     std::unique_ptr<QDBusInterface> m_gnomeIdleMonitor;
     uint m_gnomeWatchId = 0;
     bool m_usingGnomeIdleMonitor = false;

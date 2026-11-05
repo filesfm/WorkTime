@@ -45,17 +45,18 @@ bool isKeyboardOrMouse(udev_device *device)
     return (isKeyboard && QLatin1String(isKeyboard) == "1") || (isMouse && QLatin1String(isMouse) == "1");
 }
 
-constexpr QLatin1StringView kGnomeIdleMonitorService{"org.gnome.Mutter.IdleMonitor"};
 constexpr QLatin1StringView kGnomeIdleMonitorPath{"/org/gnome/Mutter/IdleMonitor/Core"};
 constexpr QLatin1StringView kGnomeIdleMonitorInterface{"org.gnome.Mutter.IdleMonitor"};
 } // namespace
+
+QString ActivityMonitor::s_gnomeIdleMonitorService = QStringLiteral("org.gnome.Mutter.IdleMonitor");
 
 bool ActivityMonitor::startGnomeIdleMonitor()
 {
     if (!qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("gnome", Qt::CaseInsensitive))
         return false;
 
-    m_gnomeIdleMonitor = std::make_unique<QDBusInterface>(QString(kGnomeIdleMonitorService),
+    m_gnomeIdleMonitor = std::make_unique<QDBusInterface>(s_gnomeIdleMonitorService,
                                                           QString(kGnomeIdleMonitorPath),
                                                           QString(kGnomeIdleMonitorInterface),
                                                           QDBusConnection::sessionBus(),
@@ -66,7 +67,7 @@ bool ActivityMonitor::startGnomeIdleMonitor()
         return false;
     }
 
-    QDBusConnection::sessionBus().connect(QString(kGnomeIdleMonitorService),
+    QDBusConnection::sessionBus().connect(s_gnomeIdleMonitorService,
                                           QString(kGnomeIdleMonitorPath),
                                           QString(kGnomeIdleMonitorInterface),
                                           QStringLiteral("WatchFired"),
@@ -80,7 +81,7 @@ bool ActivityMonitor::startGnomeIdleMonitor()
 
 void ActivityMonitor::stopGnomeIdleMonitor()
 {
-    QDBusConnection::sessionBus().disconnect(QString(kGnomeIdleMonitorService),
+    QDBusConnection::sessionBus().disconnect(s_gnomeIdleMonitorService,
                                              QString(kGnomeIdleMonitorPath),
                                              QString(kGnomeIdleMonitorInterface),
                                              QStringLiteral("WatchFired"),

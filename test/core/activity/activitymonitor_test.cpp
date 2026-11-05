@@ -6,6 +6,13 @@
 #    include <QByteArray>
 #    include <QDBusConnection>
 #    include <QDBusConnectionInterface>
+#    include <QDBusError>
+#    include <QDBusMessage>
+#    include <QDBusVirtualObject>
+#    include <QList>
+#    include <QSignalSpy>
+#    include <QString>
+#    include <QTest>
 #endif
 
 namespace {
@@ -16,6 +23,7 @@ public:
     bool isRunning() const { return m_running; }
 
 #if defined(Q_OS_LINUX)
+    using ActivityMonitor::s_gnomeIdleMonitorService;
     using ActivityMonitor::startGnomeIdleMonitor;
     using ActivityMonitor::stopGnomeIdleMonitor;
 
@@ -91,3 +99,180 @@ TEST(ActivityMonitorTest, DestructionWhileRunningDoesNotCrash)
     }
     SUCCEED();
 }
+
+#if defined(Q_OS_LINUX)
+
+namespace {
+
+// Stands in for org.gnome.Mutter.IdleMonitor's /Core object. Declares
+// AddUserActiveWatch/RemoveWatch in its introspection XML - QDBusInterface's
+// isValid() (which startGnomeIdleMonitor() gates on) requires that, same
+// lesson as CredentialStoreTest's unlock-prompt fake. WatchFired itself is
+// subscribed to via the low-level QDBusConnection::connect() API, which
+// doesn't need introspection, so it isn't declared here.
+class FakeGnomeIdleMonitor : public QDBusVirtualObject
+{
+public:
+    QList<QDBusMessage> calls;
+    uint nextWatchId = 42;
+    bool addWatchShouldFail = false;
+
+    QString introspect(const QString &) const override
+    {
+        return QStringLiteral("<interface name=\"org.gnome.Mutter.IdleMonitor\">"
+                              "<method name=\"AddUserActiveWatch\"><arg type=\"u\" direction=\"out\"/></method>"
+                              "<method name=\"RemoveWatch\"><arg type=\"u\" direction=\"in\"/></method>"
+                              "</interface>");
+    }
+
+    bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) override
+    {
+        if (message.interface() == QStringLiteral("org.freedesktop.DBus.Introspectable"))
+            return false;
+        calls.append(message);
+
+        if (message.member() == QStringLiteral("AddUserActiveWatch")) {
+            if (addWatchShouldFail)
+                connection.send(message.createErrorReply(QDBusError::Failed, QStringLiteral("no watch")));
+            else
+                connection.send(message.createReply(QVariant::fromValue(nextWatchId)));
+        } else if (message.member() == QStringLiteral("RemoveWatch")) {
+            connection.send(message.createReply());
+        }
+        return true;
+    }
+
+    void fireWatch(QDBusConnection &connection, uint watchId)
+    {
+        QDBusMessage signal = QDBusMessage::createSignal(QStringLiteral("/org/gnome/Mutter/IdleMonitor/Core"),
+                                                         QStringLiteral("org.gnome.Mutter.IdleMonitor"),
+                                                         QStringLiteral("WatchFired"));
+        signal << watchId;
+        connection.send(signal);
+    }
+};
+
+// Serves FakeGnomeIdleMonitor on this process's own session-bus connection
+// and points startGnomeIdleMonitor() at it, and sets XDG_CURRENT_DESKTOP so
+// that branch is actually taken - same technique used throughout this test
+// suite for D-Bus-backed classes.
+class ActivityMonitorGnomeTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_bus = QDBusConnection::sessionBus();
+        if (!m_bus.isConnected())
+            GTEST_SKIP() << "no D-Bus session bus available";
+
+        ASSERT_TRUE(m_bus.registerVirtualObject("/org/gnome/Mutter/IdleMonitor/Core", &m_idleMonitor));
+        m_previousService = TestableActivityMonitor::s_gnomeIdleMonitorService;
+        TestableActivityMonitor::s_gnomeIdleMonitorService = m_bus.baseService();
+        m_previousDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+        qputenv("XDG_CURRENT_DESKTOP", "gnome");
+    }
+
+    void TearDown() override
+    {
+        qputenv("XDG_CURRENT_DESKTOP", m_previousDesktop.toUtf8());
+        if (!m_bus.isConnected())
+            return;
+
+        TestableActivityMonitor::s_gnomeIdleMonitorService = m_previousService;
+        m_bus.unregisterObject("/org/gnome/Mutter/IdleMonitor/Core");
+    }
+
+    int addUserActiveWatchCallCount() const
+    {
+        int count = 0;
+        for (const QDBusMessage &call : m_idleMonitor.calls) {
+            if (call.member() == QStringLiteral("AddUserActiveWatch"))
+                ++count;
+        }
+        return count;
+    }
+
+    QDBusConnection m_bus{QString()};
+    FakeGnomeIdleMonitor m_idleMonitor;
+    QString m_previousService;
+    QString m_previousDesktop;
+};
+
+} // namespace
+
+TEST_F(ActivityMonitorGnomeTest, StartUsesGnomeIdleMonitorUnderGnome)
+{
+    TestableActivityMonitor monitor;
+    monitor.start();
+
+    EXPECT_TRUE(monitor.isUsingGnomeIdleMonitor());
+    EXPECT_TRUE(monitor.hasGnomeIdleMonitorInterface());
+    EXPECT_TRUE(monitor.isRunning());
+    EXPECT_EQ(addUserActiveWatchCallCount(), 1);
+
+    monitor.stop();
+}
+
+TEST_F(ActivityMonitorGnomeTest, StopRemovesTheWatchAndDropsTheInterface)
+{
+    TestableActivityMonitor monitor;
+    monitor.start();
+    monitor.stop();
+
+    bool sawRemoveWatch = false;
+    for (const QDBusMessage &call : m_idleMonitor.calls) {
+        if (call.member() == QStringLiteral("RemoveWatch"))
+            sawRemoveWatch = true;
+    }
+    EXPECT_TRUE(sawRemoveWatch);
+    EXPECT_FALSE(monitor.isRunning());
+    EXPECT_FALSE(monitor.hasGnomeIdleMonitorInterface());
+}
+
+TEST_F(ActivityMonitorGnomeTest, WatchFiredEmitsActivityDetectedAndRearms)
+{
+    TestableActivityMonitor monitor;
+    monitor.start();
+    ASSERT_EQ(addUserActiveWatchCallCount(), 1);
+
+    QSignalSpy spy(&monitor, &ActivityMonitor::activityDetected);
+    m_idleMonitor.fireWatch(m_bus, m_idleMonitor.nextWatchId);
+
+    ASSERT_TRUE(spy.wait(2000));
+    EXPECT_EQ(spy.count(), 1);
+    // AddUserActiveWatch is one-shot: a fired watch must be re-added.
+    EXPECT_EQ(addUserActiveWatchCallCount(), 2);
+
+    monitor.stop();
+}
+
+TEST_F(ActivityMonitorGnomeTest, WatchFiredWithStaleIdIsIgnored)
+{
+    TestableActivityMonitor monitor;
+    monitor.start();
+
+    QSignalSpy spy(&monitor, &ActivityMonitor::activityDetected);
+    m_idleMonitor.fireWatch(m_bus, m_idleMonitor.nextWatchId + 999); // not the id AddUserActiveWatch replied with
+
+    EXPECT_FALSE(spy.wait(200));
+    EXPECT_EQ(spy.count(), 0);
+
+    monitor.stop();
+}
+
+TEST_F(ActivityMonitorGnomeTest, AddUserActiveWatchFailureIsNonFatal)
+{
+    m_idleMonitor.addWatchShouldFail = true;
+
+    TestableActivityMonitor monitor;
+    monitor.start();
+
+    // Still "using" the GNOME monitor - the interface itself is fine, only
+    // the watch request failed - but no watch id is tracked.
+    EXPECT_TRUE(monitor.isUsingGnomeIdleMonitor());
+    EXPECT_TRUE(monitor.isRunning());
+
+    monitor.stop();
+}
+
+#endif // defined(Q_OS_LINUX)
