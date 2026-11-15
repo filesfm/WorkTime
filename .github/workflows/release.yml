@@ -305,6 +305,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Install CodeSignTool
+        shell: pwsh
+        run: |
+          $zip = "$env:RUNNER_TEMP\CodeSignTool.zip"
+          Invoke-WebRequest -Uri 'https://github.com/SSLcom/CodeSignTool/releases/download/v1.3.2/CodeSignTool-v1.3.2-windows.zip' -OutFile $zip
+          Expand-Archive -Path $zip -DestinationPath "$env:RUNNER_TEMP\CodeSignTool"
+
+          $batPath = Get-ChildItem -Path "$env:RUNNER_TEMP\CodeSignTool" -Recurse -Filter "CodeSignTool.bat" | Select-Object -First 1
+          if (-not $batPath) { Write-Error "CodeSignTool.bat not found after extracting CodeSignTool"; exit 1 }
+          echo "CODESIGNTOOL_DIR=$($batPath.DirectoryName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@3b1f8f94a2f8254bd26914c4ab9474d4f0015f67 # v6
 
@@ -335,6 +346,35 @@ jobs:
           windeployqt --release --compiler-runtime --qmldir src/qml --no-translations \
             build/Release/bin/worktime.exe
 
+      - name: Sign application executable
+        shell: pwsh
+        env:
+          SSLCOM_CREDENTIAL_ID: ${{ secrets.SSLCOM_CREDENTIAL_ID }}
+          SSLCOM_USERNAME: ${{ secrets.SSLCOM_USERNAME }}
+          SSLCOM_PASSWORD: ${{ secrets.SSLCOM_PASSWORD }}
+          SSLCOM_TOTP_SECRET: ${{ secrets.SSLCOM_TOTP_SECRET }}
+        run: |
+          $exe = "$env:GITHUB_WORKSPACE\build\Release\bin\worktime.exe"
+          $signedDir = "$env:RUNNER_TEMP\signed-exe"
+          New-Item -ItemType Directory -Force -Path $signedDir | Out-Null
+
+          Push-Location "$env:CODESIGNTOOL_DIR"
+          try {
+            .\CodeSignTool.bat sign `
+              -credential_id="$env:SSLCOM_CREDENTIAL_ID" `
+              -username="$env:SSLCOM_USERNAME" `
+              -password="$env:SSLCOM_PASSWORD" `
+              -totp_secret="$env:SSLCOM_TOTP_SECRET" `
+              -input_file_path="$exe" `
+              -output_dir_path="$signedDir"
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          finally {
+            Pop-Location
+          }
+
+          Copy-Item (Join-Path $signedDir "worktime.exe") $exe -Force
+
       - name: Package portable ZIP
         env:
           VERSION: ${{ github.ref_name }}
@@ -358,6 +398,35 @@ jobs:
             /DSOURCE_DIR="$(cygpath -w "$package_dir")" \
             /DOUT_FILE="$(cygpath -w "$out_file")" \
             resource/windows/installer.nsi
+
+      - name: Sign installer executable
+        shell: pwsh
+        env:
+          SSLCOM_CREDENTIAL_ID: ${{ secrets.SSLCOM_CREDENTIAL_ID }}
+          SSLCOM_USERNAME: ${{ secrets.SSLCOM_USERNAME }}
+          SSLCOM_PASSWORD: ${{ secrets.SSLCOM_PASSWORD }}
+          SSLCOM_TOTP_SECRET: ${{ secrets.SSLCOM_TOTP_SECRET }}
+        run: |
+          $installer = Get-ChildItem -Path dist -Filter "*-setup.exe" | Select-Object -First 1
+          $signedDir = "$env:RUNNER_TEMP\signed-installer"
+          New-Item -ItemType Directory -Force -Path $signedDir | Out-Null
+
+          Push-Location "$env:CODESIGNTOOL_DIR"
+          try {
+            .\CodeSignTool.bat sign `
+              -credential_id="$env:SSLCOM_CREDENTIAL_ID" `
+              -username="$env:SSLCOM_USERNAME" `
+              -password="$env:SSLCOM_PASSWORD" `
+              -totp_secret="$env:SSLCOM_TOTP_SECRET" `
+              -input_file_path="$($installer.FullName)" `
+              -output_dir_path="$signedDir"
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          finally {
+            Pop-Location
+          }
+
+          Copy-Item (Join-Path $signedDir $installer.Name) $installer.FullName -Force
 
       - name: Upload artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
