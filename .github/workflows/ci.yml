@@ -59,7 +59,7 @@ jobs:
 
       - name: ccache
         if: matrix.os != 'windows-latest'
-        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
+        uses: hendrikmuhs/ccache-action@dbeefd73e8e2ffc1bbc412570072735eb4db3607 # v1.2.25
         with:
           key: ${{ matrix.os }}-${{ matrix.build_type }}
           variant: ${{ matrix.ccache_variant }}
@@ -117,7 +117,7 @@ jobs:
         uses: ./.github/actions/install-kf6-idletime
 
       - name: ccache
-        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
+        uses: hendrikmuhs/ccache-action@dbeefd73e8e2ffc1bbc412570072735eb4db3607 # v1.2.25
         with:
           key: sanitize
           variant: ccache
@@ -188,7 +188,7 @@ jobs:
         uses: ./.github/actions/install-kf6-idletime
 
       - name: ccache
-        uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d # v1.2.24
+        uses: hendrikmuhs/ccache-action@dbeefd73e8e2ffc1bbc412570072735eb4db3607 # v1.2.25
         with:
           key: sonar
           max-size: 300M
@@ -212,7 +212,7 @@ jobs:
           --sonarqube --output build/Sonar/coverage-sonarqube.xml build/Sonar
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@4d1dc0c91ee400dcf8a6dddf2f705ac36542e304 # v8.4.0
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -279,6 +279,6 @@ jobs:
           exit-code: '0'
 
       - name: Upload results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         with:
           sarif_file: trivy-results.sarif
